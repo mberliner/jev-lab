@@ -27,7 +27,7 @@ Estándar      (tema)  ─ CÓMO se hace, con detalle y ejemplos
 | **Naturaleza** | Normativa | Estructural | Descriptiva |
 | **Alcance** | Todo el proyecto | Un tema; actúa al generar artefactos | Un tema; se consulta al diseñar e implementar |
 | **Granularidad** | Un principio por idea, sin tecnología concreta | Una sección por plantilla afectada | Todo el detalle necesario |
-| **Ubicación** | `.specify/memory/constitution.md` | `presets/jevlab-<tema>/` (fuente) → `.specify/presets/` (instalado) | `docs/standards/<tema>.md` |
+| **Ubicación** | `.specify/memory/constitution.md` | `presets/jevlab-<tema>/` (fuente) -> `.specify/presets/` (instalado) | `docs/standards/<tema>.md` |
 | **Ritmo de cambio** | Raro; enmienda formal | Moderado; al aprender de una spec | Frecuente; evoluciona con el código |
 | **Versionado** | Semver de la constitución (ver *Versionado de documentos*) | `version` del `preset.yml` (ídem) | Historial de git |
 | **Aprobación** | Humana obligatoria (HITL) | Humana, por PR | PR normal |
@@ -54,13 +54,13 @@ constitución prohíbe, se enmienda la constitución o se registra una excepció
 Se responden estas preguntas en orden. La primera respuesta "sí" decide la capa.
 
 1. **¿Se puede enunciar sin nombrar una tecnología, una sección de documento ni un archivo, y su
-   incumplimiento invalidaría una feature entera?** → **Constitución**.
-2. **¿Es algo que *cada* spec, plan o lista de tareas debe declarar, responder o incluir?** →
+   incumplimiento invalidaría una feature entera?** -> **Constitución**.
+2. **¿Es algo que *cada* spec, plan o lista de tareas debe declarar, responder o incluir?** ->
    **Preset** del tema.
-3. **¿Es una convención, un patrón o un ejemplo de cómo hacerlo bien?** → **Estándar** del tema.
-4. **¿Es una elección entre alternativas que conviene recordar?** → **ADR** (y, si genera regla, la
+3. **¿Es una convención, un patrón o un ejemplo de cómo hacerlo bien?** -> **Estándar** del tema.
+4. **¿Es una elección entre alternativas que conviene recordar?** -> **ADR** (y, si genera regla, la
    regla va además a su capa).
-5. **¿Solo afecta a una feature?** → artefactos de esa spec. No es una regla común.
+5. **¿Solo afecta a una feature?** -> artefactos de esa spec. No es una regla común.
 
 Ejemplos:
 
@@ -100,6 +100,8 @@ preset, estándar o ambos, según lo necesite.
 | Decisión Jev (escape, umbrales, calibración) | *(tras ratificar)* | `jevlab-decision` | `decision-design.md` | previsto en 000 |
 | Testing | *(tras ratificar)* | *(por decidir)* | `testing.md` | pendiente |
 | Seguridad | *(tras ratificar)* | *(por decidir)* | `security.md` | pendiente |
+| Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática en 000 |
+| Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática en 000 |
 
 Esta tabla se actualiza al crear o retirar un tema.
 
@@ -161,7 +163,7 @@ scripts de Spec Kit**. Si no está disponible (habitual en Windows), se puede ap
 
 | Cambio | Proceso | Propagación |
 | --- | --- | --- |
-| **Constitución** | `/speckit-constitution` → *Sync Impact Report* → aprobación humana → commit `docs(constitution): …` con bump semver | Revisar los presets afectados (el *Sync Impact Report* los lista) |
+| **Constitución** | `/speckit-constitution` -> *Sync Impact Report* -> aprobación humana -> commit `docs(constitution): …` con bump semver | Revisar los presets afectados (el *Sync Impact Report* los lista) |
 | **Preset** | PR con bump de `version` en `preset.yml` y reinstalación (`specify preset update` o `add --dev`) | Afecta a los artefactos que se generen a partir de ese momento |
 | **Estándar** | PR normal | Inmediata; el código existente se adapta en la siguiente spec que lo toque |
 | **Specs ya cerradas** | No se reescriben. En la retro de cierre de cada spec se anota si una regla nueva obliga a una tarea de adaptación | La tarea entra en una spec futura |

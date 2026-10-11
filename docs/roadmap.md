@@ -42,7 +42,7 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 
 ## Criterios de diseño de las specs
 
-1. **Corte vertical:** cada spec es una capacidad de dominio que atraviesa todas las capas: diseño de preguntas → cliente SDK → política en código → interfaz (CLI o API) → tests → lección. Entrega algo ejecutable a un usuario concreto.
+1. **Corte vertical:** cada spec es una capacidad de dominio que atraviesa todas las capas: diseño de preguntas -> cliente SDK -> política en código -> interfaz (CLI o API) -> tests -> lección. Entrega algo ejecutable a un usuario concreto.
 2. **Progresión de producción:** las técnicas de producción crecen de menor a mayor, spec a spec.
 3. **Tamaño:** 4 historias P1–P4 por spec, cada una probable y demostrable por sí sola, en el formato de `spec.md` de Spec Kit.
 
@@ -56,7 +56,7 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 ## Funcionamiento igual en Claude Code y Antigravity (`agy`)
 
 Spec Kit admite varias integraciones en el mismo proyecto. Según la [referencia de integraciones](https://github.github.io/spec-kit/reference/integrations.html):
-- claves `claude` → `.claude/skills/` y `agy` → `.agents/skills/`;
+- claves `claude` -> `.claude/skills/` y `agy` -> `.agents/skills/`;
 - `agy` no está declarada como segura para instalarse junto a otras, así que hace falta `--force`;
 - la integración por defecto queda en `.specify/integration.json`.
 
@@ -68,7 +68,7 @@ Spec Kit admite varias integraciones en el mismo proyecto. Según la [referencia
 5. **Invocación:** en Claude Code las skills de Spec Kit se llaman `/speckit-*` y en Antigravity también `/speckit-*`. La guía `docs/agents.md` documenta las dos.
 6. **Verificación de paridad (CI):** `specify integration status` muestra las dos integraciones; un test comprueba que `CLAUDE.md` solo importa `AGENTS.md`. La spec 000 se valida corriendo `/speckit-specify` de prueba en cada agente.
 
-> Antes de instalar, confirmar con `specify init --help` y `specify integration list` en la versión instalada, porque los flags han cambiado (`--ai` → `--integration`).
+> Antes de instalar, confirmar con `specify init --help` y `specify integration list` en la versión instalada, porque los flags han cambiado (`--ai` -> `--integration`).
 
 ## Funcionamiento igual en Windows y Linux
 
@@ -82,7 +82,7 @@ No hay nada que lo impida. Todo el stack es multiplataforma: Python 3.13 (vía u
 | **Enlaces simbólicos** | Ninguno en el repo. `CLAUDE.md` usa `@AGENTS.md` (import, no symlink). |
 | **Rutas y ficheros** | `pathlib` siempre; `encoding="utf-8"` explícito; nombres de archivo en minúsculas, sin `:` ni espacios. |
 | **Variables de entorno** | `.env` cargado con `pydantic-settings`, sin `export` de shell. |
-| **Dos intérpretes, papeles separados** | (a) **Spec Kit** ejecuta sus scripts con `python3` del sistema, ≥ 3.8 (probado con 3.8.10 en Linux; en Windows se añade un enlace duro `python3.exe` → `python.exe` del 3.13 existente). (b) **El proyecto** usa **Python 3.13 gestionado por uv** (`.python-version` = 3.13), en espacio de usuario y sin instalar nada en el sistema; en Windows uv reutiliza el 3.13 instalado. `typesafe-sdk` 0.7.4 requiere ≥ 3.10 y soporta 3.13. |
+| **Dos intérpretes, papeles separados** | (a) **Spec Kit** ejecuta sus scripts con `python3` del sistema, ≥ 3.8 (probado con 3.8.10 en Linux; en Windows se añade un enlace duro `python3.exe` -> `python.exe` del 3.13 existente). (b) **El proyecto** usa **Python 3.13 gestionado por uv** (`.python-version` = 3.13), en espacio de usuario y sin instalar nada en el sistema; en Windows uv reutiliza el 3.13 instalado. `typesafe-sdk` 0.7.4 requiere ≥ 3.10 y soporta 3.13. |
 | **Ejecución de código del proyecto** | Siempre con `uv run …` (tareas `poe`, `scripts/*.py`), nunca con `python3` directo, para no caer en el Python del sistema. |
 | **Dependencias** | Solo paquetes con wheels para Windows y Linux (p. ej. sin `uvloop` obligatorio). |
 | **Contenedores (007)** | Docker Desktop con WSL2 en Windows; el servicio también arranca sin Docker (`uv run poe api`) con SQLite. |
@@ -90,7 +90,7 @@ No hay nada que lo impida. Todo el stack es multiplataforma: Python 3.13 (vía u
 
 ## Arquitectura de aplicaciones
 
-**Monolito modular con arquitectura hexagonal (puertos y adaptadores)** en un solo paquete Python, `jevlab`. Encaja con un laboratorio de un solo equipo y un dominio desplegable. Los límites entre módulos se garantizan con una regla de dependencias comprobada en CI (`import-linter`): `entrypoints → application → domain` y `adapters → ports`.
+**Monolito modular con arquitectura hexagonal (puertos y adaptadores)** en un solo paquete Python, `jevlab`. Encaja con un laboratorio de un solo equipo y un dominio desplegable. Los límites entre módulos se garantizan con una regla de dependencias comprobada en CI (`import-linter`): `entrypoints -> application -> domain` y `adapters -> ports`.
 
 ```
                  ┌───────────── Adaptadores de entrega ─────────────┐
@@ -125,7 +125,7 @@ Cada capa se prueba de forma aislada, de modo que **la gran mayoría de los test
 
 | Capa | Tipo de test | Cómo se aísla | Ejemplos |
 | --- | --- | --- | --- |
-| **Dominio** (puro) | Unitario + propiedades (`hypothesis`) | Sin dependencias: funciones y modelos Pydantic | La fórmula de confianza coincide con la oficial; las bandas de política son monótonas; `other` siempre va a revisión; la composición con pesos es correcta; `DecisionSpec` sin escape → error de validación |
+| **Dominio** (puro) | Unitario + propiedades (`hypothesis`) | Sin dependencias: funciones y modelos Pydantic | La fórmula de confianza coincide con la oficial; las bandas de política son monótonas; `other` siempre va a revisión; la composición con pesos es correcta; `DecisionSpec` sin escape -> error de validación |
 | **Aplicación** (casos de uso) | Unitario | Puertos inyectados con *fakes* en memoria (`FakeJudge` con respuestas programables, `InMemoryReviewQueue`, `FrozenClock`) | `TriageTicket` con confianza 0,4 encola revisión y audita; `GuardInput` con inyección = 0,9 bloquea; modo degradado si `JudgePort` lanza error |
 | **Adaptadores** | Contrato | Cassettes VCR de respuestas reales; SQLite en memoria; `respx` para HTTP | `TypeSafeJudge` traduce bien la respuesta del SDK a tipos de dominio; mapeo de `TypeSafeAPIError` a errores de dominio; reintentos ante un 429 simulado |
 | **Entrypoints** | Unitario/integración ligera | `typer.testing.CliRunner`, `httpx.AsyncClient` + `TestClient` de FastAPI con dependencias sustituidas | Códigos HTTP, validación de entrada, idempotencia, salida de la CLI |
@@ -195,12 +195,13 @@ Esta lista es **un borrador de entrada**; la constitución definitiva sale del p
 
 > **Punto de reanudación (2026-10-11).** Borrador en `.specify/memory/constitution.md`: v0.3.0
 > propuesta, 7 principios, sin commit de ratificación.
-> - ✅ Paso 1: borrador (12 principios consolidados en 7).
-> - ✅ Paso 2: revisión. Todos se mantienen; en IV, escribir el test antes pasa a SHOULD; las
+> - [hecho] Paso 1: borrador (12 principios consolidados en 7).
+> - [hecho] Paso 2: revisión. Todos se mantienen; en IV, escribir el test antes pasa a SHOULD; las
 >   rutas se permiten solo fuera de los enunciados.
-> - ⏳ **Paso 3: siguiente.** Escenarios propuestos, pendientes de validación humana:
+> - [hecho] Paso 3: escenarios validados (1–6 sin cambios de texto; 7 añade una regla a VI; 8 aclara
+>   VII):
 >
->   | # | Escenario | Principio | Veredicto propuesto |
+>   | # | Escenario | Principio | Veredicto (validado) |
 >   | --- | --- | --- | --- |
 >   | 1 | 001 US4 con cassettes, sin red | IV | Pasa, si cada cassette registra modelo y fecha |
 >   | 2 | Choice de 3 colas sin `other` | II | Se bloquea (falla la validación) |
@@ -208,10 +209,10 @@ Esta lista es **un borrador de entrada**; la constitución definitiva sale del p
 >   | 4 | Benchmark de 003 con precio de Jev sin confirmar | IV | Se bloquea; «no disponible» hasta tener fuente y fecha |
 >   | 5 | Clon nuevo en Windows ejecuta `/speckit-specify` | VI | Pasa si `docs/setup.md` cubre PyYAML (hueco conocido) |
 >   | 6 | 006: Azure genera una suma de importes | I | Se bloquea; el importe se calcula en código |
->   | 7 | Hook de un agente concreto versionado en el repo | VI | Ambiguo. Propuesta: prohibido en el repo; la configuración personal queda libre (PATCH en VI) |
->   | 8 | ¿La spec 000 necesita lección? | VII | Ambiguo. Propuesta: sí, sobre el método SDD y el entorno (aclarar el texto) |
+>   | 7 | Hook de un agente concreto versionado en el repo | VI | Decidido: permitido solo con implementación neutral, con la lógica en tareas del repo y configuración equivalente en todos los agentes (o en ninguno). Añadido a VI |
+>   | 8 | ¿La spec 000 necesita lección? | VII | Decidido: sí, sobre el método SDD y el entorno. VII aclara que la excepción de cimientos solo cubre el corte vertical |
 >
-> - Pendientes: pasos 4 (segunda opinión con el otro agente), 5 (ratificación) y 6.
+> - **[siguiente] Paso 4** (segunda opinión con el otro agente). Pendientes: 5 (ratificación) y 6.
 
 Buenas prácticas que se aplican:
 - Plantilla de Spec Kit: versión semántica, fechas de ratificación y enmienda, *Sync Impact Report* y la puerta *Constitution Check* de `plan-template`.
@@ -221,7 +222,7 @@ Buenas prácticas que se aplican:
    - **Enunciado** con MUST / SHOULD (RFC 2119);
    - **Justificación**, con enlace a la fuente oficial o primaria;
    - **Cómo se verifica**: puerta concreta (test, lint, check de CI, revisión) o, si no es automatizable, pregunta de revisión.
-   - Principios sin forma de verificarse → se reformulan o se pasan a "guía" fuera de la constitución.
+   - Principios sin forma de verificarse -> se reformulan o se pasan a "guía" fuera de la constitución.
 2. **Revisión humana estructurada, principio a principio.** Se usan preguntas cerradas: mantener / editar / eliminar, y MUST frente a SHOULD. Criterios del checklist:
    - atómico (una sola idea);
    - sin ambigüedad ("rápido" o "seguro" sin métrica no valen);
@@ -249,7 +250,7 @@ Buenas prácticas que se aplican:
 
 ## Specs
 
-En cada spec se recorre `/speckit.specify → clarify → plan → tasks → analyze → implement`, en la rama `NNN-nombre`, con commit por historia.
+En cada spec se recorre `/speckit.specify -> clarify -> plan -> tasks -> analyze -> implement`, en la rama `NNN-nombre`, con commit por historia.
 
 ### 000: Cimientos (no es vertical, por diseño)
 - `git init`, `uv init --package` (Python 3.13 vía uv; `.python-version` = 3.13).
@@ -258,6 +259,8 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
 - CI mínima.
 - `specify init . --integration claude` + `specify integration install agy --force`, `AGENTS.md` y `CLAUDE.md` (`@AGENTS.md`), y constitución.
 - Esqueleto hexagonal vacío (`domain/ports/adapters/entrypoints`) + `import-linter` en CI + tareas `poe` + `.gitattributes` + CI con matriz Linux/Windows.
+- Script de comprobación de `docs/standards/writing.md` (emojis y caracteres de caja fuera de bloques de código) en pre-commit y CI, y hook `commit-msg` de `docs/standards/version-control.md` (Conventional Commits, sin atribución de agentes).
+- Lección `docs/lessons/000-cimientos.md` (principio VII): método SDD, capas de reglas, entorno y fallos típicos con su mitigación; reutiliza `docs/setup.md`.
 - `docs/setup.md` con la puesta en marcha en Linux y Windows: uv, Python 3.13, el enlace `python3.exe` en Windows (`New-Item -ItemType HardLink -Path "$dir\python3.exe" -Target "$dir\python.exe"`), Git Bash y los dos agentes.
 - `.env.example` con `TYPESAFE_API_KEY` y `AZURE_OPENAI_{ENDPOINT,API_KEY,DEPLOYMENT,API_VERSION}`.
 - **Espacio reservado: mecanismos de arquitectura y definiciones globales (según Spec Kit).** Se decide en HITL, después de ratificar la constitución y antes de la spec 001. El objetivo es fijar **dónde viven y cómo se aplican** las decisiones que afectan a todas las specs, para que cada `plan.md` las herede en vez de redefinirlas.
@@ -285,7 +288,7 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
 - *Producción introducida:* cliente reutilizado, `RetryPolicy` por defecto, timeout, errores sin filtrar datos y logs `info` sin bodies.
 - *Verificación:* test de contrato con cassette; `confidence.py` reproduce la fórmula oficial a partir de `probabilities`.
 
-### 002: Enrutado con confianza según riesgo (Aprendiz → Operador)
+### 002: Enrutado con confianza según riesgo (Aprendiz -> Operador)
 *Aprende: la confianza como segundo eje de decisión; umbrales por riesgo.*
 - **US1 (P1):** un ticket con confianza alta se enruta solo y la CLI explica el motivo (umbral y valor).
 - **US2 (P2):** si la acción es destructiva (p. ej. reembolso automático), se exige un umbral más alto; si no se alcanza, se pide confirmación.
@@ -315,7 +318,7 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
 - **US2 (P2), redacción:** lectura literal, negación e indirección, instrucciones contradictorias.
 - **US3 (P3), sesgo de orden:** test de permutación de opciones y métrica de consistencia. También self-consistency (cookbooks).
 - **US4 (P4), contexto:** estado irrelevante o largo (filtro previo y Noul de relevancia) y contenido adversarial. La generación se demuestra con la cascada: candidatos por regex y Jev elige.
-- *Resultado:* tabla "fallo → mitigación → Δ medido" generada a partir de los datos.
+- *Resultado:* tabla "fallo -> mitigación -> Δ medido" generada a partir de los datos.
 
 ### 006: Asistente RAG verificado (Aprendiz/Integrador)
 *Aprende: Jev dentro de un pipeline generativo; Azure genera y Jev decide.*
@@ -333,7 +336,7 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
 - **US4 (P4):** como Operador veo métricas y alertas: latencia, tasa de escalado, distribución de confianza y deriva de `other`. Uso Prometheus/OTel y un dashboard sencillo.
 - *Entrega:* Dockerfile, `docker compose`, job *live* nocturno en CI con tope de coste.
 
-**Progresión de técnicas de producción:** 001 cliente/reintentos/logs seguros → 002 configuración versionada y auditoría → 003 API asíncrona y contratos → 004 evaluación reproducible y modelo fijado → 006 presupuesto, caché y trazas → 007 resiliencia, shadow/enforce, retroalimentación y monitorización.
+**Progresión de técnicas de producción:** 001 cliente/reintentos/logs seguros -> 002 configuración versionada y auditoría -> 003 API asíncrona y contratos -> 004 evaluación reproducible y modelo fijado -> 006 presupuesto, caché y trazas -> 007 resiliencia, shadow/enforce, retroalimentación y monitorización.
 
 ---
 
@@ -346,10 +349,10 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
 - **Aislamiento:** un clon nuevo en una máquina sin memorias ni configuración previas (Linux o Windows) arranca siguiendo solo `README.md` y `docs/setup.md`, y los agentes encuentran todo lo que necesitan en `AGENTS.md`. Ningún archivo del repo contiene rutas absolutas de una máquina (comprobación en CI).
 
 ## Primeros pasos tras aprobar
-0. ✅ Hecho: plan en `docs/roadmap.md` (dentro del repo).
-1. ✅ Hecho: `specify check` (CLI 1.1.4; Claude Code y Antigravity detectados; `--script py` disponible).
-2. ✅ Hecho (pendiente de commit): `mkdir jev-lab && cd jev-lab && git init`, crear primero `.gitattributes` y luego `specify init . --integration claude --script py && specify integration install agy --force && specify integration status`.
-3. ✅ `AGENTS.md` mínimo de arranque y `CLAUDE.md` (`@AGENTS.md`), para que cualquier agente abierto en `jev-lab/` tenga el contexto sin memorias externas. Se completan en la spec 000.
+0. Hecho: plan en `docs/roadmap.md` (dentro del repo).
+1. Hecho: `specify check` (CLI 1.1.4; Claude Code y Antigravity detectados; `--script py` disponible).
+2. Hecho: `mkdir jev-lab && cd jev-lab && git init`, crear primero `.gitattributes` y luego `specify init . --integration claude --script py && specify integration install agy --force && specify integration status`.
+3. Hecho: `AGENTS.md` mínimo de arranque y `CLAUDE.md` (`@AGENTS.md`), para que cualquier agente abierto en `jev-lab/` tenga el contexto sin memorias externas. Se completan en la spec 000.
 4. Abrir el agente **dentro de `jev-lab/`** (Claude Code: `claude`; Antigravity: abrir la carpeta) y ejecutar `/speckit-constitution` con el borrador y luego depuración HITL (pasos 1–6) hasta ratificar la v0.3.0. Luego HITL de mecanismos de arquitectura y definiciones globales. Después, el resto de la spec 000.
 
 ---

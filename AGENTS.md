@@ -16,14 +16,14 @@ Spec-Driven Development (Spec Kit).
 | --- | --- |
 | `docs/roadmap.md` | **Plan vigente**: arquitectura, specs 000–007 y verificación |
 | `.specify/memory/constitution.md` | Principios no negociables (en ratificación, proceso HITL) |
-| `docs/governance.md` | Dónde vive cada regla común: constitución → presets propios → estándares |
+| `docs/governance.md` | Dónde vive cada regla común: constitución -> presets propios -> estándares |
 | `specs/NNN-*/` | Artefactos SDD de cada feature |
 | `docs/setup.md` | Puesta en marcha en Linux y Windows (se crea en la spec 000) |
 
 ## Flujo de trabajo (Spec Kit)
 
-`/speckit-constitution` → `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` →
-`/speckit-tasks` → `/speckit-analyze` → `/speckit-implement`.
+`/speckit-constitution` -> `/speckit-specify` -> `/speckit-clarify` -> `/speckit-plan` ->
+`/speckit-tasks` -> `/speckit-analyze` -> `/speckit-implement`.
 
 - Skills para Claude Code en `.claude/skills/` y para Antigravity en `.agents/skills/`. Las dos
   comparten `.specify/` y `specs/`.
@@ -34,7 +34,7 @@ Spec-Driven Development (Spec Kit).
 - **Python del proyecto: 3.13, gestionado por uv.** El código del proyecto se ejecuta siempre con
   `uv run …`, nunca con `python3`, que puede ser un Python de sistema antiguo.
 - **`python3` del sistema (≥ 3.8):** lo usan solo los scripts de Spec Kit.
-- **Windows:** si solo existen `python`/`py`, crear el enlace `python3.exe` → `python.exe` (ver
+- **Windows:** si solo existen `python`/`py`, crear el enlace `python3.exe` -> `python.exe` (ver
   `docs/setup.md`).
 - Multiplataforma (Linux y Windows): sin symlinks, `pathlib`, UTF-8 explícito, finales de línea
   según `.gitattributes`.
@@ -46,4 +46,9 @@ Spec-Driven Development (Spec Kit).
 - Toda acción automatizable pasa por la confianza, con umbrales por riesgo.
 - Secretos solo en `.env` (nunca en el repo); logs sin bodies ni datos personales.
 - Contenido original; solo se citan la documentación oficial de TypeSafe y fuentes primarias.
-- Nada de hooks ni comandos exclusivos de un agente: las puertas de calidad son pre-commit y CI.
+- Hooks y comandos solo con implementación neutral: la lógica va en tareas del repo y existe igual
+  para todos los agentes, o no se usa. Las puertas de calidad son pre-commit y CI.
+- Documentación sin emojis ni pictogramas; caracteres de caja y flechas solo en bloques de código
+  (`docs/standards/writing.md`).
+- Commits en formato Conventional Commits y sin firmas ni atribuciones de agentes
+  (`Co-Authored-By`, `Generated with`), también en PRs (`docs/standards/version-control.md`).

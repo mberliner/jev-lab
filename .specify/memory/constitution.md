@@ -1,28 +1,34 @@
 <!--
-Sync Impact Report (borrador HITL, paso 2 en curso; se elimina antes del commit de ratificación)
-- Versión: plantilla sin rellenar → 0.3.0 (propuesta, NO ratificada; regla de versión inicial
+Sync Impact Report (borrador HITL, paso 4 pendiente; se elimina antes del commit de ratificación)
+- Versión: plantilla sin rellenar -> 0.3.0 (propuesta, NO ratificada; regla de versión inicial
   en docs/governance.md, «Versionado de documentos»)
-- Principios: 12 del borrador → 7 consolidados (decisión humana, 2026-10-10)
-  · I   El modelo juzga, el código decide         ← juzga/decide + preguntas atómicas
-  · II  Automatizar solo con escape y confianza   ← opción de escape + confianza por riesgo
+- Principios: 12 del borrador -> 7 consolidados (decisión humana, 2026-10-10)
+  · I   El modelo juzga, el código decide         <- juzga/decide + preguntas atómicas
+  · II  Automatizar solo con escape y confianza   <- opción de escape + confianza por riesgo
   · III Una definición de decisión, aislada del proveedor
-  · IV  Evidencia antes que afirmación            ← verificación aislada + honestidad
+  · IV  Evidencia antes que afirmación            <- verificación aislada + honestidad
   · V   Seguridad y privacidad por defecto
-  · VI  Proyecto autocontenido, neutral y original ← entorno reproducible + contenido original
-  · VII Cortes verticales que enseñan             ← cortes verticales + lección
+  · VI  Proyecto autocontenido, neutral y original <- entorno reproducible + contenido original
+  · VII Cortes verticales que enseñan             <- cortes verticales + lección
 - Secciones añadidas: Alcance y relación con otras capas; Flujo de desarrollo y puertas de calidad
 - Secciones eliminadas: ninguna
 - Detalle movido fuera de la constitución (destino propuesto):
-  · rutas entre backticks, estado mínimo → estándar decision-design
-  · umbrales de cobertura, bloqueo de red en tests → estándar testing
-  · .env, escáner de secretos concreto → estándar security
-  · fuente única de instrucciones, tareas, pre-commit, matriz Linux/Windows → estándar/AGENTS.md
-  · «unas 4 historias» → preset de spec
+  · rutas entre backticks, estado mínimo -> estándar decision-design
+  · umbrales de cobertura, bloqueo de red en tests -> estándar testing
+  · .env, escáner de secretos concreto -> estándar security
+  · fuente única de instrucciones, tareas, pre-commit, matriz Linux/Windows -> estándar/AGENTS.md
+  · «unas 4 historias» -> preset de spec
 - Paso 2 HITL (revisión principio a principio) completado:
   · I, II, III, V, VI, VII: se mantienen
   · IV: escribir el test antes pasa de MUST a SHOULD
   · Rutas y herramientas SDD permitidas solo fuera de los enunciados (docs/governance.md §8)
-- Siguiente: paso 3 HITL (escenarios de prueba de la constitución).
+- Paso 3 HITL (escenarios) en curso:
+  · Escenarios 1–6: veredictos aceptados sin cambios de texto
+  · Escenario 7: VI añade paridad neutral de hooks/comandos entre agentes (lógica en tareas del
+    repo; configuración equivalente en todos los agentes o en ninguno)
+  · Escenario 8: VII aclara que la excepción de cimientos cubre solo el corte vertical; la
+    spec 000 lleva lección (método SDD y puesta en marcha)
+- Paso 3 HITL completado. Siguiente: paso 4 (segunda opinión con el otro agente).
 - Plantillas (.specify/templates/*): no modificadas; se alinearán mediante presets propios.
 - TODO(RATIFICATION_DATE): se fija al ratificar (paso 5 HITL).
 - TODO(FUENTES): confirmar enlaces exactos a la documentación oficial de TypeSafe citada.
@@ -30,7 +36,7 @@ Sync Impact Report (borrador HITL, paso 2 en curso; se elimina antes del commit 
 
 # Constitución de jev-lab
 
-> **Estado: BORRADOR (proceso HITL, paso 3).** No es vinculante hasta su ratificación.
+> **Estado: BORRADOR (proceso HITL, paso 4).** No es vinculante hasta su ratificación.
 > Las palabras clave MUST, MUST NOT, SHOULD y SHOULD NOT se interpretan según RFC 2119.
 
 ## Core Principles
@@ -102,7 +108,7 @@ baseline y modo sin conexión.
 
 **Enunciado.**
 - Todo comportamiento MUST tener tests automáticos.
-- Los tests SHOULD escribirse antes de la implementación (rojo → verde → refactor).
+- Los tests SHOULD escribirse antes de la implementación (rojo -> verde -> refactor).
 - La suite por defecto MUST ejecutarse sin red, sin claves y sin coste.
 - Las pruebas contra servicios reales MUST ser opcionales, estar marcadas y tener un tope de
   coste.
@@ -148,6 +154,10 @@ adversarial es un modo de fallo conocido.
 - Todo flujo de trabajo MUST funcionar igual en Linux y en Windows y con cualquier agente de
   código soportado, con una única fuente de instrucciones para agentes.
 - Las puertas de calidad MUST ser independientes del agente.
+- Los hooks, comandos y herramientas MUST implementarse de forma neutral: su lógica vive en
+  tareas del repositorio, y la configuración propia de cada agente solo invoca esas tareas y
+  MUST existir de forma equivalente para todos los agentes soportados. Si un agente no admite el
+  mecanismo, no se usa en ninguno.
 - El código, los escenarios, los datos y los textos MUST ser originales.
 - Las únicas referencias externas MUST ser la documentación oficial de TypeSafe y otras fuentes
   primarias, citadas donde se usan.
@@ -160,6 +170,8 @@ afirmaciones contrastables en su fuente.
 - CI en Linux y en Windows.
 - Una comprobación en CI rechaza rutas absolutas de máquina.
 - Un test comprueba que las instrucciones de agente tienen una sola fuente.
+- Pregunta de revisión: «¿este hook o comando existe con el mismo efecto para todos los agentes
+  y llama solo a tareas del repositorio?».
 - Prueba de clon limpio en la spec de cimientos.
 - Pregunta de revisión: «¿hay material sin cita o derivado de una fuente no primaria?».
 
@@ -170,8 +182,9 @@ afirmaciones contrastables en su fuente.
   capacidad ejecutable de extremo a extremo.
 - Cada historia MUST poder probarse y demostrarse por separado.
 - Solo se construye lo que las historias necesitan (YAGNI).
-- Cada feature MUST incluir una lección que explique qué se aprende, cómo se ejecuta y qué puede
-  fallar, con su mitigación.
+- Cada feature, incluida la de cimientos, MUST incluir una lección que explique qué se aprende,
+  cómo se ejecuta y qué puede fallar, con su mitigación. En la de cimientos, la lección trata el
+  método de desarrollo y la puesta en marcha del entorno.
 
 **Justificación.** Las capas sin un usuario que las use no demuestran nada y tienden a diseñarse
 de más. El propósito del proyecto es aprender y demostrar Jev: una feature sin lección cumple solo
@@ -198,8 +211,8 @@ MUST NOT contradecir a una superior.
 
 ## Flujo de desarrollo y puertas de calidad
 
-- Toda feature sigue el flujo de Spec Kit: especificar → clarificar → planificar → tareas →
-  analizar → implementar.
+- Toda feature sigue el flujo de Spec Kit: especificar -> clarificar -> planificar -> tareas ->
+  analizar -> implementar.
 - Cada plan MUST superar la puerta *Constitution Check* antes y después del diseño. Un
   incumplimiento bloquea el plan salvo que haya una excepción registrada.
 - Las excepciones MUST registrarse en *Complexity Tracking* del plan: principio afectado, motivo,
