@@ -1,16 +1,7 @@
-<!--
-Sync Impact Report
-- Versión: plantilla sin rellenar -> 0.3.0 (propuesta, no ratificada)
-- Historial del proceso HITL: docs/roadmap.md, «Depuración HITL de la constitución»
-- Plantillas (.specify/templates/*): sin cambios; se alinean mediante presets propios
-- TODO(RATIFICATION_DATE): se fija al ratificar (paso 5 HITL)
-- TODO(FUENTES): confirmar enlaces exactos a la documentación oficial de TypeSafe citada
--->
-
 # Constitución de jev-lab
 
-> **Estado: BORRADOR (proceso HITL, paso 5).** No es vinculante hasta su ratificación.
-> Las palabras clave MUST, MUST NOT, SHOULD y SHOULD NOT se interpretan según RFC 2119.
+> Las palabras clave MUST, MUST NOT, SHOULD, SHOULD NOT y MAY se interpretan según
+> [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
 
 ## Core Principles
 
@@ -24,9 +15,11 @@ Sync Impact Report
   afirmativa y directa.
 - El estado enviado al modelo SHOULD ser el mínimo necesario para responder.
 
-**Justificación.** Entre las limitaciones documentadas de jev-1.13 (*Jaggedness*) están el conteo,
+**Justificación.** Entre las limitaciones documentadas de jev-1.13
+([*Jaggedness*](https://docs.typesafe.ai/model-jaggedness/jev-1.13.md)) están el conteo,
 las representaciones numéricas, las matemáticas sobre Score, la lectura literal y las
-instrucciones contradictorias. La guía oficial *How to build* deja el control y la composición en
+instrucciones contradictorias. La guía oficial
+[*How to build*](https://docs.typesafe.ai/concepts/how-to-build-with-system-one.md) deja el control y la composición en
 el código, y recomienda preguntas atómicas con estado mínimo.
 
 **Verificación.**
@@ -48,8 +41,8 @@ el código, y recomienda preguntas atómicas con estado mínimo.
 - Los umbrales SHOULD justificarse con datos propios, comparando confianza frente a acierto.
 
 **Justificación.** Sin escape, el modelo se ve obligado a elegir una opción incorrecta cuando
-ninguna aplica, y esa elección parece legítima. La documentación oficial define la confianza de
-Choice y Score, y recomienda elegir los umbrales trazando confianza frente a acierto con datos
+ninguna aplica, y esa elección parece legítima. La documentación oficial define la
+[confianza](https://docs.typesafe.ai/confidence.md) de Choice y Score, y [recomienda](https://docs.typesafe.ai/concepts/how-to-build-with-system-one.md) elegir los umbrales trazando confianza frente a acierto con datos
 propios.
 
 **Verificación.**
@@ -112,7 +105,8 @@ contexto.
 - Todo contenido externo (estado, documentos, entradas de usuario) MUST tratarse como dato no
   confiable y nunca como instrucción.
 
-**Justificación.** El SDK registra los cuerpos en su nivel de log más detallado, y el contenido
+**Justificación.** El SDK registra los cuerpos, sin redactar, en su nivel de log más
+detallado ([*Usage*](https://docs.typesafe.ai/sdk/python/usage.md)), y el contenido
 adversarial es un modo de fallo conocido.
 
 **Verificación.**
@@ -166,23 +160,9 @@ de más. El propósito del proyecto es aprender y demostrar Jev: una feature sin
 la mitad de su objetivo.
 
 **Verificación.**
-- El preset de spec exige la persona y escenarios independientes por historia.
+- El preset de spec exige el perfil de usuario y escenarios independientes por historia.
 - `/speckit-analyze` termina sin historias huérfanas.
 - La spec se cierra solo con su lección (checklist de cierre).
-
-## Alcance y relación con otras capas
-
-Esta constitución recoge solo principios: qué debe cumplirse siempre y por qué. Cada principio
-se concreta en dos capas:
-
-- **presets propios**, que obligan a cada spec, plan y lista de tareas a tratar el tema;
-- **estándares**, que describen cómo se hace.
-
-El reparto, la trazabilidad y las convenciones están en la guía de gobernanza del repositorio
-(`docs/governance.md`).
-
-**Precedencia:** constitución > preset > estándar > `plan.md` de la feature. Una capa inferior
-MUST NOT contradecir a una superior.
 
 ## Flujo de desarrollo y puertas de calidad
 
@@ -200,6 +180,8 @@ MUST NOT contradecir a una superior.
 
 - **Autoridad:** esta constitución prevalece sobre cualquier otra práctica, guía o instrucción de
   agente del proyecto.
+- **Precedencia:** constitución > preset > estándar > `plan.md` de la feature. Una capa inferior
+  MUST NOT contradecir a una superior. El reparto entre capas está en `docs/governance.md`.
 - **Enmiendas:** se proponen por PR con la justificación y el impacto en presets y estándares. La
   aprobación humana es obligatoria; ningún agente ratifica ni enmienda por sí mismo.
 - **Versionado:** semver según la guía de gobernanza.
@@ -216,4 +198,4 @@ MUST NOT contradecir a una superior.
   cambio en la capa que corresponda.
 - **Cumplimiento:** toda revisión de PR comprueba los principios que afecta.
 
-**Version**: 0.3.0 (propuesta, borrador) | **Ratified**: TODO(RATIFICATION_DATE): se fija al ratificar (paso 5 HITL) | **Last Amended**: 2026-10-10
+**Version**: 0.3.0 | **Ratified**: 2026-10-11 | **Last Amended**: 2026-10-11

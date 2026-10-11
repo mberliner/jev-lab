@@ -18,7 +18,7 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 - **Cada spec (salvo la 000) debe ser un corte vertical hasta el usuario, de unas 4 historias de usuario.**
 
 **Base de la documentación oficial**
-- *Jaggedness* de jev-1.13: **13 limitaciones documentadas**, entre ellas conteo, representaciones numéricas, matemáticas sobre Score, instrucciones contradictorias y sesgo por orden de opciones.
+- [*Jaggedness* de jev-1.13](https://docs.typesafe.ai/model-jaggedness/jev-1.13.md): **9 modos de fallo documentados** (12 apartados, contando los 3 de «Math and Numbers»), entre ellos conteo, representaciones numéricas, matemáticas sobre Score, instrucciones contradictorias y sesgo por orden de opciones.
 - Fórmula oficial de confianza:
   - Choice: `(p_max − 1/n)/(1 − 1/n)`;
   - Score: basada en la distancia ponderada a la moda;
@@ -193,8 +193,8 @@ Esta lista es **un borrador de entrada**; la constitución definitiva sale del p
 
 ### Depuración HITL de la constitución (parte de la spec 000, antes de cualquier otra spec)
 
-> **Punto de reanudación (2026-10-11).** Borrador en `.specify/memory/constitution.md`: v0.3.0
-> propuesta, 7 principios, sin commit de ratificación.
+> **Punto de reanudación (2026-10-11).** Constitución en `.specify/memory/constitution.md`: v0.3.0
+> ratificada el 2026-10-11, 7 principios.
 >   El historial del proceso vive aquí; la constitución solo lleva un *Sync Impact Report* mínimo.
 > - [hecho] Paso 1: borrador (12 principios consolidados en 7):
 >   - I <- juzga/decide + preguntas atómicas; II <- escape + confianza por riesgo; III sin cambios;
@@ -233,7 +233,13 @@ Esta lista es **un borrador de entrada**; la constitución definitiva sale del p
 >   - Escenario nuevo G3: VI admite datos externos con licencia válida, citados, si aportan
 >     claridad, velocidad o simplicidad. Código y textos siguen siendo originales.
 >   - Además: redacción en positivo salvo prohibiciones claras (`docs/standards/writing.md` §3).
-> - **[siguiente] Paso 5:** ratificación. Pendiente: 6.
+> - [hecho] Paso 5: ratificación de la v0.3.0 (2026-10-11). Fuentes de TypeSafe verificadas y enlazadas.
+>   Antes de ratificar, se ajusta a la plantilla de Spec Kit: se elimina «Alcance y relación con
+>   otras capas» (duplicaba `docs/governance.md`) y la precedencia pasa a *Governance*; se enlaza
+>   el RFC 2119; se borra el *Sync Impact Report*, que según Spec Kit es temporal y no se
+>   versiona.
+> - [hecho] Paso 6: el gobierno de enmiendas ya está escrito en la sección *Governance*.
+> - **[siguiente]** HITL de mecanismos de arquitectura y definiciones globales.
 
 Buenas prácticas que se aplican:
 - Plantilla de Spec Kit: versión semántica, fechas de ratificación y enmienda, *Sync Impact Report* y la puerta *Constitution Check* de `plan-template`.
@@ -260,7 +266,7 @@ Buenas prácticas que se aplican:
 5. **Ratificación.** El humano aprueba explícitamente:
    - versión inicial `0.3.0` como máximo (nunca `1.0.0` de entrada; ver *Versionado de documentos* en `docs/governance.md`), con fecha de ratificación;
    - *Sync Impact Report* revisado, con plantillas `plan`, `spec` y `tasks` alineadas (`/speckit-analyze` sin conflictos);
-   - commit propio `docs(constitution): ratify v0.3.0`.
+   - commit propio `docs(constitution): ratificar v0.3.0`.
 6. **Gobierno de enmiendas** (queda escrito en la propia constitución):
    - cambio por PR con justificación;
    - semver: MAJOR si se elimina o redefine un principio, MINOR si se añade, PATCH si se aclara;
