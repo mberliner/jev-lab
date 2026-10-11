@@ -1,10 +1,8 @@
 # jev-lab: instrucciones para agentes
 
 Fuente única de instrucciones para cualquier agente de código (Claude Code, Antigravity u otro).
-`CLAUDE.md` solo importa este archivo. Todo lo necesario para trabajar está en el repo: no hay que
+Todo lo necesario para trabajar está en el repo: no hay que
 depender de memorias, rutas ni configuración externas.
-
-> Estado: **arranque (spec 000 en curso)**. Este archivo se completa durante la spec 000.
 
 ## Qué es
 
@@ -18,6 +16,7 @@ Spec-Driven Development (Spec Kit).
 | --- | --- |
 | `docs/roadmap.md` | **Plan vigente**: arquitectura, specs 000–007 y verificación |
 | `.specify/memory/constitution.md` | Principios no negociables (en ratificación, proceso HITL) |
+| `docs/governance.md` | Dónde vive cada regla común: constitución → presets propios → estándares |
 | `specs/NNN-*/` | Artefactos SDD de cada feature |
 | `docs/setup.md` | Puesta en marcha en Linux y Windows (se crea en la spec 000) |
 

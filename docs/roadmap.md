@@ -241,18 +241,14 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
 - `docs/setup.md` con la puesta en marcha en Linux y Windows: uv, Python 3.13, el enlace `python3.exe` en Windows (`New-Item -ItemType HardLink -Path "$dir\python3.exe" -Target "$dir\python.exe"`), Git Bash y los dos agentes.
 - `.env.example` con `TYPESAFE_API_KEY` y `AZURE_OPENAI_{ENDPOINT,API_KEY,DEPLOYMENT,API_VERSION}`.
 - **Espacio reservado: mecanismos de arquitectura y definiciones globales (según Spec Kit).** Se decide en HITL, después de ratificar la constitución y antes de la spec 001. El objetivo es fijar **dónde viven y cómo se aplican** las decisiones que afectan a todas las specs, para que cada `plan.md` las herede en vez de redefinirlas.
-  - *Capas de Spec Kit disponibles:*
-    - `.specify/memory/constitution.md`: principios, el "qué es innegociable";
-    - `.specify/memory/` con documentos globales adicionales, por ejemplo `architecture.md` (hexagonal, regla de dependencias, puertos), `tech-stack.md` (versiones fijadas), `glossary.md` (DecisionSpec, banda, escape…), `testing-strategy.md` y `security.md`;
-    - **plantillas personalizadas** en `.specify/templates/` (`plan-template.md` con *Technical Context* que referencia esos documentos y *Constitution Check* ampliado; `spec-template.md` con personas fijas; `tasks-template.md` con TDD), o mejor como **preset/extensión** de Spec Kit (`specify extension add`) para que sobreviva a `specify integration upgrade`;
-    - **ADRs** (`docs/adr/NNNN-*.md`, formato MADR) para decisiones con alternativas;
-    - `research.md` y `data-model.md` por feature, solo para lo local.
-  - *Preguntas a resolver (HITL):*
-    1. ¿Documentos globales en `.specify/memory/` o ADRs, o ambos con reparto claro?
-    2. ¿Plantillas editadas directamente o mediante preset o extensión versionada?
-    3. ¿Cómo se propaga un cambio global a specs ya cerradas (re-analyze, retro)?
-    4. ¿Qué puerta automática lo verifica (`/speckit-analyze`, checklist `/speckit-checklist` de arquitectura, `import-linter`)?
-  - *Resultado esperado:* `architecture.md` + ADR-0001 (hexagonal) + ADR-0002 (paridad Claude/agy) + plantillas o preset ajustados, aprobados por el humano.
+  - **Decisión (2026-10-10): tres capas por tema, documentadas en [`docs/governance.md`](governance.md).**
+    - **Constitución** (`.specify/memory/constitution.md`): qué debe cumplirse siempre y por qué.
+    - **Presets propios** (`presets/jevlab-<tema>/`, instalados con `specify preset add --dev`): qué debe contestar cada spec, plan o lista de tareas. Se componen con `append` sobre las plantillas base, uno por tema. No se usan presets del catálogo ni `templates/overrides/`.
+    - **Estándares** (`docs/standards/<tema>.md`): cómo se hace, con detalle y ejemplos.
+    - **ADRs** (`docs/adr/`, MADR) para decisiones con alternativas; no son una capa de reglas.
+    - Precedencia: constitución > preset > estándar > `plan.md`. Cada regla se rastrea hasta un principio.
+  - *Temas iniciales:* arquitectura (`jevlab-arch`), UX (`jevlab-ux`) y decisión Jev (`jevlab-decision`). Testing y seguridad, por decidir.
+  - *Pendiente (HITL, tras ratificar la constitución):* contenido de cada preset y estándar; ADR-0001 (hexagonal) y ADR-0002 (paridad Claude/agy); comprobar `specify preset add --dev` y PyYAML en Windows.
 - **Aceptación:**
   - constitución v1.0.0 ratificada por el humano tras los 6 pasos HITL;
   - mecanismos de definiciones globales acordados y aplicados en las plantillas;

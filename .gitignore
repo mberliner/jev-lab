@@ -18,3 +18,6 @@ htmlcov/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Cachés de Spec Kit (catálogos de presets/extensiones descargados)
+.specify/**/.cache/
