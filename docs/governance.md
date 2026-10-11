@@ -29,7 +29,7 @@ Estándar      (tema)  ─ CÓMO se hace, con detalle y ejemplos
 | **Granularidad** | Un principio por idea, sin tecnología concreta | Una sección por plantilla afectada | Todo el detalle necesario |
 | **Ubicación** | `.specify/memory/constitution.md` | `presets/jevlab-<tema>/` (fuente) → `.specify/presets/` (instalado) | `docs/standards/<tema>.md` |
 | **Ritmo de cambio** | Raro; enmienda formal | Moderado; al aprender de una spec | Frecuente; evoluciona con el código |
-| **Versionado** | Semver de la constitución | `version` del `preset.yml` | Historial de git |
+| **Versionado** | Semver de la constitución (ver *Versionado de documentos*) | `version` del `preset.yml` (ídem) | Historial de git |
 | **Aprobación** | Humana obligatoria (HITL) | Humana, por PR | PR normal |
 | **Cómo se hace cumplir** | Puerta *Constitution Check* del plan; `/speckit-analyze` | El agente no puede generar el artefacto sin la sección; checklist del tema | Revisión de código, lint, tests, `import-linter` |
 
@@ -170,10 +170,27 @@ Una retro breve al cerrar cada spec responde tres preguntas: ¿algún principio 
 alguno?, ¿alguna sección de preset se rellenó por rellenar? Cada respuesta "sí" abre un cambio en
 la capa que corresponda.
 
+### Versionado de documentos
+
+Se aplica a todo documento o artefacto del proyecto versionado con semver: constitución, presets,
+estándares versionados y definiciones de decisión.
+
+- **Versión inicial: `0.3.0` como máximo.** Nunca se empieza en `1.0.0`. Los valores `0.1.0` y
+  `0.2.0` sirven para borradores tempranos.
+- **Fase `0.x` (maduración):** un cambio incompatible (eliminar o redefinir algo) sube MINOR; el
+  resto sube PATCH. Ratificar un documento no lo saca de `0.x`.
+- **`1.0.0` (estable):** solo por decisión humana explícita, cuando el documento ha superado al
+  menos una spec completa sin cambios incompatibles. A partir de ahí rigen las reglas semver
+  normales (MAJOR/MINOR/PATCH).
+
 ## 8. Antipatrones
 
 - **Constitución como manual:** principios con nombres de librerías, versiones o rutas. Eso va en
-  estándares o en `AGENTS.md`.
+  estándares o en `AGENTS.md`. Excepción acotada: los **enunciados** de los principios no nombran
+  rutas ni herramientas, pero las secciones de proceso (alcance, flujo, gobernanza) y las líneas
+  de *Verificación* sí pueden nombrar las herramientas del proceso SDD, como esta guía,
+  `plan.md`, *Constitution Check*, *Complexity Tracking* o `/speckit-analyze`. Si cambian, la
+  enmienda es PATCH.
 - **Preset legislador:** un fragmento de plantilla que introduce una regla que no está en la
   constitución.
 - **Estándar duplicado en el preset:** el detalle se copia en la plantilla y deja de coincidir con

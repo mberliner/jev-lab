@@ -193,6 +193,26 @@ Esta lista es **un borrador de entrada**; la constitución definitiva sale del p
 
 ### Depuración HITL de la constitución (parte de la spec 000, antes de cualquier otra spec)
 
+> **Punto de reanudación (2026-10-11).** Borrador en `.specify/memory/constitution.md`: v0.3.0
+> propuesta, 7 principios, sin commit de ratificación.
+> - ✅ Paso 1: borrador (12 principios consolidados en 7).
+> - ✅ Paso 2: revisión. Todos se mantienen; en IV, escribir el test antes pasa a SHOULD; las
+>   rutas se permiten solo fuera de los enunciados.
+> - ⏳ **Paso 3: siguiente.** Escenarios propuestos, pendientes de validación humana:
+>
+>   | # | Escenario | Principio | Veredicto propuesto |
+>   | --- | --- | --- | --- |
+>   | 1 | 001 US4 con cassettes, sin red | IV | Pasa, si cada cassette registra modelo y fecha |
+>   | 2 | Choice de 3 colas sin `other` | II | Se bloquea (falla la validación) |
+>   | 3 | Umbral fijado en 002, antes de la evaluación de 004 | II | Pasa (datos = SHOULD); se marca como provisional |
+>   | 4 | Benchmark de 003 con precio de Jev sin confirmar | IV | Se bloquea; «no disponible» hasta tener fuente y fecha |
+>   | 5 | Clon nuevo en Windows ejecuta `/speckit-specify` | VI | Pasa si `docs/setup.md` cubre PyYAML (hueco conocido) |
+>   | 6 | 006: Azure genera una suma de importes | I | Se bloquea; el importe se calcula en código |
+>   | 7 | Hook de un agente concreto versionado en el repo | VI | Ambiguo. Propuesta: prohibido en el repo; la configuración personal queda libre (PATCH en VI) |
+>   | 8 | ¿La spec 000 necesita lección? | VII | Ambiguo. Propuesta: sí, sobre el método SDD y el entorno (aclarar el texto) |
+>
+> - Pendientes: pasos 4 (segunda opinión con el otro agente), 5 (ratificación) y 6.
+
 Buenas prácticas que se aplican:
 - Plantilla de Spec Kit: versión semántica, fechas de ratificación y enmienda, *Sync Impact Report* y la puerta *Constitution Check* de `plan-template`.
 - Principios declarativos y verificables.
@@ -207,7 +227,7 @@ Buenas prácticas que se aplican:
    - sin ambigüedad ("rápido" o "seguro" sin métrica no valen);
    - sin solapes ni contradicciones con otros principios;
    - no prescribe detalles de implementación que corresponden a `plan.md`;
-   - conjunto pequeño (≤ 12) y priorizado.
+   - conjunto pequeño (≤ 8; principios muy relacionados se fusionan) y priorizado.
 3. **Prueba con escenarios (*red-team* de la constitución).** Se contrastan los principios con 4–6 situaciones reales del proyecto y el humano valida cada veredicto. Por ejemplo:
    - ¿la US4 de 001 (cassettes) cumple "probar antes de afirmar"?
    - ¿un Choice de 3 opciones sin `other` se bloquea?
@@ -216,9 +236,9 @@ Buenas prácticas que se aplican:
    Se ajusta lo que bloquee de más o deje pasar algo indebido.
 4. **Segunda opinión con el otro agente.** Si se redactó en Claude Code, se revisa en Antigravity, o al revés, con el mismo checklist. Las discrepancias las resuelve el humano. Así se valida también la paridad entre agentes.
 5. **Ratificación.** El humano aprueba explícitamente:
-   - versión `1.0.0` con fecha de ratificación;
+   - versión inicial `0.3.0` como máximo (nunca `1.0.0` de entrada; ver *Versionado de documentos* en `docs/governance.md`), con fecha de ratificación;
    - *Sync Impact Report* revisado, con plantillas `plan`, `spec` y `tasks` alineadas (`/speckit-analyze` sin conflictos);
-   - commit propio `docs(constitution): ratify v1.0.0`.
+   - commit propio `docs(constitution): ratify v0.3.0`.
 6. **Gobierno de enmiendas** (queda escrito en la propia constitución):
    - cambio por PR con justificación;
    - semver: MAJOR si se elimina o redefine un principio, MINOR si se añade, PATCH si se aclara;
@@ -250,7 +270,7 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
   - *Temas iniciales:* arquitectura (`jevlab-arch`), UX (`jevlab-ux`) y decisión Jev (`jevlab-decision`). Testing y seguridad, por decidir.
   - *Pendiente (HITL, tras ratificar la constitución):* contenido de cada preset y estándar; ADR-0001 (hexagonal) y ADR-0002 (paridad Claude/agy); comprobar `specify preset add --dev` y PyYAML en Windows.
 - **Aceptación:**
-  - constitución v1.0.0 ratificada por el humano tras los 6 pasos HITL;
+  - constitución v0.3.0 ratificada por el humano tras los 6 pasos HITL;
   - mecanismos de definiciones globales acordados y aplicados en las plantillas;
   - pytest y CI en verde;
   - pre-commit activo.
@@ -330,7 +350,7 @@ En cada spec se recorre `/speckit.specify → clarify → plan → tasks → ana
 1. ✅ Hecho: `specify check` (CLI 1.1.4; Claude Code y Antigravity detectados; `--script py` disponible).
 2. ✅ Hecho (pendiente de commit): `mkdir jev-lab && cd jev-lab && git init`, crear primero `.gitattributes` y luego `specify init . --integration claude --script py && specify integration install agy --force && specify integration status`.
 3. ✅ `AGENTS.md` mínimo de arranque y `CLAUDE.md` (`@AGENTS.md`), para que cualquier agente abierto en `jev-lab/` tenga el contexto sin memorias externas. Se completan en la spec 000.
-4. Abrir el agente **dentro de `jev-lab/`** (Claude Code: `claude`; Antigravity: abrir la carpeta) y ejecutar `/speckit-constitution` con el borrador y luego depuración HITL (pasos 1–6) hasta ratificar la v1.0.0. Luego HITL de mecanismos de arquitectura y definiciones globales. Después, el resto de la spec 000.
+4. Abrir el agente **dentro de `jev-lab/`** (Claude Code: `claude`; Antigravity: abrir la carpeta) y ejecutar `/speckit-constitution` con el borrador y luego depuración HITL (pasos 1–6) hasta ratificar la v0.3.0. Luego HITL de mecanismos de arquitectura y definiciones globales. Después, el resto de la spec 000.
 
 ---
 
