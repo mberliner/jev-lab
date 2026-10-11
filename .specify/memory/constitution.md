@@ -1,42 +1,15 @@
 <!--
-Sync Impact Report (borrador HITL, paso 4 pendiente; se elimina antes del commit de ratificación)
-- Versión: plantilla sin rellenar -> 0.3.0 (propuesta, NO ratificada; regla de versión inicial
-  en docs/governance.md, «Versionado de documentos»)
-- Principios: 12 del borrador -> 7 consolidados (decisión humana, 2026-10-10)
-  · I   El modelo juzga, el código decide         <- juzga/decide + preguntas atómicas
-  · II  Automatizar solo con escape y confianza   <- opción de escape + confianza por riesgo
-  · III Una definición de decisión, aislada del proveedor
-  · IV  Evidencia antes que afirmación            <- verificación aislada + honestidad
-  · V   Seguridad y privacidad por defecto
-  · VI  Proyecto autocontenido, neutral y original <- entorno reproducible + contenido original
-  · VII Cortes verticales que enseñan             <- cortes verticales + lección
-- Secciones añadidas: Alcance y relación con otras capas; Flujo de desarrollo y puertas de calidad
-- Secciones eliminadas: ninguna
-- Detalle movido fuera de la constitución (destino propuesto):
-  · rutas entre backticks, estado mínimo -> estándar decision-design
-  · umbrales de cobertura, bloqueo de red en tests -> estándar testing
-  · .env, escáner de secretos concreto -> estándar security
-  · fuente única de instrucciones, tareas, pre-commit, matriz Linux/Windows -> estándar/AGENTS.md
-  · «unas 4 historias» -> preset de spec
-- Paso 2 HITL (revisión principio a principio) completado:
-  · I, II, III, V, VI, VII: se mantienen
-  · IV: escribir el test antes pasa de MUST a SHOULD
-  · Rutas y herramientas SDD permitidas solo fuera de los enunciados (docs/governance.md §8)
-- Paso 3 HITL (escenarios) en curso:
-  · Escenarios 1–6: veredictos aceptados sin cambios de texto
-  · Escenario 7: VI añade paridad neutral de hooks/comandos entre agentes (lógica en tareas del
-    repo; configuración equivalente en todos los agentes o en ninguno)
-  · Escenario 8: VII aclara que la excepción de cimientos cubre solo el corte vertical; la
-    spec 000 lleva lección (método SDD y puesta en marcha)
-- Paso 3 HITL completado. Siguiente: paso 4 (segunda opinión con el otro agente).
-- Plantillas (.specify/templates/*): no modificadas; se alinearán mediante presets propios.
-- TODO(RATIFICATION_DATE): se fija al ratificar (paso 5 HITL).
-- TODO(FUENTES): confirmar enlaces exactos a la documentación oficial de TypeSafe citada.
+Sync Impact Report
+- Versión: plantilla sin rellenar -> 0.3.0 (propuesta, no ratificada)
+- Historial del proceso HITL: docs/roadmap.md, «Depuración HITL de la constitución»
+- Plantillas (.specify/templates/*): sin cambios; se alinean mediante presets propios
+- TODO(RATIFICATION_DATE): se fija al ratificar (paso 5 HITL)
+- TODO(FUENTES): confirmar enlaces exactos a la documentación oficial de TypeSafe citada
 -->
 
 # Constitución de jev-lab
 
-> **Estado: BORRADOR (proceso HITL, paso 4).** No es vinculante hasta su ratificación.
+> **Estado: BORRADOR (proceso HITL, paso 5).** No es vinculante hasta su ratificación.
 > Las palabras clave MUST, MUST NOT, SHOULD y SHOULD NOT se interpretan según RFC 2119.
 
 ## Core Principles
@@ -47,8 +20,8 @@ Sync Impact Report (borrador HITL, paso 4 pendiente; se elimina antes del commit
 - Jev MUST usarse solo para juicios sobre contenido: clasificar, puntuar o verificar.
 - La aritmética, las fechas, los conteos, los permisos, la composición de resultados y cualquier
   invariante de seguridad MUST resolverse en código determinista.
-- Cada pregunta al modelo MUST evaluar una sola idea, formulada de forma literal y sin negaciones
-  ni indirección.
+- Cada pregunta al modelo MUST evaluar una sola idea, formulada de forma literal,
+  afirmativa y directa.
 - El estado enviado al modelo SHOULD ser el mínimo necesario para responder.
 
 **Justificación.** Entre las limitaciones documentadas de jev-1.13 (*Jaggedness*) están el conteo,
@@ -66,8 +39,8 @@ el código, y recomienda preguntas atómicas con estado mínimo.
 
 **Enunciado.**
 - Toda Choice MUST incluir una opción de escape (`other` o `none`).
-- Una respuesta de escape MUST NOT ejecutarse automáticamente: se envía a revisión o se resuelve
-  como abstención explícita.
+- Una respuesta de escape, o la falta de una respuesta válida, MUST enviarse a revisión
+  o resolverse como abstención explícita.
 - Toda acción automatizable MUST condicionarse a la confianza de la respuesta, además de a su
   valor.
 - Los umbrales de confianza MUST ser más exigentes cuanto mayor sea el riesgo de la acción y MUST
@@ -82,10 +55,10 @@ propios.
 **Verificación.**
 - Una definición de decisión sin escape MUST fallar su validación (test).
 - Tests de propiedades:
-  - el escape nunca produce una acción automática;
+  - el escape siempre termina en revisión o abstención;
   - las bandas de confianza son monótonas;
   - nada por debajo del umbral se automatiza.
-- Cada cambio de umbral referencia la evaluación que lo justifica.
+- Cada umbral referencia la evaluación que lo justifica o se marca como provisional.
 
 ### III. Una definición de decisión, aislada del proveedor
 
@@ -115,8 +88,8 @@ baseline y modo sin conexión.
 - Toda afirmación sobre calidad, coste o rendimiento MUST apoyarse en una ejecución reproducible e
   indicar los datos y la versión de modelo usados.
 - Los datos sintéticos MUST etiquetarse como tales.
-- Lo desconocido MUST mostrarse como «no disponible», no estimarse.
-- Las comparaciones MUST NOT declarar un ganador fuera de las condiciones medidas.
+- Lo desconocido MUST mostrarse como «no disponible».
+- Las conclusiones de una comparación MUST limitarse a las condiciones medidas.
 
 **Justificación.** Las conclusiones de un laboratorio son su producto: solo valen si cualquiera
 puede reproducirlas de forma rápida y gratuita, y si ninguna cifra está inventada ni sacada de
@@ -128,6 +101,7 @@ contexto.
 - En el orden de tareas, los tests van antes que la implementación salvo que el plan justifique
   lo contrario.
 - Los informes se generan a partir de los datos e incluyen su procedencia.
+- Las pruebas contra servicios reales declaran su marca y su tope de coste (revisión de tareas).
 - Pregunta de revisión: «¿cada cifra tiene una ejecución o una fuente que la produzca?».
 
 ### V. Seguridad y privacidad por defecto
@@ -149,16 +123,17 @@ adversarial es un modo de fallo conocido.
 ### VI. Proyecto autocontenido, neutral y original
 
 **Enunciado.**
-- El repositorio MUST arrancar y funcionar a partir de su propio contenido, sin depender de
-  memorias, rutas ni configuración externas.
+- El repositorio MUST arrancar y funcionar solo con su propio contenido.
 - Todo flujo de trabajo MUST funcionar igual en Linux y en Windows y con cualquier agente de
   código soportado, con una única fuente de instrucciones para agentes.
 - Las puertas de calidad MUST ser independientes del agente.
 - Los hooks, comandos y herramientas MUST implementarse de forma neutral: su lógica vive en
   tareas del repositorio, y la configuración propia de cada agente solo invoca esas tareas y
-  MUST existir de forma equivalente para todos los agentes soportados. Si un agente no admite el
-  mecanismo, no se usa en ninguno.
-- El código, los escenarios, los datos y los textos MUST ser originales.
+  MUST existir de forma equivalente para todos los agentes soportados. Un mecanismo se usa solo si
+  todos los agentes soportados lo admiten.
+- El código y los textos MUST ser originales.
+- Los escenarios y los datos SHOULD ser propios. MAY incorporarse datos externos si su licencia lo
+  permite, se citan como corresponde y aportan claridad, velocidad o simplicidad.
 - Las únicas referencias externas MUST ser la documentación oficial de TypeSafe y otras fuentes
   primarias, citadas donde se usan.
 
@@ -173,18 +148,18 @@ afirmaciones contrastables en su fuente.
 - Pregunta de revisión: «¿este hook o comando existe con el mismo efecto para todos los agentes
   y llama solo a tareas del repositorio?».
 - Prueba de clon limpio en la spec de cimientos.
-- Pregunta de revisión: «¿hay material sin cita o derivado de una fuente no primaria?».
+- Pregunta de revisión: «¿hay material sin cita, derivado de una fuente no primaria o con una
+  licencia que no permite incorporarlo?».
 
 ### VII. Cortes verticales que enseñan
 
 **Enunciado.**
-- Cada feature, salvo la de cimientos, MUST entregar a una persona concreta del proyecto una
-  capacidad ejecutable de extremo a extremo.
+- Cada feature, salvo la de cimientos, MUST entregar a uno de los perfiles de usuario del
+  proyecto una capacidad ejecutable de extremo a extremo.
 - Cada historia MUST poder probarse y demostrarse por separado.
-- Solo se construye lo que las historias necesitan (YAGNI).
+- El diseño SHOULD limitarse a lo que las historias necesitan (YAGNI).
 - Cada feature, incluida la de cimientos, MUST incluir una lección que explique qué se aprende,
-  cómo se ejecuta y qué puede fallar, con su mitigación. En la de cimientos, la lección trata el
-  método de desarrollo y la puesta en marcha del entorno.
+  cómo se ejecuta y qué puede fallar, con su mitigación.
 
 **Justificación.** Las capas sin un usuario que las use no demuestran nada y tienden a diseñarse
 de más. El propósito del proyecto es aprender y demostrar Jev: una feature sin lección cumple solo
@@ -193,12 +168,12 @@ la mitad de su objetivo.
 **Verificación.**
 - El preset de spec exige la persona y escenarios independientes por historia.
 - `/speckit-analyze` termina sin historias huérfanas.
-- La spec no se cierra sin su lección (checklist de cierre).
+- La spec se cierra solo con su lección (checklist de cierre).
 
 ## Alcance y relación con otras capas
 
-Esta constitución recoge solo principios: qué debe cumplirse siempre y por qué. No nombra
-tecnologías, versiones ni estructura de documentos. Cada principio se concreta en dos capas:
+Esta constitución recoge solo principios: qué debe cumplirse siempre y por qué. Cada principio
+se concreta en dos capas:
 
 - **presets propios**, que obligan a cada spec, plan y lista de tareas a tratar el tema;
 - **estándares**, que describen cómo se hace.

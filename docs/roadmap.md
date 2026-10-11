@@ -13,7 +13,7 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 - Stack: **Python + SDK oficial `typesafe-sdk`** (uv).
 - Claves: **TypeSafe + Azure OpenAI** (el baseline comparativo es Azure).
 - **Proyecto autocontenido y agnóstico:** el repo arranca y funciona aislado, sin depender de rutas, memorias ni configuración externas. Todo lo fundamental (plan, constitución, instrucciones para agentes, puesta en marcha) vive en el repo. Este documento, `docs/roadmap.md`, es el plan vigente.
-- **Contenido original:** código, escenarios, datos y textos son propios. Solo se citan la documentación oficial de TypeSafe y otras fuentes primarias.
+- **Contenido original:** código y textos son propios. Escenarios y datos, preferentemente propios; se admiten datos externos con licencia válida, citados, si aportan claridad, velocidad o simplicidad. Solo se citan la documentación oficial de TypeSafe y otras fuentes primarias.
 - Spec Kit: ya instalado con `uv tool install specify-cli`.
 - **Cada spec (salvo la 000) debe ser un corte vertical hasta el usuario, de unas 4 historias de usuario.**
 
@@ -195,7 +195,18 @@ Esta lista es **un borrador de entrada**; la constitución definitiva sale del p
 
 > **Punto de reanudación (2026-10-11).** Borrador en `.specify/memory/constitution.md`: v0.3.0
 > propuesta, 7 principios, sin commit de ratificación.
-> - [hecho] Paso 1: borrador (12 principios consolidados en 7).
+>   El historial del proceso vive aquí; la constitución solo lleva un *Sync Impact Report* mínimo.
+> - [hecho] Paso 1: borrador (12 principios consolidados en 7):
+>   - I <- juzga/decide + preguntas atómicas; II <- escape + confianza por riesgo; III sin cambios;
+>     IV <- verificación aislada + honestidad; V sin cambios; VI <- entorno reproducible + contenido
+>     original; VII <- cortes verticales + lección.
+>   - Secciones añadidas: «Alcance y relación con otras capas» y «Flujo de desarrollo y puertas de
+>     calidad».
+>   - Detalle sacado de la constitución, con su destino: rutas entre backticks y estado mínimo ->
+>     estándar `decision-design`; umbrales de cobertura y bloqueo de red -> estándar `testing`;
+>     `.env` y escáner de secretos -> estándar `security`; fuente única de instrucciones, tareas,
+>     pre-commit y matriz Linux/Windows -> estándar o `AGENTS.md`; «unas 4 historias» -> preset de
+>     spec.
 > - [hecho] Paso 2: revisión. Todos se mantienen; en IV, escribir el test antes pasa a SHOULD; las
 >   rutas se permiten solo fuera de los enunciados.
 > - [hecho] Paso 3: escenarios validados (1–6 sin cambios de texto; 7 añade una regla a VI; 8 aclara
@@ -212,7 +223,17 @@ Esta lista es **un borrador de entrada**; la constitución definitiva sale del p
 >   | 7 | Hook de un agente concreto versionado en el repo | VI | Decidido: permitido solo con implementación neutral, con la lógica en tareas del repo y configuración equivalente en todos los agentes (o en ninguno). Añadido a VI |
 >   | 8 | ¿La spec 000 necesita lección? | VII | Decidido: sí, sobre el método SDD y el entorno. VII aclara que la excepción de cimientos solo cubre el corte vertical |
 >
-> - **[siguiente] Paso 4** (segunda opinión con el otro agente). Pendientes: 5 (ratificación) y 6.
+> - [hecho] Paso 4: segunda opinión de Antigravity (11 hallazgos), con filtro de simplicidad:
+>   - Aceptados con cambio mínimo: II, escape o falta de respuesta válida va a revisión o
+>     abstención; II, cada umbral está justificado o marcado como provisional; IV, tope de coste en
+>     la verificación; VII, «perfiles de usuario»; VII, YAGNI como SHOULD; VII, sin el temario de
+>     la lección 000; Alcance, sin la frase «no nombra tecnologías».
+>   - Rechazados por sobrerregulación: logs de depuración en local; «referencias externas»;
+>     verificar el estado mínimo (va al estándar `decision-design`); test de consumidores futuros.
+>   - Escenario nuevo G3: VI admite datos externos con licencia válida, citados, si aportan
+>     claridad, velocidad o simplicidad. Código y textos siguen siendo originales.
+>   - Además: redacción en positivo salvo prohibiciones claras (`docs/standards/writing.md` §3).
+> - **[siguiente] Paso 5:** ratificación. Pendiente: 6.
 
 Buenas prácticas que se aplican:
 - Plantilla de Spec Kit: versión semántica, fechas de ratificación y enmienda, *Sync Impact Report* y la puerta *Constitution Check* de `plan-template`.

@@ -42,6 +42,27 @@ Sin embargo, una consola con una página de códigos distinta de UTF-8 (conhost 
 
 **Fuera de alcance.** La salida de la CLI por terminal se rige por el estándar `cli-ux.md`.
 
+## 3. Redacción en positivo
+
+**Regla.** Las reglas y las instrucciones SHOULD redactarse en positivo: qué hay que hacer, no
+qué hay que evitar. La forma negativa (MUST NOT, «nunca») se reserva para prohibiciones claras.
+
+**Motivo.** Una frase en positivo dice directamente qué hacer y se puede comprobar. Una negación
+obliga a deducir la alternativa y deja huecos.
+
+**Correcto:**
+
+```text
+El diseño SHOULD limitarse a lo que las historias necesitan.
+Los secretos MUST NOT entrar en el repositorio.   (prohibición clara)
+```
+
+**Incorrecto:**
+
+```text
+El diseño SHOULD NOT incluir nada que las historias no necesiten.
+```
+
 ## Excepciones
 
 Los archivos generados por Spec Kit y no editados por el proyecto (`.specify/templates/`,
@@ -54,4 +75,6 @@ los presets propios, no editando esos archivos a mano.
 - **Automática:** un script del repo, ejecutado en pre-commit y en CI, rechaza los emojis y
   pictogramas en `*.md` fuera de las excepciones, y los caracteres de caja y flechas fuera de los
   bloques de código. Se implementa en la spec 000.
-- **Revisión:** «¿hay algún símbolo que debería ser una palabra?».
+- **Revisión:** «¿hay algún símbolo que debería ser una palabra?» y «¿hay alguna regla en
+  negativo que no sea una prohibición clara?». La redacción en positivo no se comprueba de forma
+  automática.

@@ -45,7 +45,8 @@ Spec-Driven Development (Spec Kit).
 - Cada Choice incluye una opción de escape (`other`/`none`).
 - Toda acción automatizable pasa por la confianza, con umbrales por riesgo.
 - Secretos solo en `.env` (nunca en el repo); logs sin bodies ni datos personales.
-- Contenido original; solo se citan la documentación oficial de TypeSafe y fuentes primarias.
+- Código y textos originales; datos externos solo con licencia válida y citados. Solo se citan la
+  documentación oficial de TypeSafe y fuentes primarias.
 - Hooks y comandos solo con implementación neutral: la lógica va en tareas del repo y existe igual
   para todos los agentes, o no se usa. Las puertas de calidad son pre-commit y CI.
 - Documentación sin emojis ni pictogramas; caracteres de caja y flechas solo en bloques de código
