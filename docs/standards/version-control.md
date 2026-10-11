@@ -17,8 +17,8 @@ cuerpo opcional
 pies opcionales
 ```
 
-- **Resumen:** en español, en imperativo o nominal, sin punto final y de unos 72 caracteres como
-  máximo.
+- **Resumen:** en español, en imperativo o nominal y sin punto final. Su longitud SHOULD no pasar
+  de unos 72 caracteres; es una recomendación, no se rechaza un commit por superarla.
 - **Tipos:** `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `build`, `ci`, `chore`.
 - **Ámbito** (opcional): la zona afectada, por ejemplo `constitution`, `standards`, `spec-001`,
   `domain`, `cli` o `api`.
@@ -55,5 +55,6 @@ al historial y lo hace depender del agente que se usó.
 ## Verificación
 
 - **Automática:** un hook `commit-msg` en pre-commit valida las dos reglas: el formato de
-  Conventional Commits y la ausencia de pies de atribución. Se implementa en la spec 000.
+  Conventional Commits y la ausencia de pies de atribución. La longitud del resumen como mucho
+  genera un aviso, nunca un rechazo. Se implementa en la spec 000.
 - **Revisión:** «¿el mensaje dice qué cambia y por qué, sin firmas?».
