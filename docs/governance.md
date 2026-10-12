@@ -104,9 +104,12 @@ preset, estándar o ambos, según lo necesite.
 | Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática en 000 |
 | Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática en 000 |
 
-Esta tabla se actualiza al crear o retirar un tema. Las prioridades de instalación (`--priority`)
-se fijan al crear los presets. Un preset con `replace` corta la composición de esa plantilla: los
-presets que añadan algo a la misma plantilla necesitan más prioridad que él.
+Esta tabla se actualiza al crear o retirar un tema.
+
+**Prioridades de instalación (`--priority`; número menor = más precedencia):** `jevlab-spec` 10;
+`jevlab-decision`, `jevlab-arch` y `jevlab-security` entre 20 y 40 (se fijan al crearlos);
+`jevlab-testing` 90. Un preset con `replace` corta la composición de esa plantilla, así que va
+siempre con el número más alto para que los fragmentos `append` de los demás se compongan sobre él.
 
 No hay tema UX propio: la transparencia de la decisión (resultado, confianza, motivo de escalado,
 «no disponible», grabado o sintético) deriva de II y IV y vive en `jevlab-decision`; las
@@ -205,7 +208,7 @@ scripts de Spec Kit**. Si no está disponible (habitual en Windows), se puede ap
 | **Constitución** | `/speckit-constitution` -> *Sync Impact Report* -> aprobación humana -> commit `docs(constitution): …` con bump semver | Revisar los presets afectados (el *Sync Impact Report* los lista) |
 | **Preset** | PR con bump de `version` en `preset.yml` y reinstalación (`specify preset update` o `add --dev`) | Afecta a los artefactos que se generen a partir de ese momento |
 | **Estándar** | PR normal | Inmediata; el código existente se adapta en la siguiente spec que lo toque |
-| **Specs ya cerradas** | No se reescriben. En la retro de cierre de cada spec se anota si una regla nueva obliga a una tarea de adaptación | La tarea entra en una spec futura |
+| **Specs ya cerradas** | No se reescriben. En la retro de cierre de cada spec se anota si una regla nueva obliga a una tarea de adaptación | La tarea se anota en `docs/ideas.md` y entra en una spec futura |
 
 Una retro breve al cerrar cada spec responde tres preguntas: ¿algún principio estorbó?, ¿faltó
 alguno?, ¿alguna sección de preset se rellenó por rellenar? Cada respuesta "sí" abre un cambio en

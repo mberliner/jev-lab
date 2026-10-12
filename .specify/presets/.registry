@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "presets": {
+    "jevlab-spec": {
+      "version": "0.1.0",
+      "source": "local",
+      "manifest_hash": "sha256:fcdfa38f5029dfb471cf6e481dd3197ecd6d0f4897eb8b3687f09c914587dd2a",
+      "enabled": true,
+      "priority": 10,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T13:27:59.294790+00:00"
+    }
+  }
+}

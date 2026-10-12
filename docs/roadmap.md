@@ -15,7 +15,7 @@
   redacción en positivo) y `docs/standards/version-control.md` (Conventional Commits en español,
   sin firmas ni atribuciones de agentes).
 - Entorno de la máquina Linux comprobado: uv 0.9.18, Python 3.13.11 (uv), `python3` 3.8.10 con
-  PyYAML 5.3.1 y `specify` 1.1.4.
+  PyYAML 5.3.1 y `specify` 1.1.4.dev0.
 
 **En curso: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
 «Espacio reservado»).
@@ -27,10 +27,19 @@
    - `jevlab-testing` usa `replace` en la plantilla y el comando de tareas para eliminar «Tests are
      OPTIONAL» de Spec Kit, que contradice IV. Se complementa con una comprobación en CI.
      Procedimiento de actualización en `docs/governance.md` §5, «Actualizar Spec Kit».
-2. **[siguiente]** Contenido de cada preset y de sus estándares. Usar como entrada el «detalle
+2. **[en curso]** Contenido de cada preset y de sus estándares. Usar como entrada el «detalle
    sacado de la constitución» del paso 1 HITL (destinos `decision-design`, `testing` y `security`).
+   - [hecho, 2026-10-12] `jevlab-spec` v0.1.0 (prioridad 10): sección «Corte vertical y lección» en
+     spec y fase final de cierre en tasks. Lecciones en `docs/lessons/NNN-<nombre-descriptivo>.md`;
+     la retro va en el commit de cierre, sin archivo propio, y lo que genera, a `docs/ideas.md`.
+   - Regla: lo estable (constitución, presets, estándares, specs) no apunta a este roadmap; solo
+     el roadmap apunta a lo estable. Por eso los perfiles pasan a `docs/personas.md`. El resto del
+     contenido duradero de este documento se mueve a su sitio cuando toque cada pieza.
+   - **[siguiente]** `jevlab-testing`, `jevlab-decision`, `jevlab-arch` y `jevlab-security`.
 3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
-4. Comprobar `specify preset add --dev` en Linux y PyYAML en Windows. Verificar si
+4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
+   absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
+   `speckit_version: ">=1.1.4.dev0"`. Pendiente: PyYAML en Windows, y verificar si
    `specify integration upgrade` devuelve las skills a su versión base (pasos 2 y 3 de «Actualizar
    Spec Kit»).
 
@@ -90,10 +99,7 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 2. **Progresión de producción:** las técnicas de producción crecen de menor a mayor, spec a spec.
 3. **Tamaño:** 4 historias P1–P4 por spec, cada una probable y demostrable por sí sola, en el formato de `spec.md` de Spec Kit.
 
-**Usuarios (personas)**
-- **Aprendiz:** desarrollador que estudia Jev con la CLI y las lecciones.
-- **Operador:** atiende la cola de revisión y ajusta umbrales.
-- **Integrador:** consume la API desde otro sistema.
+**Usuarios (personas):** Aprendiz, Operador e Integrador, definidos en `docs/personas.md`.
 
 ---
 
@@ -210,7 +216,7 @@ jev-lab/
 │   ├── adapters/             # typesafe, cassette, azure, sqlite/postgres, yaml, cache, otel
 │   ├── entrypoints/{cli,api}/
 │   └── specs/<dominio>/*.yaml  # DecisionSpecs versionados
-├── lessons/NN-<tema>/README.md
+├── docs/lessons/NNN-<nombre-descriptivo>.md  # una lección por spec; el nombre dice lo que aporta
 ├── data/<dominio>/*.jsonl    # datasets propios o externos con licencia y cita + cassettes/
 ├── tests/{unit,contract,live}/
 ├── pyproject.toml (tareas poe) · .gitattributes · .importlinter · .github/workflows/ci.yml · Dockerfile · compose.yaml
@@ -332,7 +338,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - `specify init . --integration claude` + `specify integration install agy --force`, `AGENTS.md` y `CLAUDE.md` (`@AGENTS.md`), y constitución.
 - Esqueleto hexagonal vacío (`domain/ports/adapters/entrypoints`) + `import-linter` en CI + tareas `poe` + `.gitattributes` + CI con matriz Linux/Windows.
 - Script de comprobación de `docs/standards/writing.md` (emojis y caracteres de caja fuera de bloques de código) en pre-commit y CI, y hook `commit-msg` de `docs/standards/version-control.md` (Conventional Commits, sin atribución de agentes).
-- Lección `docs/lessons/000-cimientos.md` (principio VII): método SDD, capas de reglas, entorno y fallos típicos con su mitigación; reutiliza `docs/setup.md`.
+- Lección `docs/lessons/000-<nombre-descriptivo>.md` (principio VII; el nombre dice lo que aporta): método SDD, capas de reglas, entorno y fallos típicos con su mitigación; reutiliza `docs/setup.md`.
 - `README.md` para personas (las instrucciones para agentes siguen en `AGENTS.md`): qué es jev-lab, estado con puntero al roadmap, inicio rápido de 3–4 comandos con enlace a `docs/setup.md`, y mapa de documentos. Sin licencia por ahora. Se escribe junto a `docs/setup.md`, cuando los comandos existan.
 - `docs/setup.md` con la puesta en marcha en Linux y Windows: uv, Python 3.13, el enlace `python3.exe` en Windows (`New-Item -ItemType HardLink -Path "$dir\python3.exe" -Target "$dir\python.exe"`), Git Bash y los dos agentes.
 - `.env.example` con `TYPESAFE_API_KEY` y `AZURE_OPENAI_{ENDPOINT,API_KEY,DEPLOYMENT,API_VERSION}`.

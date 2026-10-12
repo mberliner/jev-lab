@@ -1,0 +1,27 @@
+schema_version: "1.0"
+
+preset:
+  id: "jevlab-spec"
+  name: "jev-lab: corte vertical y lección"
+  version: "0.1.0"
+  description: "Exige persona, capacidad de extremo a extremo, demostración por historia, YAGNI y lección en cada spec, y una fase de cierre en tasks (Constitución VII)."
+
+requires:
+  speckit_version: ">=1.1.4.dev0"
+
+provides:
+  templates:
+    - type: "template"
+      name: "spec-template"
+      file: "templates/spec-template.md"
+      description: "Sección «Corte vertical y lección»"
+      strategy: "append"
+    - type: "template"
+      name: "tasks-template"
+      file: "templates/tasks-template.md"
+      description: "Fase final de cierre: lección, demostración y retro"
+      strategy: "append"
+
+tags:
+  - "jev-lab"
+  - "spec"

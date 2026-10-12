@@ -16,6 +16,8 @@ Spec-Driven Development (Spec Kit).
 | --- | --- |
 | `docs/roadmap.md` | **Plan vigente y estado actual**: empezar por «Estado actual y cómo retomar» |
 | `.specify/memory/constitution.md` | Principios no negociables (v0.3.0, ratificada) |
+| `docs/personas.md` | Perfiles de usuario a los que sirve cada feature |
+| `docs/ideas.md` | Ideas abiertas para specs futuras (sobre todo de las retros); revisar al planificar una spec |
 | `docs/governance.md` | Dónde vive cada regla común: constitución -> presets propios -> estándares |
 | `specs/NNN-*/` | Artefactos SDD de cada feature |
 | `docs/setup.md` | Puesta en marcha en Linux y Windows (se crea en la spec 000) |
