@@ -10,6 +10,30 @@
       "registered_commands": {},
       "registered_skills": {},
       "installed_at": "2026-10-12T13:27:59.294790+00:00"
+    },
+    "jevlab-testing": {
+      "version": "0.1.0",
+      "source": "local",
+      "manifest_hash": "sha256:52935608db01848b30322466d21fb117d3f899e6c574c9f8857ffbaba324c56c",
+      "enabled": true,
+      "priority": 90,
+      "registered_commands": {
+        "claude": [
+          "speckit.tasks"
+        ],
+        "agy": [
+          "speckit.tasks"
+        ]
+      },
+      "registered_skills": {
+        "claude": [
+          "speckit-tasks"
+        ],
+        "agy": [
+          "speckit-tasks"
+        ]
+      },
+      "installed_at": "2026-10-12T14:44:16.245624+00:00"
     }
   }
 }

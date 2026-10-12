@@ -35,7 +35,12 @@
    - Regla: lo estable (constitución, presets, estándares, specs) no apunta a este roadmap; solo
      el roadmap apunta a lo estable. Por eso los perfiles pasan a `docs/personas.md`. El resto del
      contenido duradero de este documento se mueve a su sitio cuando toque cada pieza.
-   - **[siguiente]** `jevlab-testing`, `jevlab-decision`, `jevlab-arch` y `jevlab-security`.
+   - [hecho, 2026-10-12] `jevlab-testing` v0.1.0 (prioridad 90, `replace`): plantilla y comando
+     de tareas sin «Tests are OPTIONAL», en los dos agentes. Composición verificada: la plantilla
+     de tareas resuelta es `jevlab-testing` + `jevlab-spec`. Hallazgo: Spec Kit registra los
+     comandos de un preset solo en el agente activo; el procedimiento para los dos agentes está en
+     `docs/governance.md` §5, «Instalar o cambiar un preset».
+   - **[siguiente]** `jevlab-decision`, `jevlab-arch` y `jevlab-security`.
 3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
@@ -338,7 +343,8 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - `specify init . --integration claude` + `specify integration install agy --force`, `AGENTS.md` y `CLAUDE.md` (`@AGENTS.md`), y constitución.
 - Esqueleto hexagonal vacío (`domain/ports/adapters/entrypoints`) + `import-linter` en CI + tareas `poe` + `.gitattributes` + CI con matriz Linux/Windows.
 - Script de comprobación de `docs/standards/writing.md` (emojis y caracteres de caja fuera de bloques de código) en pre-commit y CI, y hook `commit-msg` de `docs/standards/version-control.md` (Conventional Commits, sin atribución de agentes).
-- Lección `docs/lessons/000-<nombre-descriptivo>.md` (principio VII; el nombre dice lo que aporta): método SDD, capas de reglas, entorno y fallos típicos con su mitigación; reutiliza `docs/setup.md`.
+- Comprobaciones de presets en pre-commit y CI: la copia instalada coincide con la fuente; «Tests are OPTIONAL» no aparece en la plantilla resuelta ni en las skills; las skills de los comandos sustituidos son iguales en los dos agentes; los scripts de `.specify/scripts/bash/` conservan el bit de ejecución.
+- Lección `docs/lessons/000-<nombre-descriptivo>.md` (principio VII; el nombre dice lo que aporta): método SDD, capas de reglas, entorno y fallos típicos con su mitigación; reutiliza `docs/setup.md`. Incluye cómo se aplica un preset paso a paso (caso `jevlab-testing`: `replace` de plantilla y comando, composición por prioridad, agente único activo) con su procedimiento en `docs/governance.md` §5.
 - `README.md` para personas (las instrucciones para agentes siguen en `AGENTS.md`): qué es jev-lab, estado con puntero al roadmap, inicio rápido de 3–4 comandos con enlace a `docs/setup.md`, y mapa de documentos. Sin licencia por ahora. Se escribe junto a `docs/setup.md`, cuando los comandos existan.
 - `docs/setup.md` con la puesta en marcha en Linux y Windows: uv, Python 3.13, el enlace `python3.exe` en Windows (`New-Item -ItemType HardLink -Path "$dir\python3.exe" -Target "$dir\python.exe"`), Git Bash y los dos agentes.
 - `.env.example` con `TYPESAFE_API_KEY` y `AZURE_OPENAI_{ENDPOINT,API_KEY,DEPLOYMENT,API_VERSION}`.

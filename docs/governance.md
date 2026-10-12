@@ -126,13 +126,44 @@ catálogo comunitario.
 presets/jevlab-<tema>/          # fuente versionada (la que se edita)
 ├── preset.yml                  # manifiesto
 ├── README.md                   # qué añade, de qué principios deriva
-└── templates/
-    ├── plan-template.md        # solo el fragmento que se añade
-    └── spec-template.md
+├── templates/
+│   ├── plan-template.md        # solo el fragmento que se añade
+│   └── spec-template.md
+└── commands/                   # solo si el preset cambia un comando (skill) de los agentes
+    └── speckit.<comando>.md    # formato fuente de Spec Kit, con sus marcadores
 ```
 
-Se instala con `specify preset add --dev presets/jevlab-<tema> --priority <n>`. Eso lo deja en
-`.specify/presets/`, que también se versiona para que un clon nuevo funcione sin pasos extra.
+En `preset.yml`, cada entrada de `provides.templates` declara `type` (`template` o `command`),
+`name` (nombre base de la plantilla, como `tasks-template`, o del comando, como `speckit.tasks`),
+`file` y `strategy`. **Si no se indica `strategy`, es `replace`.** `requires.speckit_version` debe
+admitir la versión instalada, incluidas las prerelease (hoy `>=1.1.4.dev0`).
+
+### Instalar o cambiar un preset
+
+1. Editar la fuente en `presets/jevlab-<tema>/` y, si ya estaba instalado, subir su `version`.
+2. Instalar o reinstalar:
+   ```
+   specify preset remove jevlab-<tema>        # solo si ya estaba instalado
+   specify preset add --dev presets/jevlab-<tema> --priority <n>
+   ```
+   Copia el preset a `.specify/presets/` (se versiona, para que un clon nuevo funcione sin pasos
+   extra) y lo anota en `.specify/presets/.registry`. La copia instalada no se sincroniza sola con
+   la fuente: sin reinstalar, Spec Kit sigue usando la anterior.
+3. **Solo si el preset trae comandos:** Spec Kit registra los comandos únicamente en la integración
+   activa (regla de agente único activo). Para mantener la paridad, se pasa por cada agente y se
+   vuelve al de por defecto:
+   ```
+   specify integration use agy
+   specify integration use claude
+   ```
+   `integration use` quita el bit de ejecución a `.specify/scripts/bash/*.sh`; se restaura con
+   `git checkout -- .specify/scripts/bash/`.
+4. Comprobar:
+   - `specify preset resolve <plantilla>` muestra las capas esperadas;
+   - `.specify/presets/.registry` lista el comando en `registered_skills` para los dos agentes;
+   - `diff -r presets/jevlab-<tema> .specify/presets/jevlab-<tema>` no muestra diferencias de
+     contenido.
+5. Commit de la fuente, la copia instalada, el registro y las skills de los agentes.
 
 ### Reglas
 
@@ -155,7 +186,7 @@ Se instala con `specify preset add --dev presets/jevlab-<tema> --priority <n>`. 
 | Pieza | Cuándo se compone | Con `append`/`prepend`/`wrap` | Con `replace` |
 | --- | --- | --- | --- |
 | Plantilla (`spec`, `plan`, `tasks`…) | En cada uso: el script de Spec Kit la recompone al ejecutar el comando | Plantilla base **actual** + fragmento: recibe las mejoras de Spec Kit sin hacer nada | Solo nuestra copia; la base no se lee. Queda **fija hasta que la editemos** |
-| Comando (skill de cada agente) | Una vez, al instalar el preset: se escribe en `.claude/skills/` y `.agents/skills/` | Base de ese momento + fragmento, fija hasta reinstalar el preset | Nuestra copia, fija hasta reinstalar el preset |
+| Comando (skill de cada agente) | Una vez, al instalar el preset, y solo en el agente activo; el resto, con `integration use` (ver *Instalar o cambiar un preset*) | Base de ese momento + fragmento, fija hasta reinstalar el preset | Nuestra copia, fija hasta reinstalar el preset |
 
 Consecuencia: `replace` cambia el mantenimiento automático por el control total. Solo se usa donde
 la base contradice la constitución y no basta con añadir texto (hoy: `jevlab-testing`, que elimina
@@ -169,8 +200,10 @@ no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
 1. Anotar la versión actual (`specify version`).
 2. Actualizar la CLI (`specify self upgrade`) y cada integración instalada
    (`specify integration upgrade`).
-3. Reinstalar todos los presets (`specify preset update` o `specify preset add --dev`), porque la
-   actualización de integraciones puede devolver las skills a su versión base.
+3. Reinstalar todos los presets según *Instalar o cambiar un preset*, incluido el paso por cada
+   agente, porque la actualización de integraciones puede devolver las skills a su versión base:
+   `specify integration status` ya marca las skills sustituidas como «managed files modified», y
+   `integration upgrade --force` las sobrescribiría.
 4. Por cada preset con `replace`: comparar con `git diff` la nueva base (plantilla en
    `.specify/templates/` y comando base) con la anterior, trasladar a nuestra copia las mejoras que
    no contradigan la constitución, actualizar en su README la versión de Spec Kit de la que parte la
@@ -180,7 +213,8 @@ no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
    o en las skills de cualquier agente.
 6. Commit `chore(speckit): actualizar a <versión>`.
 
-Los pasos 2 y 3 están pendientes de verificar en la práctica (spec 000).
+La reinstalación de presets (paso 3) está verificada en Linux; el efecto real de `specify self
+upgrade` e `integration upgrade` (paso 2) se verificará en la primera actualización.
 
 ### Nota técnica
 

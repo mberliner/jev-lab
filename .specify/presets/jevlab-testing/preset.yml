@@ -1,0 +1,27 @@
+schema_version: "1.0"
+
+preset:
+  id: "jevlab-testing"
+  name: "jev-lab: tests obligatorios"
+  version: "0.1.0"
+  description: "Sustituye la plantilla y el comando de tareas para que los tests sean obligatorios y vayan antes de la implementación (Constitución IV)."
+
+requires:
+  speckit_version: ">=1.1.4.dev0"
+
+provides:
+  templates:
+    - type: "template"
+      name: "tasks-template"
+      file: "templates/tasks-template.md"
+      description: "Plantilla de tareas sin «Tests are OPTIONAL»"
+      strategy: "replace"
+    - type: "command"
+      name: "speckit.tasks"
+      file: "commands/speckit.tasks.md"
+      description: "Comando de tareas con tests obligatorios"
+      strategy: "replace"
+
+tags:
+  - "jev-lab"
+  - "testing"
