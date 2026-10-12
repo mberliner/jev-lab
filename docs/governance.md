@@ -210,9 +210,11 @@ no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
 2. Actualizar la CLI (`specify self upgrade`) y cada integración instalada
    (`specify integration upgrade`).
 3. Reinstalar todos los presets según *Instalar o cambiar un preset*, incluido el paso por cada
-   agente, porque la actualización de integraciones puede devolver las skills a su versión base:
-   `specify integration status` ya marca las skills sustituidas como «managed files modified», y
-   `integration upgrade --force` las sobrescribiría.
+   agente. Comportamiento comprobado con 1.1.4.dev0:
+   - sin `--force`, `integration upgrade` se detiene si una skill fue sustituida por un preset;
+   - con `--force`, la integración activa conserva los comandos de los presets, pero las demás
+     vuelven a la versión base (en `agy` reaparece «Tests are OPTIONAL»);
+   - el paso por cada agente con `integration use` los restaura.
 4. Por cada preset con `replace`: comparar con `git diff` la nueva base (plantilla en
    `.specify/templates/` y comando base) con la anterior, trasladar a nuestra copia las mejoras que
    no contradigan la constitución, actualizar en su README la versión de Spec Kit de la que parte la
@@ -222,8 +224,8 @@ no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
    o en las skills de cualquier agente.
 6. Commit `chore(speckit): actualizar a <versión>`.
 
-La reinstalación de presets (paso 3) está verificada en Linux; el efecto real de `specify self
-upgrade` e `integration upgrade` (paso 2) se verificará en la primera actualización.
+La reinstalación de presets y el efecto de `integration upgrade` (pasos 2 y 3) están verificados
+en Linux; el de `specify self upgrade` se verificará en la primera actualización.
 
 ### Nota técnica
 

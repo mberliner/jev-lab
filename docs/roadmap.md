@@ -59,9 +59,10 @@
    pasan a `docs/setup.md` en la spec 000.
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
-   `speckit_version: ">=1.1.4.dev0"`. Pendiente: PyYAML en Windows, y verificar si
-   `specify integration upgrade` devuelve las skills a su versión base (pasos 2 y 3 de «Actualizar
-   Spec Kit»).
+   `speckit_version: ">=1.1.4.dev0"`. [hecho, 2026-10-12] `integration upgrade --force` devuelve
+   a la base las skills de las integraciones no activas; el paso por cada agente las restaura
+   (`docs/governance.md` §5). Pendiente: PyYAML en Windows, que se resuelve con `docs/setup.md`
+   en la spec 000.
 
 **Después:** el resto de la spec 000 (ver «000: Cimientos»): entorno uv, esqueleto hexagonal, CI
 Linux/Windows, pre-commit con las comprobaciones de los estándares, `README.md` para personas, `docs/setup.md`,
