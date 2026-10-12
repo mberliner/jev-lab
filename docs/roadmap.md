@@ -136,23 +136,9 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 
 ## Funcionamiento igual en Claude Code y Antigravity (`agy`)
 
-La decisión y sus alternativas están en [ADR-0002](adr/0002-paridad-de-agentes.md). Lo que sigue
-es el procedimiento, que pasará a `docs/setup.md` en la spec 000.
-
-Spec Kit admite varias integraciones en el mismo proyecto. Según la [referencia de integraciones](https://github.github.io/spec-kit/reference/integrations.html):
-- claves `claude` -> `.claude/skills/` y `agy` -> `.agents/skills/`;
-- `agy` no está declarada como segura para instalarse junto a otras, así que hace falta `--force`;
-- la integración por defecto queda en `.specify/integration.json`.
-
-**Cómo se consigue la paridad:**
-1. `specify init . --integration claude` y después `specify integration install agy --force`. Comprobar con `specify integration status --json`. Las dos comparten `.specify/` (constitución, plantillas y scripts) y `specs/`, de modo que **los artefactos SDD son los mismos para los dos agentes**.
-2. **Una sola fuente de instrucciones:** `AGENTS.md` (convenciones, comandos, constitución resumida y puesta en marcha). `CLAUDE.md` solo contiene `@AGENTS.md`, sin reglas propias. Antigravity lee `AGENTS.md` y `.agents/`.
-3. **Neutralidad de herramientas:** todo flujo se ejecuta con comandos del repo (`uv run poe <tarea>`, multiplataforma). Un *hook* o comando de agente se admite solo con implementación neutral: su lógica vive en una tarea del repo y existe de forma equivalente en todos los agentes, o no se usa en ninguno (constitución, VI). Las puertas de calidad son pre-commit y CI, que se aplican igual uses el agente que uses.
-4. **Skill de TypeSafe:** se instala por usuario, no se copia en el repo. En Claude Code va como plugin oficial. En `agy` se instala la misma skill en su directorio de usuario si la licencia lo permite; si no, `AGENTS.md` enlaza la documentación oficial (`docs.typesafe.ai/llms.txt`).
-5. **Invocación:** en Claude Code las skills de Spec Kit se llaman `/speckit-*` y en Antigravity también `/speckit-*`. La guía `docs/agents.md` documenta las dos.
-6. **Verificación de paridad (CI):** `specify integration status` muestra las dos integraciones; un test comprueba que `CLAUDE.md` solo importa `AGENTS.md`. La spec 000 se valida corriendo `/speckit-specify` de prueba en cada agente.
-
-> Antes de instalar, confirmar con `specify init --help` y `specify integration list` en la versión instalada, porque los flags han cambiado (`--ai` -> `--integration`).
+La decisión y sus alternativas están en [ADR-0002](adr/0002-paridad-de-agentes.md). El
+procedimiento (integraciones, fuente única de instrucciones, skill de TypeSafe e invocación) está
+en [`docs/setup.md`](setup.md), «Agentes: Claude Code y Antigravity».
 
 ## Funcionamiento igual en Windows y Linux
 
