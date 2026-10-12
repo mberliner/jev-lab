@@ -3,7 +3,7 @@ schema_version: "1.0"
 preset:
   id: "jevlab-security"
   name: "jev-lab: seguridad y privacidad"
-  version: "0.1.0"
+  version: "0.1.1"
   description: "Exige en el plan el origen y la confianza de cada dato, qué se registra sin payloads ni datos personales, los secretos nuevos y los casos adversariales (Constitución V)."
 
 requires:

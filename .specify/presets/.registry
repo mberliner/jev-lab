@@ -1,16 +1,6 @@
 {
   "schema_version": "1.0",
   "presets": {
-    "jevlab-spec": {
-      "version": "0.1.0",
-      "source": "local",
-      "manifest_hash": "sha256:fcdfa38f5029dfb471cf6e481dd3197ecd6d0f4897eb8b3687f09c914587dd2a",
-      "enabled": true,
-      "priority": 10,
-      "registered_commands": {},
-      "registered_skills": {},
-      "installed_at": "2026-10-12T13:27:59.294790+00:00"
-    },
     "jevlab-testing": {
       "version": "0.1.0",
       "source": "local",
@@ -35,16 +25,6 @@
       },
       "installed_at": "2026-10-12T14:44:16.245624+00:00"
     },
-    "jevlab-decision": {
-      "version": "0.1.0",
-      "source": "local",
-      "manifest_hash": "sha256:54880258a10d3c0d36ec70dd3d43615e2a83d0d45d6e8c0690f9e1a44a8c4014",
-      "enabled": true,
-      "priority": 20,
-      "registered_commands": {},
-      "registered_skills": {},
-      "installed_at": "2026-10-12T15:21:49.001418+00:00"
-    },
     "jevlab-arch": {
       "version": "0.1.0",
       "source": "local",
@@ -53,17 +33,37 @@
       "priority": 30,
       "registered_commands": {},
       "registered_skills": {},
-      "installed_at": "2026-10-12T15:32:17.117773+00:00"
+      "installed_at": "2026-10-12T15:54:55.681514+00:00"
+    },
+    "jevlab-spec": {
+      "version": "0.1.1",
+      "source": "local",
+      "manifest_hash": "sha256:76a0a6d7bd36d01ca89055a081a3488a437afe28fa048ec228e1c244e41730b9",
+      "enabled": true,
+      "priority": 10,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T15:56:05.990476+00:00"
     },
     "jevlab-security": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "source": "local",
-      "manifest_hash": "sha256:1b3a61b15534b9108a3680aae4ecfd8005638e673dcb76aa68bffe86f52a38e1",
+      "manifest_hash": "sha256:59363f13b373fc6a0485c602f33aa1e6f0dbb594b22829d637415e08180ccf20",
+      "enabled": true,
+      "priority": 20,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T15:56:06.634728+00:00"
+    },
+    "jevlab-decision": {
+      "version": "0.1.1",
+      "source": "local",
+      "manifest_hash": "sha256:4a59f5463f60fa95efe2529ec8f088eeadac4eb8f7c10fee7e323ef2d8942797",
       "enabled": true,
       "priority": 40,
       "registered_commands": {},
       "registered_skills": {},
-      "installed_at": "2026-10-12T15:46:56.078756+00:00"
+      "installed_at": "2026-10-12T15:56:07.277351+00:00"
     }
   }
 }

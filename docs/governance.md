@@ -107,11 +107,18 @@ preset, estándar o ambos, según lo necesite.
 Esta tabla se actualiza al crear o retirar un tema.
 
 **Prioridades de instalación (`--priority`; número menor = más precedencia):** `jevlab-spec` 10;
-`jevlab-decision` 20; `jevlab-arch` 30; `jevlab-security` 40;
+`jevlab-security` 20; `jevlab-arch` 30; `jevlab-decision` 40;
 `jevlab-testing` 90. Un preset con `replace` corta la composición de esa plantilla, así que va
 siempre con el número más alto para que los fragmentos `append` de los demás se compongan sobre él.
 Los fragmentos `append` se añaden de menor a mayor precedencia: el preset con el número más bajo
 queda al final de la plantilla (comprobado con `specify preset resolve`).
+
+Las prioridades de los presets `append` fijan el orden de sus secciones y se eligen para que cada
+sección use lo que la anterior ya definió. En el plan: «Diseño de decisiones» (`DecisionSpec` y
+estado mínimo), luego «Arquitectura» (sitúa ese `DecisionSpec` y sus piezas en capas) y por último
+«Seguridad» (clasifica los datos de ese estado y decide qué registran esas piezas). Así quien
+rellena el plan de arriba abajo, persona o agente, no clasifica datos ni piezas aún sin definir.
+Entre presets `append` la prioridad no cambia el resultado, solo el orden.
 
 No hay tema UX propio: la transparencia de la decisión (resultado, confianza, motivo de escalado,
 «no disponible», grabado o sintético) deriva de II y IV y vive en `jevlab-decision`; las

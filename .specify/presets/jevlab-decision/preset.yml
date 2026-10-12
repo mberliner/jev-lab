@@ -3,7 +3,7 @@ schema_version: "1.0"
 preset:
   id: "jevlab-decision"
   name: "jev-lab: decisiones Jev"
-  version: "0.1.0"
+  version: "0.1.1"
   description: "Exige en la spec la tabla de decisiones (pregunta, primitiva, escape, riesgo) y en el plan su diseño (DecisionSpec, estado mínimo, umbrales) (Constitución I, II, III y IV)."
 
 requires:

@@ -17,4 +17,4 @@ Decisiones de diseño:
 - La sección es obligatoria solo si la feature pregunta al modelo; si no, se marca «no aplica».
 - La transparencia ante cada persona vive aquí y no en un tema UX propio (`docs/governance.md` §4).
 
-Instalación: `specify preset add --dev presets/jevlab-decision --priority 20`.
+Instalación: `specify preset add --dev presets/jevlab-decision --priority 40`.

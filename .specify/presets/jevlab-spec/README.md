@@ -22,4 +22,4 @@ Decisiones de diseño:
 - Como `jevlab-testing` sustituye `tasks-template` (`replace`), este preset necesita más prioridad
   que él para que su fragmento se componga.
 
-Instalación: `specify preset add --dev presets/jevlab-spec --priority <n>`.
+Instalación: `specify preset add --dev presets/jevlab-spec --priority 10`.

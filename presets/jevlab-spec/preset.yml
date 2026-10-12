@@ -3,7 +3,7 @@ schema_version: "1.0"
 preset:
   id: "jevlab-spec"
   name: "jev-lab: corte vertical y lección"
-  version: "0.1.0"
+  version: "0.1.1"
   description: "Exige persona, capacidad de extremo a extremo, demostración por historia, YAGNI y lección en cada spec, y una fase de cierre en tasks (Constitución VII)."
 
 requires:

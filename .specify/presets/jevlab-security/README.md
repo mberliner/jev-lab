@@ -16,4 +16,4 @@ Decisiones de diseño:
 - Las columnas «Origen» y «Confiable» hacen explícito qué contenido nunca se trata como
   instrucción; «Qué se registra» obliga a decidir el log antes de escribirlo.
 
-Instalación: `specify preset add --dev presets/jevlab-security --priority 40`.
+Instalación: `specify preset add --dev presets/jevlab-security --priority 20`.
