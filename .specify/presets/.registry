@@ -44,6 +44,16 @@
       "registered_commands": {},
       "registered_skills": {},
       "installed_at": "2026-10-12T15:21:49.001418+00:00"
+    },
+    "jevlab-arch": {
+      "version": "0.1.0",
+      "source": "local",
+      "manifest_hash": "sha256:eab7e135f2ad298b9ff02d913ef64657913feec5baf7f98fcd274681364a7c66",
+      "enabled": true,
+      "priority": 30,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T15:32:17.117773+00:00"
     }
   }
 }

@@ -1,0 +1,22 @@
+schema_version: "1.0"
+
+preset:
+  id: "jevlab-arch"
+  name: "jev-lab: arquitectura"
+  version: "0.1.0"
+  description: "Exige en el plan la capa, las dependencias y la forma de prueba aislada de cada pieza, los efectos externos por puertos y una sola definición de decisión (Constitución III)."
+
+requires:
+  speckit_version: ">=1.1.4.dev0"
+
+provides:
+  templates:
+    - type: "template"
+      name: "plan-template"
+      file: "templates/plan-template.md"
+      description: "Sección «Arquitectura»"
+      strategy: "append"
+
+tags:
+  - "jev-lab"
+  - "architecture"

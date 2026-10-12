@@ -107,7 +107,7 @@ preset, estándar o ambos, según lo necesite.
 Esta tabla se actualiza al crear o retirar un tema.
 
 **Prioridades de instalación (`--priority`; número menor = más precedencia):** `jevlab-spec` 10;
-`jevlab-decision` 20; `jevlab-arch` y `jevlab-security` entre 30 y 40 (se fijan al crearlos);
+`jevlab-decision` 20; `jevlab-arch` 30; `jevlab-security` 40;
 `jevlab-testing` 90. Un preset con `replace` corta la composición de esa plantilla, así que va
 siempre con el número más alto para que los fragmentos `append` de los demás se compongan sobre él.
 Los fragmentos `append` se añaden de menor a mayor precedencia: el preset con el número más bajo

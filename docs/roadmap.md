@@ -43,7 +43,10 @@
    - [hecho, 2026-10-12] `jevlab-decision` v0.1.0 (prioridad 20, `append` en spec y plan): tabla
      de decisiones en la spec y su diseño en el plan, con el estándar
      `docs/standards/decision-design.md`. Los `append` se componen de menor a mayor precedencia.
-   - **[siguiente]** `jevlab-arch` y `jevlab-security`.
+   - [hecho, 2026-10-12] `jevlab-arch` v0.1.0 (prioridad 30, `append` en plan) con el estándar
+     `docs/standards/architecture.md`. Las reglas de arquitectura salen de este roadmap; la tabla
+     de testabilidad y la cobertura pasarán a `docs/standards/testing.md`.
+   - **[siguiente]** `jevlab-security`; después, `docs/standards/testing.md`.
 3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
@@ -171,11 +174,8 @@ No hay nada que lo impida. Todo el stack es multiplataforma: Python 3.13 (vía u
             FakeJudge (tests)
 ```
 
-**Ideas clave**
-- **`DecisionSpec` es la unidad central.** Es un objeto declarativo y versionado (Pydantic + YAML) con las preguntas, la opción de escape, la política y el modelo fijado. CLI, API, evaluación (004) y laboratorio de fallos (005) **consumen el mismo spec**, así que lo que se evalúa es exactamente lo que se despliega.
-- **`JudgePort` aísla al proveedor.** Jev en vivo, las cassettes, el baseline de Azure y los fakes son intercambiables. Esto da tests sin red, comparación justa y modo offline.
-- **El dominio es puro.** Política, confianza y composición son funciones sin I/O, lo que permite tests de propiedades.
-- **Los efectos están en adaptadores:** cola de revisión, auditoría, caché y telemetría (OTel).
+Las reglas de arquitectura (capas, dominio puro, puertos, inyección, una sola definición) están en
+[`docs/standards/architecture.md`](standards/architecture.md).
 
 **Testabilidad: la arquitectura está diseñada para tests unitarios**
 
@@ -189,10 +189,7 @@ Cada capa se prueba de forma aislada, de modo que **la gran mayoría de los test
 | **Entrypoints** | Unitario/integración ligera | `typer.testing.CliRunner`, `httpx.AsyncClient` + `TestClient` de FastAPI con dependencias sustituidas | Códigos HTTP, validación de entrada, idempotencia, salida de la CLI |
 | **Extremo a extremo** | Live (opcional, `-m live`) | Claves reales y tope de coste | Humo diario en CI |
 
-Reglas que lo garantizan:
-- **Inyección de dependencias explícita:** los casos de uso reciben puertos por constructor, y no hay singletons ni llamadas globales al SDK.
-- **Puertos como `typing.Protocol`:** los fakes cumplen el protocolo y `mypy --strict` lo verifica.
-- **El tiempo, el azar y los IDs entran por puertos** (`Clock`, `IdGenerator`), lo que da tests deterministas.
+Reglas que lo garantizan (las de arquitectura, en `docs/standards/architecture.md`):
 - **Pirámide de tests vigilada en CI:** cobertura ≥ 80 % global y ≥ 95 % en `domain/`; un test unitario que intente abrir red falla (`pytest-socket`).
 - **TDD por historia:** `/speckit-tasks` genera primero las tareas de test (rojo), luego la implementación (verde) y después el refactor.
 
