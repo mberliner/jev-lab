@@ -73,7 +73,8 @@
   la suite con cobertura; `doctor` remoto sin red termina con error.
 - [hecho, 2026-10-12] `/speckit-plan`: plan, research, data-model, contrato de `jevlab doctor` y
   quickstart en `specs/000-cimientos/`.
-- **[siguiente]** `/speckit-tasks` y `/speckit-analyze`. Luego, la spec 001.
+- [hecho, 2026-10-12] `/speckit-tasks`: 64 tareas en `specs/000-cimientos/tasks.md`.
+- **[siguiente]** `/speckit-analyze` y después `/speckit-implement`. Luego, la spec 001.
 
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.
