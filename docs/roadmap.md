@@ -27,7 +27,7 @@
    - `jevlab-testing` usa `replace` en la plantilla y el comando de tareas para eliminar «Tests are
      OPTIONAL» de Spec Kit, que contradice IV. Se complementa con una comprobación en CI.
      Procedimiento de actualización en `docs/governance.md` §5, «Actualizar Spec Kit».
-2. **[en curso]** Contenido de cada preset y de sus estándares. Usar como entrada el «detalle
+2. [hecho, 2026-10-12] Contenido de cada preset y de sus estándares. Usar como entrada el «detalle
    sacado de la constitución» del paso 1 HITL (destinos `decision-design`, `testing` y `security`).
    - [hecho, 2026-10-12] `jevlab-spec` v0.1.0 (prioridad 10): sección «Corte vertical y lección» en
      spec y fase final de cierre en tasks. Lecciones en `docs/lessons/NNN-<nombre-descriptivo>.md`;
@@ -48,9 +48,13 @@
      de testabilidad y la cobertura pasarán a `docs/standards/testing.md`.
    - [hecho, 2026-10-12] `jevlab-security` v0.1.0 (prioridad 20, `append` en plan) con el
      estándar `docs/standards/security.md`, que define *payload* frente a metadatos.
-   - **[siguiente]** `docs/standards/testing.md` (tabla de testabilidad por capa, cobertura y
-     bloqueo de red, que salen de este roadmap).
-3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
+   - [hecho, 2026-10-12] `docs/standards/testing.md`: testabilidad por capa, pirámide de tres
+     niveles, red bloqueada, cobertura, tests primero, pruebas `live` con tope y procedencia de
+     los datos. Define *cassette* frente a fake. Pirámide por regla, sin porcentaje: unitarios
+     hasta la cobertura (medida sin los niveles superiores), 1 test de integración por historia y
+     1 humo `live` por aplicación. `jevlab-testing` v0.2.0 lleva esa mezcla a la plantilla y al
+     comando de tareas.
+3. **[siguiente]** ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
    `speckit_version: ">=1.1.4.dev0"`. Pendiente: PyYAML en Windows, y verificar si
@@ -180,21 +184,8 @@ No hay nada que lo impida. Todo el stack es multiplataforma: Python 3.13 (vía u
 Las reglas de arquitectura (capas, dominio puro, puertos, inyección, una sola definición) están en
 [`docs/standards/architecture.md`](standards/architecture.md).
 
-**Testabilidad: la arquitectura está diseñada para tests unitarios**
-
-Cada capa se prueba de forma aislada, de modo que **la gran mayoría de los tests son unitarios, rápidos (< 1 s el conjunto por módulo) y sin red ni claves**.
-
-| Capa | Tipo de test | Cómo se aísla | Ejemplos |
-| --- | --- | --- | --- |
-| **Dominio** (puro) | Unitario + propiedades (`hypothesis`) | Sin dependencias: funciones y modelos Pydantic | La fórmula de confianza coincide con la oficial; las bandas de política son monótonas; `other` siempre va a revisión; la composición con pesos es correcta; `DecisionSpec` sin escape -> error de validación |
-| **Aplicación** (casos de uso) | Unitario | Puertos inyectados con *fakes* en memoria (`FakeJudge` con respuestas programables, `InMemoryReviewQueue`, `FrozenClock`) | `TriageTicket` con confianza 0,4 encola revisión y audita; `GuardInput` con inyección = 0,9 bloquea; modo degradado si `JudgePort` lanza error |
-| **Adaptadores** | Contrato | Cassettes VCR de respuestas reales; SQLite en memoria; `respx` para HTTP | `TypeSafeJudge` traduce bien la respuesta del SDK a tipos de dominio; mapeo de `TypeSafeAPIError` a errores de dominio; reintentos ante un 429 simulado |
-| **Entrypoints** | Unitario/integración ligera | `typer.testing.CliRunner`, `httpx.AsyncClient` + `TestClient` de FastAPI con dependencias sustituidas | Códigos HTTP, validación de entrada, idempotencia, salida de la CLI |
-| **Extremo a extremo** | Live (opcional, `-m live`) | Claves reales y tope de coste | Humo diario en CI |
-
-Reglas que lo garantizan (las de arquitectura, en `docs/standards/architecture.md`):
-- **Pirámide de tests vigilada en CI:** cobertura ≥ 80 % global y ≥ 95 % en `domain/`; un test unitario que intente abrir red falla (`pytest-socket`).
-- **TDD por historia:** `/speckit-tasks` genera primero las tareas de test (rojo), luego la implementación (verde) y después el refactor.
+La testabilidad por capa, la cobertura, el bloqueo de red y las pruebas `live` están en
+[`docs/standards/testing.md`](standards/testing.md).
 
 **Aplicaciones desplegables (por spec en que nacen)**
 
