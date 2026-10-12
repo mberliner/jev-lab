@@ -95,14 +95,14 @@ preset, estándar o ambos, según lo necesite.
 
 | Tema | Principio(s) | Preset (plantillas, estrategia) | Estándar(es) | Estado |
 | --- | --- | --- | --- | --- |
-| Forma de la spec (corte vertical, historias, lección) | VII | `jevlab-spec` (spec, checklist de cierre; `append`) | *(no necesita)* | previsto en 000 |
-| Arquitectura | III | `jevlab-arch` (plan; `append`) | `architecture.md` | previsto en 000 |
-| Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | previsto en 000 |
-| Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | previsto en 000 |
-| Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | previsto en 000 |
+| Forma de la spec (corte vertical, historias, lección) | VII | `jevlab-spec` (spec, checklist de cierre; `append`) | *(no necesita)* | creado |
+| Arquitectura | III | `jevlab-arch` (plan; `append`) | `architecture.md` | creado |
+| Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | creado |
+| Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | creado |
+| Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | creado |
 | Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | *(no necesita)* | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
-| Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática en 000 |
-| Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática en 000 |
+| Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática (`poe check-writing`) |
+| Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática (gancho `commit-msg`) |
 
 Esta tabla se actualiza al crear o retirar un tema.
 
@@ -156,7 +156,10 @@ admitir la versión instalada, incluidas las prerelease (hoy `>=1.1.4.dev0`).
    specify preset add --dev presets/jevlab-<tema> --priority <n>
    ```
    Copia el preset a `.specify/presets/` (se versiona, para que un clon nuevo funcione sin pasos
-   extra) y lo anota en `.specify/presets/.registry`. La copia instalada no se sincroniza sola con
+   extra) y lo anota en `.specify/presets/.registry`. **Antes, apartar `.venv/`** (por ejemplo,
+   `mv .venv .venv.off` y restaurarlo al terminar el paso 3): si existe, Spec Kit escribe en las
+   skills `.venv/bin/python` en lugar de `python3`, que solo vale en esa máquina y ese sistema
+   (comprobado con 1.1.4.dev0; `poe check-presets` lo detecta). La copia instalada no se sincroniza sola con
    la fuente: sin reinstalar, Spec Kit sigue usando la anterior.
 3. **Solo si el preset trae comandos:** Spec Kit registra los comandos únicamente en la integración
    activa (regla de agente único activo). Para mantener la paridad, se pasa por cada agente y se

@@ -31,10 +31,20 @@
       "registered_skills": {},
       "installed_at": "2026-10-12T15:56:07.277351+00:00"
     },
-    "jevlab-testing": {
+    "jevlab-spec": {
       "version": "0.2.0",
       "source": "local",
-      "manifest_hash": "sha256:7b8b8e1253cbbda0f69407b70ea8a14cc0c6e0cf70f451ff31b04c6d7dc124ec",
+      "manifest_hash": "sha256:8bce3ba7c4aa00c53ff74c9f269f25862f48a60ec575450070ddfad7a8ff3aa7",
+      "enabled": true,
+      "priority": 10,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T17:05:14.598529+00:00"
+    },
+    "jevlab-testing": {
+      "version": "0.2.1",
+      "source": "local",
+      "manifest_hash": "sha256:0625a8fd7d9d9dc1cdfeceb4f238327b641d9c867ce6197c366f9b2bbfafa7ac",
       "enabled": true,
       "priority": 90,
       "registered_commands": {
@@ -53,17 +63,7 @@
           "speckit-tasks"
         ]
       },
-      "installed_at": "2026-10-12T16:20:49.214399+00:00"
-    },
-    "jevlab-spec": {
-      "version": "0.2.0",
-      "source": "local",
-      "manifest_hash": "sha256:8bce3ba7c4aa00c53ff74c9f269f25862f48a60ec575450070ddfad7a8ff3aa7",
-      "enabled": true,
-      "priority": 10,
-      "registered_commands": {},
-      "registered_skills": {},
-      "installed_at": "2026-10-12T17:05:14.598529+00:00"
+      "installed_at": "2026-10-12T23:53:27.610214+00:00"
     }
   }
 }

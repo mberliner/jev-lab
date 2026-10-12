@@ -19,7 +19,8 @@ proyecto con `replace` (regla 1 de `docs/governance.md` §5).
 
 ## Qué cambia respecto a la base
 
-Solo las líneas que hacían opcionales los tests; el resto es copia literal:
+Solo las líneas que hacían opcionales los tests y los símbolos que prohíbe
+`docs/standards/writing.md`; el resto es copia literal:
 
 - Plantilla: la nota «Tests» (tests obligatorios, primero y en rojo; pruebas `live` opcionales,
   marcadas y con tope de coste), los títulos «Tests for User Story N», y tres menciones
@@ -29,6 +30,10 @@ Solo las líneas que hacían opcionales los tests; el resto es copia literal:
 - Plantilla y comando (v0.2.0): la mezcla de tests por historia de `docs/standards/testing.md` §2.
   En los ejemplos de cada historia, el test de contrato pasa a tests unitarios y el de
   integración cubre el escenario de aceptación principal.
+- Plantilla y comando (v0.2.1): sin emojis ni flechas (`docs/standards/writing.md`). Se quita el
+  símbolo de los ejemplos «CORRECT»/«WRONG», de «CRITICAL» y de «MVP», que ya llevan la palabra,
+  y la flecha Unicode pasa a `->`. Al trasladar mejoras de una base nueva, repetir la sustitución;
+  `uv run poe check-writing` avisa si se escapa alguno.
 
 ## Mantenimiento
 
