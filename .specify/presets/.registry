@@ -34,6 +34,16 @@
         ]
       },
       "installed_at": "2026-10-12T14:44:16.245624+00:00"
+    },
+    "jevlab-decision": {
+      "version": "0.1.0",
+      "source": "local",
+      "manifest_hash": "sha256:54880258a10d3c0d36ec70dd3d43615e2a83d0d45d6e8c0690f9e1a44a8c4014",
+      "enabled": true,
+      "priority": 20,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T15:21:49.001418+00:00"
     }
   }
 }

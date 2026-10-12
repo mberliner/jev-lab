@@ -40,7 +40,10 @@
      de tareas resuelta es `jevlab-testing` + `jevlab-spec`. Hallazgo: Spec Kit registra los
      comandos de un preset solo en el agente activo; el procedimiento para los dos agentes está en
      `docs/governance.md` §5, «Instalar o cambiar un preset».
-   - **[siguiente]** `jevlab-decision`, `jevlab-arch` y `jevlab-security`.
+   - [hecho, 2026-10-12] `jevlab-decision` v0.1.0 (prioridad 20, `append` en spec y plan): tabla
+     de decisiones en la spec y su diseño en el plan, con el estándar
+     `docs/standards/decision-design.md`. Los `append` se componen de menor a mayor precedencia.
+   - **[siguiente]** `jevlab-arch` y `jevlab-security`.
 3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
