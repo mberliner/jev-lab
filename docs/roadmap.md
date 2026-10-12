@@ -54,7 +54,9 @@
      hasta la cobertura (medida sin los niveles superiores), 1 test de integración por historia y
      1 humo `live` por aplicación. `jevlab-testing` v0.2.0 lleva esa mezcla a la plantilla y al
      comando de tareas.
-3. **[en curso]** [hecho, 2026-10-12] ADR-0001 (hexagonal, aceptado). **[siguiente]** ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
+3. [hecho, 2026-10-12] ADR-0001 (arquitectura hexagonal) y ADR-0002 (paridad Claude
+   Code/Antigravity), aceptados, en `docs/adr/` (MADR). Los pasos de instalación de la paridad
+   pasan a `docs/setup.md` en la spec 000.
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
    `speckit_version: ">=1.1.4.dev0"`. Pendiente: PyYAML en Windows, y verificar si
@@ -122,6 +124,9 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 ---
 
 ## Funcionamiento igual en Claude Code y Antigravity (`agy`)
+
+La decisión y sus alternativas están en [ADR-0002](adr/0002-paridad-de-agentes.md). Lo que sigue
+es el procedimiento, que pasará a `docs/setup.md` en la spec 000.
 
 Spec Kit admite varias integraciones en el mismo proyecto. Según la [referencia de integraciones](https://github.github.io/spec-kit/reference/integrations.html):
 - claves `claude` -> `.claude/skills/` y `agy` -> `.agents/skills/`;
