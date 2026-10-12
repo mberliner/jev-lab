@@ -28,6 +28,8 @@ Spec-Driven Development (Spec Kit).
 - Skills para Claude Code en `.claude/skills/` y para Antigravity en `.agents/skills/`. Las dos
   comparten `.specify/` y `specs/`.
 - Los scripts de Spec Kit son Python (`.specify/scripts/python/`) y se ejecutan con `python3` ≥ 3.8.
+- Para actualizar Spec Kit se sigue `docs/governance.md` §5, «Actualizar Spec Kit»: los presets
+  propios con `replace` no reciben las mejoras de la base sin intervención manual.
 
 ## Entorno
 

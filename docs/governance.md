@@ -71,7 +71,7 @@ Ejemplos:
 | "Los puertos son `typing.Protocol` y se nombran `<Algo>Port`" | Estándar `architecture` | Convención de implementación |
 | "Elegimos hexagonal frente a capas clásicas" | ADR | Decisión con alternativas |
 | "Toda decisión expuesta al usuario muestra resultado, confianza y motivo de escalado" | Constitución | Invariante de experiencia |
-| "Cada spec describe los estados auto/revisión/escape por persona" | Preset `ux` | Sección obligatoria de `spec.md` |
+| "Cada spec describe los estados auto/revisión/escape por persona" | Preset `decision` | Sección obligatoria de `spec.md` |
 | "Formato de error de la API: `{code, message, request_id}`" | Estándar `api-errors` | Detalle de implementación |
 
 ## 3. Trazabilidad entre capas
@@ -93,17 +93,24 @@ esa regla sobra o falta un principio.
 Un tema existe cuando tiene al menos un principio en la constitución. A partir de ahí puede tener
 preset, estándar o ambos, según lo necesite.
 
-| Tema | Principio(s) | Preset | Estándar(es) | Estado |
+| Tema | Principio(s) | Preset (plantillas, estrategia) | Estándar(es) | Estado |
 | --- | --- | --- | --- | --- |
-| Arquitectura | *(tras ratificar)* | `jevlab-arch` | `architecture.md` | previsto en 000 |
-| UX (CLI/API) | *(tras ratificar)* | `jevlab-ux` | `cli-ux.md`, `api-errors.md` | previsto en 000 |
-| Decisión Jev (escape, umbrales, calibración) | *(tras ratificar)* | `jevlab-decision` | `decision-design.md` | previsto en 000 |
-| Testing | *(tras ratificar)* | *(por decidir)* | `testing.md` | pendiente |
-| Seguridad | *(tras ratificar)* | *(por decidir)* | `security.md` | pendiente |
+| Forma de la spec (corte vertical, historias, lección) | VII | `jevlab-spec` (spec, checklist de cierre; `append`) | *(no necesita)* | previsto en 000 |
+| Arquitectura | III | `jevlab-arch` (plan; `append`) | `architecture.md` | previsto en 000 |
+| Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | previsto en 000 |
+| Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | previsto en 000 |
+| Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | previsto en 000 |
+| Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | *(no necesita)* | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
 | Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática en 000 |
 | Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática en 000 |
 
-Esta tabla se actualiza al crear o retirar un tema.
+Esta tabla se actualiza al crear o retirar un tema. Las prioridades de instalación (`--priority`)
+se fijan al crear los presets. Un preset con `replace` corta la composición de esa plantilla: los
+presets que añadan algo a la misma plantilla necesitan más prioridad que él.
+
+No hay tema UX propio: la transparencia de la decisión (resultado, confianza, motivo de escalado,
+«no disponible», grabado o sintético) deriva de II y IV y vive en `jevlab-decision`; las
+convenciones de formato de CLI y API son solo estándares.
 
 ## 5. Presets propios: convenciones
 
@@ -139,6 +146,38 @@ Se instala con `specify preset add --dev presets/jevlab-<tema> --priority <n>`. 
    rompería la composición por temas.
 6. **Sin dependencias de un agente.** Los fragmentos son Markdown neutro. Funcionan igual con Claude
    Code y Antigravity.
+
+### Cómo se aplica cada estrategia
+
+| Pieza | Cuándo se compone | Con `append`/`prepend`/`wrap` | Con `replace` |
+| --- | --- | --- | --- |
+| Plantilla (`spec`, `plan`, `tasks`…) | En cada uso: el script de Spec Kit la recompone al ejecutar el comando | Plantilla base **actual** + fragmento: recibe las mejoras de Spec Kit sin hacer nada | Solo nuestra copia; la base no se lee. Queda **fija hasta que la editemos** |
+| Comando (skill de cada agente) | Una vez, al instalar el preset: se escribe en `.claude/skills/` y `.agents/skills/` | Base de ese momento + fragmento, fija hasta reinstalar el preset | Nuestra copia, fija hasta reinstalar el preset |
+
+Consecuencia: `replace` cambia el mantenimiento automático por el control total. Solo se usa donde
+la base contradice la constitución y no basta con añadir texto (hoy: `jevlab-testing`, que elimina
+«Tests are OPTIONAL» de la plantilla y del comando de tareas).
+
+### Actualizar Spec Kit
+
+Una actualización reescribe `.specify/templates/` y puede reescribir las skills de los agentes, pero
+no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
+
+1. Anotar la versión actual (`specify version`).
+2. Actualizar la CLI (`specify self upgrade`) y cada integración instalada
+   (`specify integration upgrade`).
+3. Reinstalar todos los presets (`specify preset update` o `specify preset add --dev`), porque la
+   actualización de integraciones puede devolver las skills a su versión base.
+4. Por cada preset con `replace`: comparar con `git diff` la nueva base (plantilla en
+   `.specify/templates/` y comando base) con la anterior, trasladar a nuestra copia las mejoras que
+   no contradigan la constitución, actualizar en su README la versión de Spec Kit de la que parte la
+   copia y subir su `version`.
+5. Comprobar: `specify preset resolve <plantilla>` devuelve la capa esperada, y pre-commit y CI pasan.
+   CI incluye una comprobación que falla si «Tests are OPTIONAL» reaparece en la plantilla resuelta
+   o en las skills de cualquier agente.
+6. Commit `chore(speckit): actualizar a <versión>`.
+
+Los pasos 2 y 3 están pendientes de verificar en la práctica (spec 000).
 
 ### Nota técnica
 

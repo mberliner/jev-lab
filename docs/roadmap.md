@@ -2,7 +2,7 @@
 
 ## Estado actual y cómo retomar
 
-> **Actualizado: 2026-10-11.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> **Actualizado: 2026-10-12.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
 **Dónde estamos:** spec 000 (Cimientos), sin código todavía. Hecho:
@@ -17,14 +17,22 @@
 - Entorno de la máquina Linux comprobado: uv 0.9.18, Python 3.13.11 (uv), `python3` 3.8.10 con
   PyYAML 5.3.1 y `specify` 1.1.4.
 
-**Siguiente paso: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
-«Espacio reservado»). Orden propuesto:
-1. Completar la columna «Principio(s)» de la tabla de temas de `docs/governance.md` §4.
-2. Decidir el contenido de cada preset (`jevlab-arch`, `jevlab-ux`, `jevlab-decision`) y de sus
-   estándares; decidir si testing y seguridad tienen preset. Usar como entrada el «detalle sacado
-   de la constitución» del paso 1 HITL (destinos `decision-design`, `testing` y `security`).
+**En curso: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
+«Espacio reservado»).
+1. [hecho, 2026-10-12] Temas, principios y presets en `docs/governance.md` §4:
+   - `jevlab-spec` (VII), `jevlab-arch` (III), `jevlab-decision` (I, II, IV), `jevlab-testing`
+     (IV) y `jevlab-security` (V). Todos con `append`, salvo `jevlab-testing`.
+   - Sin tema UX: la transparencia de la decisión va a `jevlab-decision`; las convenciones de CLI y
+     API son solo estándares (`cli-ux.md` en 001, `api-errors.md` en 003).
+   - `jevlab-testing` usa `replace` en la plantilla y el comando de tareas para eliminar «Tests are
+     OPTIONAL» de Spec Kit, que contradice IV. Se complementa con una comprobación en CI.
+     Procedimiento de actualización en `docs/governance.md` §5, «Actualizar Spec Kit».
+2. **[siguiente]** Contenido de cada preset y de sus estándares. Usar como entrada el «detalle
+   sacado de la constitución» del paso 1 HITL (destinos `decision-design`, `testing` y `security`).
 3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
-4. Comprobar `specify preset add --dev` en Linux, y PyYAML en Windows.
+4. Comprobar `specify preset add --dev` en Linux y PyYAML en Windows. Verificar si
+   `specify integration upgrade` devuelve las skills a su versión base (pasos 2 y 3 de «Actualizar
+   Spec Kit»).
 
 **Después:** el resto de la spec 000 (ver «000: Cimientos»): entorno uv, esqueleto hexagonal, CI
 Linux/Windows, pre-commit con las comprobaciones de los estándares, `README.md` para personas, `docs/setup.md`,
@@ -275,7 +283,8 @@ Esta lista fue **el borrador de entrada**. La constitución vigente es `.specify
 >   el RFC 2119; se borra el *Sync Impact Report*, que según Spec Kit es temporal y no se
 >   versiona.
 > - [hecho] Paso 6: el gobierno de enmiendas ya está escrito en la sección *Governance*.
-> - **[siguiente]** HITL de mecanismos de arquitectura y definiciones globales.
+> - **[en curso]** HITL de mecanismos de arquitectura y definiciones globales (ver «Estado actual y
+>   cómo retomar»).
 
 Buenas prácticas que se aplican:
 - Plantilla de Spec Kit: versión semántica, fechas de ratificación y enmienda, *Sync Impact Report* y la puerta *Constitution Check* de `plan-template`.
@@ -334,8 +343,8 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
     - **Estándares** (`docs/standards/<tema>.md`): cómo se hace, con detalle y ejemplos.
     - **ADRs** (`docs/adr/`, MADR) para decisiones con alternativas; no son una capa de reglas.
     - Precedencia: constitución > preset > estándar > `plan.md`. Cada regla se rastrea hasta un principio.
-  - *Temas iniciales:* arquitectura (`jevlab-arch`), UX (`jevlab-ux`) y decisión Jev (`jevlab-decision`). Testing y seguridad, por decidir.
-  - *Pendiente (HITL, tras ratificar la constitución):* contenido de cada preset y estándar; ADR-0001 (hexagonal) y ADR-0002 (paridad Claude/agy); comprobar `specify preset add --dev` y PyYAML en Windows.
+  - *Temas (decidido 2026-10-12):* `jevlab-spec`, `jevlab-arch`, `jevlab-decision`, `jevlab-testing` (`replace`) y `jevlab-security`; sin tema UX. Detalle en `docs/governance.md` §4.
+  - *Pendiente (HITL):* contenido de cada preset y estándar; ADR-0001 (hexagonal) y ADR-0002 (paridad Claude/agy); comprobar `specify preset add --dev`, PyYAML en Windows y el efecto de `specify integration upgrade` sobre las skills.
 - **Aceptación:**
   - constitución v0.3.0 ratificada por el humano tras los 6 pasos HITL;
   - mecanismos de definiciones globales acordados y aplicados en las plantillas;
