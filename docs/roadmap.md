@@ -69,7 +69,9 @@
   `jevlab doctor` solo sale a la red con una opción explícita; CI en GitHub Actions sobre un
   repositorio público (hay que crear el remoto), sin tokens ni accesos visibles para el público
   (`docs/standards/security.md` §5).
-- **[siguiente]** `/speckit-clarify` (opcional) y `/speckit-plan`. Luego, la spec 001.
+- [hecho, 2026-10-12] `/speckit-clarify`: licencia Apache-2.0; pre-commit ejecuta todo, incluida
+  la suite con cobertura; `doctor` remoto sin red termina con error.
+- **[siguiente]** `/speckit-plan`. Luego, la spec 001.
 
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.

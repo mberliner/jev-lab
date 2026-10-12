@@ -16,6 +16,17 @@ demostrables y una lección. Las herramientas que nombra (uv, Python 3.13, pre-c
 son elecciones de esta spec: vienen decididas por la constitución, los estándares y los ADRs, y
 aquí son requisitos de entrada.
 
+## Clarifications
+
+### Session 2026-10-12
+
+- Q: ¿Con qué licencia se publica el repositorio público? -> A: Apache-2.0 para todo el
+  repositorio (código y documentación).
+- Q: ¿Qué comprobaciones se ejecutan al hacer commit y cuáles solo en CI? -> A: todas en los dos
+  sitios; pre-commit ejecuta también la suite completa con cobertura.
+- Q: Si se piden las comprobaciones remotas de `jevlab doctor` y no hay red, ¿termina con error?
+  -> A: sí; con la opción remota, «no disponible» cuenta como fallo.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Poner en marcha el proyecto desde un clon limpio (Priority: P1)
@@ -118,7 +129,7 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
 
 1. **Given** el repositorio, **When** una persona abre `README.md`, **Then** encuentra qué es
    jev-lab, el estado con enlace al roadmap, un inicio rápido de 3 o 4 comandos enlazado a
-   `docs/setup.md` y un mapa de documentos.
+   `docs/setup.md`, un mapa de documentos y la licencia.
 2. **Given** la lección 000, **When** la persona la sigue, **Then** aprende el flujo SDD, las capas
    de reglas, el entorno de dos intérpretes y los fallos típicos con su mitigación.
 
@@ -137,7 +148,8 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
 - `specify integration upgrade --force` devuelve a la base las skills del agente no activo: la
   puerta de paridad lo detecta.
 - Sin red durante `jevlab doctor` con comprobaciones remotas: el comando informa «no disponible»
-  para esas comprobaciones, distingue error de red de clave inválida y no se cuelga.
+  para esas comprobaciones, distingue error de red de clave inválida, no se cuelga y termina con
+  error.
 - El paquete casi no tiene código: los umbrales de cobertura se aplican igual desde el principio.
 - Un test intenta usar la red sin la marca `live`: falla.
 
@@ -165,7 +177,8 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
   cobertura aplicados.
 
 **Puertas de calidad**
-- **FR-007**: Pre-commit y CI MUST comprobar, con el mismo resultado en Linux y Windows:
+- **FR-007**: Pre-commit y CI MUST ejecutar las mismas comprobaciones, incluida la suite completa
+  con cobertura en cada commit, con el mismo resultado en Linux y Windows:
   1. estilo y tipos estrictos;
   2. dependencias entre capas;
   3. suite por defecto con la red bloqueada y cobertura (`docs/standards/testing.md` §3 y §4);
@@ -192,6 +205,7 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
   deployment de Azure OpenAI con una llamada mínima. Sin esa opción, el comando no usa la red.
 - **FR-012**: Cada comprobación de `jevlab doctor` MUST mostrar su estado (correcto, falla, no
   disponible) y, si falla, cómo arreglarla; el comando MUST terminar con error si alguna falla.
+  Con la opción remota, una comprobación remota «no disponible» cuenta como fallo.
 - **FR-013**: `jevlab doctor` MUST NOT mostrar valores de claves ni *payloads*
   (`docs/standards/security.md` §2).
 
@@ -200,7 +214,9 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
   `python3` y PyYAML para Spec Kit, el enlace `python3.exe` en Windows, Git Bash, los dos agentes y
   los pasos de paridad que hoy están en el roadmap.
 - **FR-015**: `README.md` MUST presentar el proyecto a personas (no a agentes): qué es, estado con
-  enlace al roadmap, inicio rápido de 3 o 4 comandos y mapa de documentos.
+  enlace al roadmap, inicio rápido de 3 o 4 comandos, mapa de documentos y licencia.
+- **FR-019**: El repositorio MUST incluir `LICENSE` con la licencia Apache-2.0, que cubre código y
+  documentación.
 - **FR-016**: La lección 000 MUST cubrir el flujo SDD, las capas de reglas, cómo se aplica un
   preset paso a paso (caso `jevlab-testing`), el entorno y los fallos típicos con su mitigación,
   reutilizando `docs/setup.md` en vez de repetirlo.
