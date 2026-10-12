@@ -29,7 +29,9 @@ decisión, motivo y alternativas. Versiones consultadas en PyPI y GitHub el 2026
 ## R3. El SDK de TypeSafe usa `httpx2`
 
 - **Hallazgo:** `typesafe-sdk` depende de `httpx2>=2.0.0`, no de `httpx`. `respx` (previsto en
-  `docs/standards/testing.md` §1 para HTTP) y `vcrpy` interceptan `httpx`.
+  `docs/standards/testing.md` §1 para HTTP) y `vcrpy` interceptan `httpx`. Comprobado al
+  implementar: `openai` 3.29.0 también usa `httpx2` (no hay `httpx` en el entorno), así que el
+  test de contrato de Azure usa igualmente `httpx2.MockTransport`.
 - **Decisión para la 000:** los tests de contrato del adaptador de TypeSafe usan el parámetro
   `transport` del cliente con un transporte simulado de `httpx2`, sin `respx`. Las *cassettes*
   quedan fuera de alcance (spec, YAGNI).
@@ -140,5 +142,7 @@ decisión, motivo y alternativas. Versiones consultadas en PyPI y GitHub el 2026
 | Desarrollo: `pytest`, `pytest-socket`, `pytest-cov`, `hypothesis` | 9.1.1, 0.8.1, 7.1.0, 6.169.0 | Tests |
 | Desarrollo: `ruff`, `mypy`, `import-linter`, `poethepoet`, `pre-commit` | 0.17.0, 2.4.0, 2.15, 0.48.0, 4.6.2 | Puertas y tareas |
 
-`python-dotenv` no hace falta: `pydantic-settings` lee `.env`. `vcrpy` y `pytest-recording` se
+Añadido al implementar: `pyyaml` 6.0.3 y `types-pyyaml` en desarrollo, para que
+`scripts/checks/presets.py` lea los `preset.yml` (antes llegaba solo como dependencia de
+`pre-commit`). `python-dotenv` no hace falta: `pydantic-settings` lee `.env`. `vcrpy` y `pytest-recording` se
 añaden en la 001, cuando haya *cassettes* (R3).
