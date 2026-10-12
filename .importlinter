@@ -1,0 +1,44 @@
+; Regla de dependencias entre capas: docs/standards/architecture.md §1 y §2.
+[importlinter]
+root_package = jevlab
+include_external_packages = True
+
+[importlinter:contract:layers]
+name = Capas: entrypoints -> application -> domain
+type = layers
+layers =
+    jevlab.entrypoints
+    jevlab.application
+    jevlab.domain
+
+[importlinter:contract:domain-pure]
+name = El dominio es puro: sin otras capas ni SDKs de proveedores
+type = forbidden
+source_modules =
+    jevlab.domain
+forbidden_modules =
+    jevlab.adapters
+    jevlab.ports
+    jevlab.application
+    jevlab.entrypoints
+    typesafe_sdk
+    openai
+
+[importlinter:contract:application-ports]
+name = La aplicación usa puertos, no adaptadores ni SDKs
+type = forbidden
+source_modules =
+    jevlab.application
+forbidden_modules =
+    jevlab.adapters
+    typesafe_sdk
+    openai
+
+[importlinter:contract:adapters-ports]
+name = Los adaptadores dependen solo de puertos y dominio
+type = forbidden
+source_modules =
+    jevlab.adapters
+forbidden_modules =
+    jevlab.application
+    jevlab.entrypoints
