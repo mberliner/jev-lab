@@ -1,0 +1,22 @@
+schema_version: "1.0"
+
+preset:
+  id: "jevlab-security"
+  name: "jev-lab: seguridad y privacidad"
+  version: "0.1.0"
+  description: "Exige en el plan el origen y la confianza de cada dato, qué se registra sin payloads ni datos personales, los secretos nuevos y los casos adversariales (Constitución V)."
+
+requires:
+  speckit_version: ">=1.1.4.dev0"
+
+provides:
+  templates:
+    - type: "template"
+      name: "plan-template"
+      file: "templates/plan-template.md"
+      description: "Sección «Seguridad»"
+      strategy: "append"
+
+tags:
+  - "jev-lab"
+  - "security"

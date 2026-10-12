@@ -54,6 +54,16 @@
       "registered_commands": {},
       "registered_skills": {},
       "installed_at": "2026-10-12T15:32:17.117773+00:00"
+    },
+    "jevlab-security": {
+      "version": "0.1.0",
+      "source": "local",
+      "manifest_hash": "sha256:1b3a61b15534b9108a3680aae4ecfd8005638e673dcb76aa68bffe86f52a38e1",
+      "enabled": true,
+      "priority": 40,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T15:46:56.078756+00:00"
     }
   }
 }

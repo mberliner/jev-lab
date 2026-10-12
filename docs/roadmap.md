@@ -46,7 +46,10 @@
    - [hecho, 2026-10-12] `jevlab-arch` v0.1.0 (prioridad 30, `append` en plan) con el estándar
      `docs/standards/architecture.md`. Las reglas de arquitectura salen de este roadmap; la tabla
      de testabilidad y la cobertura pasarán a `docs/standards/testing.md`.
-   - **[siguiente]** `jevlab-security`; después, `docs/standards/testing.md`.
+   - [hecho, 2026-10-12] `jevlab-security` v0.1.0 (prioridad 40, `append` en plan) con el
+     estándar `docs/standards/security.md`, que define *payload* frente a metadatos.
+   - **[siguiente]** `docs/standards/testing.md` (tabla de testabilidad por capa, cobertura y
+     bloqueo de red, que salen de este roadmap).
 3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
