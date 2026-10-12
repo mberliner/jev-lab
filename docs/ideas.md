@@ -26,3 +26,4 @@ cambiada que obliga a adaptar algo ya hecho, o una mejora detectada al trabajar.
 
 | Origen (spec, fecha) | Idea | Principio o capa | Spec que la recoge |
 | --- | --- | --- | --- |
+| 000, 2026-10-12 (plan, research R3) | El SDK de TypeSafe usa `httpx2`; `respx` y `vcrpy` interceptan `httpx`. Comprobar si `vcrpy` graba `httpx2`; si no, un grabador propio sobre el parámetro `transport` del cliente y ajustar `docs/standards/testing.md` §0 y §1 | IV, estándar de testing | 001 |

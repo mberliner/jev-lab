@@ -71,7 +71,9 @@
   (`docs/standards/security.md` §5).
 - [hecho, 2026-10-12] `/speckit-clarify`: licencia Apache-2.0; pre-commit ejecuta todo, incluida
   la suite con cobertura; `doctor` remoto sin red termina con error.
-- **[siguiente]** `/speckit-plan`. Luego, la spec 001.
+- [hecho, 2026-10-12] `/speckit-plan`: plan, research, data-model, contrato de `jevlab doctor` y
+  quickstart en `specs/000-cimientos/`.
+- **[siguiente]** `/speckit-tasks` y `/speckit-analyze`. Luego, la spec 001.
 
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.
