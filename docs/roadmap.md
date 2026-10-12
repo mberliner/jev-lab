@@ -8,7 +8,7 @@
 **Dónde estamos:** spec 000 (Cimientos), sin código todavía. Hecho:
 - Spec Kit instalado con las integraciones de Claude Code y Antigravity; `AGENTS.md` como única
   fuente de instrucciones (`CLAUDE.md` solo importa `@AGENTS.md`).
-- **Constitución v0.3.0 ratificada** (`.specify/memory/constitution.md`), 7 principios. El historial
+- **Constitución v0.3.1** (v0.3.0 ratificada; PATCH del 2026-10-12: «cuerpos» pasa a *payloads*) (`.specify/memory/constitution.md`), 7 principios. El historial
   del proceso está en «Depuración HITL de la constitución», más abajo.
 - Gobernanza en tres capas (constitución, presets propios y estándares) en `docs/governance.md`.
 - Estándares: `docs/standards/writing.md` (sin emojis; cajas y flechas solo en bloques de código;
@@ -92,7 +92,7 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
   - `Noul` / `Choice` / `Score`, y `response_model` con Pydantic;
   - `RetryPolicy`, `TypeSafeAPIError(.status, .request_id)`;
   - variables `TYPESAFE_API_KEY`, `TYPESAFE_DEFAULT_MODEL` y `TYPESAFE_LOG_LEVEL`.
-  - **Riesgo:** en nivel `debug` registra los *bodies* en los logs.
+  - **Riesgo:** en nivel `debug` registra los *payloads* en los logs.
 - Guía "How to build":
   - el control queda en el código;
   - preguntas atómicas;
@@ -237,7 +237,7 @@ Cada spec añade solo lo que sus historias necesitan (YAGNI); la estructura se c
 4. **Toda acción automatizable pasa por la confianza**, con umbrales por riesgo, versionados y justificados con datos.
 5. **Honestidad metodológica.** Los fixtures se etiquetan; no se proclaman ganadores; lo desconocido se marca como "no disponible".
 6. **Probar antes de afirmar.** Unitarios sin red; contrato con cassettes; *live* opcional y con tope de coste. TDD y cobertura ≥ 80 %.
-7. **Seguridad.** Secretos solo en `.env` + gitleaks; logs sin bodies ni datos personales; el estado es dato no confiable.
+7. **Seguridad.** Secretos solo en `.env` + gitleaks; logs sin *payloads* ni datos personales; el estado es dato no confiable.
 8. **Contenido original y autocontenido.** Contenido propio; solo fuentes oficiales y primarias. El repo arranca y funciona aislado: lo fundamental vive dentro, sin rutas, memorias ni configuración externas.
 9. **Cortes verticales.** Cada feature entrega valor ejecutable a una persona; unas 4 historias independientes.
 10. **Pedagogía.** Cada feature trae su lección, con lo que puede fallar.
@@ -370,7 +370,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - **US2 (P2):** veo si el ticket menciona explícitamente un problema urgente (Noul). Lo que cae en la banda incierta se muestra como "incierto", no como "medio".
 - **US3 (P3):** veo la prioridad en una escala ordenada (Score con `legend`), usada solo para comparar con un umbral, no como magnitud.
 - **US4 (P4):** repito todo **sin red ni coste** reproduciendo respuestas reales grabadas (cassettes). La salida indica que es una grabación.
-- *Producción introducida:* cliente reutilizado, `RetryPolicy` por defecto, timeout, errores sin filtrar datos y logs `info` sin bodies.
+- *Producción introducida:* cliente reutilizado, `RetryPolicy` por defecto, timeout, errores sin filtrar datos y logs `info` sin *payloads*.
 - *Verificación:* test de contrato con cassette; `confidence.py` reproduce la fórmula oficial a partir de `probabilities`.
 
 ### 002: Enrutado con confianza según riesgo (Aprendiz -> Operador)

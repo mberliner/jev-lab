@@ -15,7 +15,7 @@ Spec-Driven Development (Spec Kit).
 | Documento | Para qué |
 | --- | --- |
 | `docs/roadmap.md` | **Plan vigente y estado actual**: empezar por «Estado actual y cómo retomar» |
-| `.specify/memory/constitution.md` | Principios no negociables (v0.3.0, ratificada) |
+| `.specify/memory/constitution.md` | Principios no negociables (v0.3.1, ratificada) |
 | `docs/personas.md` | Perfiles de usuario a los que sirve cada feature |
 | `docs/ideas.md` | Ideas abiertas para specs futuras (de dominio y de las retros); revisar al planificar una spec |
 | `docs/governance.md` | Dónde vive cada regla común: constitución -> presets propios -> estándares |
@@ -48,7 +48,7 @@ Spec-Driven Development (Spec Kit).
 - El modelo juzga, el código decide: aritmética, fechas, conteos, permisos e invariantes van en código.
 - Cada Choice incluye una opción de escape (`other`/`none`).
 - Toda acción automatizable pasa por la confianza, con umbrales por riesgo.
-- Secretos solo en `.env` (nunca en el repo); logs sin bodies ni datos personales.
+- Secretos solo en `.env` (nunca en el repo); logs sin *payloads* ni datos personales.
 - Código y textos originales; datos externos solo con licencia válida y citados. Solo se citan la
   documentación oficial de TypeSafe y fuentes primarias.
 - Hooks y comandos solo con implementación neutral: la lógica va en tareas del repo y existe igual

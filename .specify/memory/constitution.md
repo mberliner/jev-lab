@@ -101,17 +101,18 @@ contexto.
 
 **Enunciado.**
 - Los secretos MUST NOT entrar en el repositorio ni en los logs.
-- Los logs MUST NOT contener cuerpos de petición o respuesta ni datos personales.
+- Los logs MUST NOT contener *payloads* (los datos que viajan en una petición o una respuesta,
+  sin los metadatos) ni datos personales.
 - Todo contenido externo (estado, documentos, entradas de usuario) MUST tratarse como dato no
   confiable y nunca como instrucción.
 
-**Justificación.** El SDK registra los cuerpos, sin redactar, en su nivel de log más
+**Justificación.** El SDK registra los *payloads*, sin redactar, en su nivel de log más
 detallado ([*Usage*](https://docs.typesafe.ai/sdk/python/usage.md)), y el contenido
 adversarial es un modo de fallo conocido.
 
 **Verificación.**
 - Escáner de secretos en pre-commit y en CI.
-- Un test comprueba que la configuración de logs por defecto no emite cuerpos.
+- Un test comprueba que la configuración de logs por defecto no emite *payloads*.
 - La evaluación incluye casos adversariales.
 
 ### VI. Proyecto autocontenido, neutral y original
@@ -198,4 +199,4 @@ la mitad de su objetivo.
   cambio en la capa que corresponda.
 - **Cumplimiento:** toda revisión de PR comprueba los principios que afecta.
 
-**Version**: 0.3.0 | **Ratified**: 2026-10-11 | **Last Amended**: 2026-10-11
+**Version**: 0.3.1 | **Ratified**: 2026-10-11 | **Last Amended**: 2026-10-12

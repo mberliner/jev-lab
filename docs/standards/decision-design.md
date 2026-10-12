@@ -57,7 +57,7 @@ lista esos campos y explica por qué bastan.
 **Motivo.** Menos estado es menos ruido, menos coste y menos superficie para contenido
 adversarial (§V).
 
-**Correcto:** para «¿A qué cola pertenece este ticket?», se envían asunto y cuerpo.
+**Correcto:** para «¿A qué cola pertenece este ticket?», se envían asunto y texto.
 
 **Incorrecto:** se envía el ticket completo con el historial del cliente y sus datos de contacto.
 
