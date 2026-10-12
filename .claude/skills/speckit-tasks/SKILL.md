@@ -144,7 +144,7 @@ The tasks.md should be immediately executable - each task must be specific enoug
 
 **CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
 
-**Tests are MANDATORY** (jev-lab, Constitution IV): every user story includes test tasks, written and failing before its implementation tasks. Tests against real services are optional, marked `live`, and declare a cost cap.
+**Tests are MANDATORY** (jev-lab, Constitution IV): every user story includes test tasks, written and failing before its implementation tasks. Tests against real services are optional, marked `live`, and declare a cost cap. Test mix per story (docs/standards/testing.md §2): unit tests first, enough to reach coverage; one `integration` test for the main acceptance scenario; contract tests only if the story adds or changes an adapter.
 
 ### Checklist Format (REQUIRED)
 

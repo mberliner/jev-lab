@@ -26,6 +26,9 @@ Solo las líneas que hacían opcionales los tests; el resto es copia literal:
   «(if requested)», «(if included)» y «(if tests requested)».
 - Comando: la regla «Tests are OPTIONAL» y cuatro menciones «(if requested)» / «If tests
   requested».
+- Plantilla y comando (v0.2.0): la mezcla de tests por historia de `docs/standards/testing.md` §2.
+  En los ejemplos de cada historia, el test de contrato pasa a tests unitarios y el de
+  integración cubre el escenario de aceptación principal.
 
 ## Mantenimiento
 
