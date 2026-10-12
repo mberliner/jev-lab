@@ -1,0 +1,44 @@
+# CI pública sin secrets (docs/standards/security.md §5): solo push y pull_request.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: puertas (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.9.18"
+
+      - name: Instalar dependencias
+        run: uv sync --locked
+
+      - name: Puertas de calidad
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
+      - name: Secretos en toda la historia
+        run: uv run pre-commit run gitleaks-history --hook-stage manual --all-files
+
+      - name: Mensajes de commit nuevos
+        shell: bash
+        env:
+          RANGE: >-
+            ${{ github.event_name == 'pull_request'
+            && format('{0}..{1}', github.event.pull_request.base.sha, github.event.pull_request.head.sha)
+            || format('{0}..{1}', github.event.before, github.sha) }}
+        run: uv run poe check-commit-msg --range "$RANGE"

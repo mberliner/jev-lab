@@ -74,7 +74,7 @@ los presets propios, no editando esos archivos a mano.
 
 - **Automática:** un script del repo, ejecutado en pre-commit y en CI, rechaza los emojis y
   pictogramas en `*.md` fuera de las excepciones, y los caracteres de caja y flechas fuera de los
-  bloques de código. Se implementa en la spec 000.
+  bloques de código. Lo implementa `scripts/checks/writing.py` (`uv run poe check-writing`).
 - **Revisión:** «¿hay algún símbolo que debería ser una palabra?» y «¿hay alguna regla en
   negativo que no sea una prohibición clara?». La redacción en positivo no se comprueba de forma
   automática.
