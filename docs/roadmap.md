@@ -27,7 +27,7 @@
 4. Comprobar `specify preset add --dev` en Linux, y PyYAML en Windows.
 
 **Después:** el resto de la spec 000 (ver «000: Cimientos»): entorno uv, esqueleto hexagonal, CI
-Linux/Windows, pre-commit con las comprobaciones de los estándares, `docs/setup.md`,
+Linux/Windows, pre-commit con las comprobaciones de los estándares, `README.md` para personas, `docs/setup.md`,
 `.env.example`, la lección y `jevlab doctor`. Luego, la spec 001.
 
 **Convenciones vigentes al retomar:**
@@ -324,6 +324,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - Esqueleto hexagonal vacío (`domain/ports/adapters/entrypoints`) + `import-linter` en CI + tareas `poe` + `.gitattributes` + CI con matriz Linux/Windows.
 - Script de comprobación de `docs/standards/writing.md` (emojis y caracteres de caja fuera de bloques de código) en pre-commit y CI, y hook `commit-msg` de `docs/standards/version-control.md` (Conventional Commits, sin atribución de agentes).
 - Lección `docs/lessons/000-cimientos.md` (principio VII): método SDD, capas de reglas, entorno y fallos típicos con su mitigación; reutiliza `docs/setup.md`.
+- `README.md` para personas (las instrucciones para agentes siguen en `AGENTS.md`): qué es jev-lab, estado con puntero al roadmap, inicio rápido de 3–4 comandos con enlace a `docs/setup.md`, y mapa de documentos. Sin licencia por ahora. Se escribe junto a `docs/setup.md`, cuando los comandos existan.
 - `docs/setup.md` con la puesta en marcha en Linux y Windows: uv, Python 3.13, el enlace `python3.exe` en Windows (`New-Item -ItemType HardLink -Path "$dir\python3.exe" -Target "$dir\python.exe"`), Git Bash y los dos agentes.
 - `.env.example` con `TYPESAFE_API_KEY` y `AZURE_OPENAI_{ENDPOINT,API_KEY,DEPLOYMENT,API_VERSION}`.
 - **Espacio reservado: mecanismos de arquitectura y definiciones globales (según Spec Kit).** Se decide en HITL, después de ratificar la constitución y antes de la spec 001. El objetivo es fijar **dónde viven y cómo se aplican** las decisiones que afectan a todas las specs, para que cada `plan.md` las herede en vez de redefinirlas.
