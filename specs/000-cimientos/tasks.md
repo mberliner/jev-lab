@@ -34,10 +34,10 @@ of each story.
 
 - [ ] T001 Crear `pyproject.toml` con `uv init --package --name jevlab` (paquete en `src/jevlab/`), `requires-python = ">=3.13,<3.14"`, `.python-version` con `3.13`, dependencias de `research.md` R14 (`typesafe-sdk`, `openai`, `pydantic`, `pydantic-settings`, `typer`) y grupo `dev` (`pytest`, `pytest-socket`, `pytest-cov`, `hypothesis`, `ruff`, `mypy`, `import-linter`, `poethepoet`, `pre-commit`)
 - [ ] T002 [P] Crear los paquetes vacíos de las cinco capas: `src/jevlab/domain/__init__.py`, `src/jevlab/application/__init__.py`, `src/jevlab/ports/__init__.py`, `src/jevlab/adapters/__init__.py`, `src/jevlab/entrypoints/__init__.py` y `src/jevlab/entrypoints/cli/__init__.py`
-- [ ] T003 [P] Crear `tests/unit/`, `tests/contract/`, `tests/integration/` y `tests/live/`, y configurar pytest en `pyproject.toml`: marcas `integration` y `live`, `addopts = "--disable-socket --allow-unix-socket -m 'not live'"`, `pythonpath = ["scripts"]`, `testpaths = ["tests"]`
-- [ ] T004 [P] Configurar en `pyproject.toml` `ruff` (reglas por defecto más `I`, `UP`, `B`; formato) y `mypy` (`strict = true`, `files = ["src", "scripts", "tests"]`)
+- [ ] T003 Crear `tests/unit/`, `tests/contract/`, `tests/integration/`, `tests/live/` y el paquete `scripts/checks/__init__.py`, y configurar pytest en `pyproject.toml`: marcas `integration` y `live`, `addopts = "--disable-socket --allow-unix-socket -m 'not live'"`, `pythonpath = ["scripts"]`, `testpaths = ["tests"]`
+- [ ] T004 Configurar en `pyproject.toml` `ruff` (reglas por defecto más `I`, `UP`, `B`; formato) y `mypy` (`strict = true`, `files = ["src", "scripts", "tests"]`)
 - [ ] T005 [P] Crear `.env.example` con `TYPESAFE_API_KEY=`, `TYPESAFE_DEFAULT_MODEL=jev-latest`, `AZURE_OPENAI_ENDPOINT=`, `AZURE_OPENAI_API_KEY=`, `AZURE_OPENAI_DEPLOYMENT=` y `AZURE_OPENAI_API_VERSION=`, y comprobar que `.gitignore` excluye `.env`
-- [ ] T006 [P] Crear `LICENSE` con el texto oficial de Apache-2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt) y la línea de copyright del mantenedor; declarar `license = "Apache-2.0"` en `pyproject.toml`
+- [ ] T006 Crear `LICENSE` con el texto oficial de Apache-2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt) y la línea de copyright del mantenedor; declarar `license = "Apache-2.0"` en `pyproject.toml`
 - [ ] T007 Declarar las tareas `poe` de `plan.md`, «Puertas de calidad», en `pyproject.toml`: `lint`, `typecheck`, `lint-imports`, `test`, `cov` (dos pasos: `pytest -m "not integration and not live" --cov=jevlab --cov=checks --cov-fail-under=80` y `coverage report --include="src/jevlab/domain/*" --fail-under=95`), `test-integration`, `live` (`pytest -m live --force-enable-socket`), `check-writing`, `check-commit-msg`, `check-presets`, `check-paths`, `check-agents` y `check` (secuencia sin `test` ni `check-commit-msg`)
 - [ ] T008 Ejecutar `uv lock` y `uv sync` y versionar `uv.lock`
 
@@ -130,7 +130,7 @@ puerta la rechaza; `/speckit-specify` de prueba en cada agente.
 - [ ] T038 [P] [US3] Tests unitarios de `scripts/checks/writing.py` en `tests/unit/checks/test_writing.py`: rechaza un emoji y una flecha o carácter de caja fuera de bloques de código; los acepta dentro de bloques de código; el mensaje nombra la regla, el archivo y la línea (FR-008)
 - [ ] T039 [P] [US3] Tests unitarios de `scripts/checks/commit_msg.py` en `tests/unit/checks/test_commit_msg.py`: acepta `feat(presets): …`; rechaza un tipo inválido, una línea `Co-Authored-By:` y `Generated with` (`docs/standards/version-control.md`)
 - [ ] T040 [P] [US3] Tests unitarios de `scripts/checks/presets.py` sobre un repositorio de prueba en `tmp_path`, en `tests/unit/checks/test_presets.py`: copia instalada distinta de la fuente; «Tests are OPTIONAL» en una plantilla de preset o en una skill `speckit-tasks`; cuerpos de skill distintos entre `.claude/skills/` y `.agents/skills/` (el *frontmatter* puede diferir); script de `.specify/scripts/bash/` sin modo `100755` en el índice de Git (`research.md` R8)
-- [ ] T041 [P] [US3] Tests unitarios de `scripts/checks/paths.py` en `tests/unit/checks/test_paths.py`: rechaza `/home/<usuario>/`, `/datum1/` y `C:\Users\` en un archivo versionado y un enlace simbólico; acepta rutas relativas
+- [ ] T041 [P] [US3] Tests unitarios de `scripts/checks/paths.py` en `tests/unit/checks/test_paths.py`: rechaza `/home/<usuario>/`, `/Users/<usuario>/`, `C:\Users\` y la ruta absoluta del repositorio de prueba en un archivo versionado, y un enlace simbólico; acepta rutas relativas
 - [ ] T042 [P] [US3] Tests unitarios de `scripts/checks/agents.py` en `tests/unit/checks/test_agents.py`: acepta `CLAUDE.md` con solo `@AGENTS.md`; rechaza cualquier otra línea
 - [ ] T043 [P] [US3] Test de integración (marca `integration`) del escenario principal en `tests/integration/test_gates_on_repo.py`: las cinco comprobaciones de `scripts/checks/` pasan sobre el propio repositorio
 
@@ -176,7 +176,7 @@ aplicar el procedimiento de un preset.
 
 - [ ] T058 [P] Actualizar `AGENTS.md` con los comandos del proyecto (`uv sync`, `uv run poe check`, `uv run jevlab doctor`) y el enlace a `docs/setup.md`
 - [ ] T059 [P] Actualizar `docs/governance.md` §4: la columna «Estado» pasa de «previsto en 000» a «creado» en los temas ya hechos, y las comprobaciones automáticas de redacción y control de versiones quedan como hechas
-- [ ] T060 Ejecutar `uv run poe check` y `uv run pre-commit run --all-files` en Linux y revisar el tiempo de la suite (SC-002, menos de 1 minuto)
+- [ ] T060 Ejecutar `uv run poe check` y `uv run pre-commit run --all-files` en Linux, y comprobar en el job `ubuntu-latest` de la CI que la suite tarda menos de 1 minuto según pytest (SC-002)
 - [ ] T061 Validar `quickstart.md` completo
 
 ---
@@ -216,7 +216,7 @@ aplicar el procedimiento de un preset.
 
 ### Parallel Opportunities
 
-- Setup: T002 a T006.
+- Setup: T002 y T005 (T003, T004 y T006 editan `pyproject.toml` y van en serie).
 - US2: T018 a T027 (tests y fakes, archivos distintos); T030, T031, T033, T034 y T035.
 - US3: T038 a T043 y T044 a T048.
 - US4: T054 y T055.

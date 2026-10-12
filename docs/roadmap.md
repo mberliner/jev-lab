@@ -74,7 +74,9 @@
 - [hecho, 2026-10-12] `/speckit-plan`: plan, research, data-model, contrato de `jevlab doctor` y
   quickstart en `specs/000-cimientos/`.
 - [hecho, 2026-10-12] `/speckit-tasks`: 64 tareas en `specs/000-cimientos/tasks.md`.
-- **[siguiente]** `/speckit-analyze` y después `/speckit-implement`. Luego, la spec 001.
+- [hecho, 2026-10-12] `/speckit-analyze` (con Antigravity): 4 hallazgos de severidad baja,
+  corregidos; ninguno con la constitución.
+- **[siguiente]** `/speckit-implement`, empezando por la fase 1 (Setup). Luego, la spec 001.
 
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.

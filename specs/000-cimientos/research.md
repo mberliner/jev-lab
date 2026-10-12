@@ -105,8 +105,10 @@ decisión, motivo y alternativas. Versiones consultadas en PyPI y GitHub el 2026
     código (`docs/standards/writing.md`).
   - `commit_msg.py`: Conventional Commits y ausencia de `Co-Authored-By` y `Generated with`
     (`docs/standards/version-control.md`).
-  - `paths.py`: rutas absolutas de máquina (`/home/`, `/datum`, `C:\Users\`…) en archivos
-    versionados, y ausencia de enlaces simbólicos.
+  - `paths.py`: rutas absolutas de máquina en archivos versionados (patrones genéricos `/home/`,
+    `/Users/`, `/root/`, `C:\Users\` y la ruta absoluta del propio repositorio, calculada al
+    ejecutarse, sin escribir en el código ningún punto de montaje), y ausencia de enlaces
+    simbólicos.
 - **Motivo:** no hay herramienta estándar para estas reglas propias; un script corto y probado es
   lo más simple.
 

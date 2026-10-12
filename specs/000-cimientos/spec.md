@@ -239,8 +239,8 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
 
 - **SC-001**: Una persona sin contexto pone en marcha el proyecto desde un clon limpio en menos de
   15 minutos en Linux y en Windows, siguiendo solo `docs/setup.md`.
-- **SC-002**: La suite por defecto pasa sin red ni claves y tarda menos de 1 minuto en una máquina
-  de desarrollo normal.
+- **SC-002**: La suite por defecto pasa sin red ni claves y tarda menos de 1 minuto en el runner
+  `ubuntu-latest` de la CI.
 - **SC-003**: El 100 % de las violaciones de la lista de FR-007 se rechazan, en local y en CI, con
   un mensaje que nombra la regla.
 - **SC-004**: `jevlab doctor` detecta el 100 % de los requisitos ausentes simulados y da su
