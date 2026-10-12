@@ -54,7 +54,7 @@
      hasta la cobertura (medida sin los niveles superiores), 1 test de integración por historia y
      1 humo `live` por aplicación. `jevlab-testing` v0.2.0 lleva esa mezcla a la plantilla y al
      comando de tareas.
-3. **[siguiente]** ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
+3. **[en curso]** [hecho, 2026-10-12] ADR-0001 (hexagonal, aceptado). **[siguiente]** ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
    absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
    `speckit_version: ">=1.1.4.dev0"`. Pendiente: PyYAML en Windows, y verificar si
@@ -158,7 +158,9 @@ No hay nada que lo impida. Todo el stack es multiplataforma: Python 3.13 (vía u
 
 ## Arquitectura de aplicaciones
 
-**Monolito modular con arquitectura hexagonal (puertos y adaptadores)** en un solo paquete Python, `jevlab`. Encaja con un laboratorio de un solo equipo y un dominio desplegable. Los límites entre módulos se garantizan con una regla de dependencias comprobada en CI (`import-linter`): `entrypoints -> application -> domain` y `adapters -> ports`.
+**Monolito modular con arquitectura hexagonal (puertos y adaptadores)** en un solo paquete Python,
+`jevlab`. La decisión y sus alternativas están en
+[ADR-0001](adr/0001-arquitectura-hexagonal.md).
 
 ```
                  ┌───────────── Adaptadores de entrega ─────────────┐

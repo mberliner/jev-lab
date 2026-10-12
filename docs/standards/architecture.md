@@ -1,6 +1,6 @@
 # Estándar: arquitectura
 
-> Concreta: Constitución §III · Exigido por: preset jevlab-arch · ADRs: 0001 (pendiente)
+> Concreta: Constitución §III · Exigido por: preset jevlab-arch · ADRs: 0001
 
 Monolito modular con arquitectura hexagonal (puertos y adaptadores) en un solo paquete Python,
 `jevlab`, bajo `src/jevlab/`.
