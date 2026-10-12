@@ -1,5 +1,41 @@
 # Plan: `jev-lab`, laboratorio progresivo de Jev (TypeSafe) con SDD y Spec Kit
 
+## Estado actual y cómo retomar
+
+> **Actualizado: 2026-10-11.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> cualquier agente.
+
+**Dónde estamos:** spec 000 (Cimientos), sin código todavía. Hecho:
+- Spec Kit instalado con las integraciones de Claude Code y Antigravity; `AGENTS.md` como única
+  fuente de instrucciones (`CLAUDE.md` solo importa `@AGENTS.md`).
+- **Constitución v0.3.0 ratificada** (`.specify/memory/constitution.md`), 7 principios. El historial
+  del proceso está en «Depuración HITL de la constitución», más abajo.
+- Gobernanza en tres capas (constitución, presets propios y estándares) en `docs/governance.md`.
+- Estándares: `docs/standards/writing.md` (sin emojis; cajas y flechas solo en bloques de código;
+  redacción en positivo) y `docs/standards/version-control.md` (Conventional Commits en español,
+  sin firmas ni atribuciones de agentes).
+- Entorno de la máquina Linux comprobado: uv 0.9.18, Python 3.13.11 (uv), `python3` 3.8.10 con
+  PyYAML 5.3.1 y `specify` 1.1.4.
+
+**Siguiente paso: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
+«Espacio reservado»). Orden propuesto:
+1. Completar la columna «Principio(s)» de la tabla de temas de `docs/governance.md` §4.
+2. Decidir el contenido de cada preset (`jevlab-arch`, `jevlab-ux`, `jevlab-decision`) y de sus
+   estándares; decidir si testing y seguridad tienen preset. Usar como entrada el «detalle sacado
+   de la constitución» del paso 1 HITL (destinos `decision-design`, `testing` y `security`).
+3. ADR-0001 (hexagonal) y ADR-0002 (paridad Claude Code/Antigravity), en `docs/adr/` (MADR).
+4. Comprobar `specify preset add --dev` en Linux, y PyYAML en Windows.
+
+**Después:** el resto de la spec 000 (ver «000: Cimientos»): entorno uv, esqueleto hexagonal, CI
+Linux/Windows, pre-commit con las comprobaciones de los estándares, `docs/setup.md`,
+`.env.example`, la lección y `jevlab doctor`. Luego, la spec 001.
+
+**Convenciones vigentes al retomar:**
+- Toda decisión la aprueba la persona (HITL); los agentes proponen.
+- Commits sin firma de agente, en formato Conventional Commits y en español.
+- Filtro de simplicidad: cambiar solo lo que corrige una contradicción o un riesgo real, con el
+  mínimo texto.
+
 ## Context
 
 Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico a técnicas de producción. Pone el foco en lo que distingue a Jev:
@@ -63,7 +99,7 @@ Spec Kit admite varias integraciones en el mismo proyecto. Según la [referencia
 **Cómo se consigue la paridad:**
 1. `specify init . --integration claude` y después `specify integration install agy --force`. Comprobar con `specify integration status --json`. Las dos comparten `.specify/` (constitución, plantillas y scripts) y `specs/`, de modo que **los artefactos SDD son los mismos para los dos agentes**.
 2. **Una sola fuente de instrucciones:** `AGENTS.md` (convenciones, comandos, constitución resumida y puesta en marcha). `CLAUDE.md` solo contiene `@AGENTS.md`, sin reglas propias. Antigravity lee `AGENTS.md` y `.agents/`.
-3. **Neutralidad de herramientas:** todo flujo se ejecuta con comandos del repo (`uv run poe <tarea>`, multiplataforma), nunca con *hooks* ni comandos exclusivos de un agente. Las puertas de calidad son pre-commit y CI, que se aplican igual uses el agente que uses.
+3. **Neutralidad de herramientas:** todo flujo se ejecuta con comandos del repo (`uv run poe <tarea>`, multiplataforma). Un *hook* o comando de agente se admite solo con implementación neutral: su lógica vive en una tarea del repo y existe de forma equivalente en todos los agentes, o no se usa en ninguno (constitución, VI). Las puertas de calidad son pre-commit y CI, que se aplican igual uses el agente que uses.
 4. **Skill de TypeSafe:** se instala por usuario, no se copia en el repo. En Claude Code va como plugin oficial. En `agy` se instala la misma skill en su directorio de usuario si la licencia lo permite; si no, `AGENTS.md` enlaza la documentación oficial (`docs.typesafe.ai/llms.txt`).
 5. **Invocación:** en Claude Code las skills de Spec Kit se llaman `/speckit-*` y en Antigravity también `/speckit-*`. La guía `docs/agents.md` documenta las dos.
 6. **Verificación de paridad (CI):** `specify integration status` muestra las dos integraciones; un test comprueba que `CLAUDE.md` solo importa `AGENTS.md`. La spec 000 se valida corriendo `/speckit-specify` de prueba en cada agente.
@@ -167,14 +203,14 @@ jev-lab/
 │   ├── entrypoints/{cli,api}/
 │   └── specs/<dominio>/*.yaml  # DecisionSpecs versionados
 ├── lessons/NN-<tema>/README.md
-├── data/<dominio>/*.jsonl    # datasets originales + cassettes/
+├── data/<dominio>/*.jsonl    # datasets propios o externos con licencia y cita + cassettes/
 ├── tests/{unit,contract,live}/
 ├── pyproject.toml (tareas poe) · .gitattributes · .importlinter · .github/workflows/ci.yml · Dockerfile · compose.yaml
 ```
 
 Cada spec añade solo lo que sus historias necesitan (YAGNI); la estructura se completa poco a poco.
 
-## Constitución (`/speckit.constitution`)
+## Constitución: borrador de entrada (histórico)
 
 1. **El modelo juzga, el código decide.** La aritmética, las fechas, los conteos, los permisos y los interbloqueos nunca se delegan en Jev.
 2. **Preguntas atómicas y literales.** Sin negaciones ni indirección; estado mínimo; rutas entre backticks.
@@ -189,13 +225,13 @@ Cada spec añade solo lo que sus historias necesitan (YAGNI); la estructura se c
 11. **Neutralidad de agente y de sistema operativo.** Todo funciona igual en Claude Code y Antigravity, y en Windows y Linux: una sola fuente de instrucciones (`AGENTS.md`), tareas `poe`, sin symlinks, y puertas de calidad en pre-commit y CI con matriz Linux/Windows.
 12. **Hexagonal.** El dominio es puro; los proveedores van detrás de puertos; un mismo `DecisionSpec` sirve para servir, evaluar y probar.
 
-Esta lista es **un borrador de entrada**; la constitución definitiva sale del proceso HITL siguiente.
+Esta lista fue **el borrador de entrada**. La constitución vigente es `.specify/memory/constitution.md` (v0.3.0 ratificada), resultado del proceso HITL siguiente.
 
 ### Depuración HITL de la constitución (parte de la spec 000, antes de cualquier otra spec)
 
 > **Punto de reanudación (2026-10-11).** Constitución en `.specify/memory/constitution.md`: v0.3.0
 > ratificada el 2026-10-11, 7 principios.
->   El historial del proceso vive aquí; la constitución solo lleva un *Sync Impact Report* mínimo.
+>   El historial del proceso vive aquí; la constitución no lleva *Sync Impact Report*.
 > - [hecho] Paso 1: borrador (12 principios consolidados en 7):
 >   - I <- juzga/decide + preguntas atómicas; II <- escape + confianza por riesgo; III sin cambios;
 >     IV <- verificación aislada + honestidad; V sin cambios; VI <- entorno reproducible + contenido
@@ -277,7 +313,7 @@ Buenas prácticas que se aplican:
 
 ## Specs
 
-En cada spec se recorre `/speckit.specify -> clarify -> plan -> tasks -> analyze -> implement`, en la rama `NNN-nombre`, con commit por historia.
+En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze -> implement`, en la rama `NNN-nombre`, con commit por historia.
 
 ### 000: Cimientos (no es vertical, por diseño)
 - `git init`, `uv init --package` (Python 3.13 vía uv; `.python-version` = 3.13).
@@ -333,7 +369,7 @@ En cada spec se recorre `/speckit.specify -> clarify -> plan -> tasks -> analyze
 
 ### 004: ¿Puedo fiarme? Evaluación y calibración del triaje (Operador)
 *Aprende: evaluar con datos propios y elegir umbrales con evidencia.*
-- **US1 (P1):** con `jevlab eval triage` evalúo un dataset etiquetado original (~200 ítems: claros, ambiguos, fuera de dominio y adversariales) y obtengo un informe con macro-F1 y la matriz de confusión.
+- **US1 (P1):** con `jevlab eval triage` evalúo un dataset etiquetado, propio o externo con licencia válida y citado (~200 ítems: claros, ambiguos, fuera de dominio y adversariales) y obtengo un informe con macro-F1 y la matriz de confusión.
 - **US2 (P2):** el informe incluye la **calibración**: Brier, ECE y diagrama de fiabilidad.
 - **US3 (P3):** obtengo la **curva cobertura-precisión** y un umbral recomendado para una precisión objetivo. Se exporta como propuesta de `policy.yaml`, con lo que se cierra el ciclo con la 002.
 - **US4 (P4):** comparo con el baseline **Azure OpenAI** (Structured Outputs estricto, mismas preguntas): acierto, latencia p50/p95 y coste por cada 1.000 llamadas. Se advierte que sus "probabilidades" son autodeclaradas.
@@ -368,7 +404,7 @@ En cada spec se recorre `/speckit.specify -> clarify -> plan -> tasks -> analyze
 ---
 
 ## Verificación
-- Por spec: `/speckit.analyze` sin inconsistencias graves antes de implementar. Cada US cumple sus escenarios Given/When/Then de `spec.md` y se puede demostrar por separado.
+- Por spec: `/speckit-analyze` sin inconsistencias graves antes de implementar. Cada US cumple sus escenarios Given/When/Then de `spec.md` y se puede demostrar por separado.
 - `uv run ruff check && uv run mypy src && uv run pytest -m "not live" --cov` en verde (≥ 80 %); `uv run pytest -m live` con claves reales.
 - Demostración de cada US con la CLI o con `curl` contra la API, tanto con cassettes como en vivo.
 - 007: `docker compose up`, un 429 simulado que se resuelve con reintento, y modo degradado si Jev cae.
@@ -380,7 +416,8 @@ En cada spec se recorre `/speckit.specify -> clarify -> plan -> tasks -> analyze
 1. Hecho: `specify check` (CLI 1.1.4; Claude Code y Antigravity detectados; `--script py` disponible).
 2. Hecho: `mkdir jev-lab && cd jev-lab && git init`, crear primero `.gitattributes` y luego `specify init . --integration claude --script py && specify integration install agy --force && specify integration status`.
 3. Hecho: `AGENTS.md` mínimo de arranque y `CLAUDE.md` (`@AGENTS.md`), para que cualquier agente abierto en `jev-lab/` tenga el contexto sin memorias externas. Se completan en la spec 000.
-4. Abrir el agente **dentro de `jev-lab/`** (Claude Code: `claude`; Antigravity: abrir la carpeta) y ejecutar `/speckit-constitution` con el borrador y luego depuración HITL (pasos 1–6) hasta ratificar la v0.3.0. Luego HITL de mecanismos de arquitectura y definiciones globales. Después, el resto de la spec 000.
+4. Hecho: `/speckit-constitution` con el borrador y depuración HITL (pasos 1–6); v0.3.0 ratificada el 2026-10-11.
+5. Siguiente: HITL de mecanismos de arquitectura y definiciones globales (ver «Estado actual y cómo retomar»). Después, el resto de la spec 000.
 
 ---
 
@@ -388,7 +425,7 @@ En cada spec se recorre `/speckit.specify -> clarify -> plan -> tasks -> analyze
 
 - Precio orientativo de Jev 1.13: unos **0,042 USD por millón de tokens de entrada**, con salida sin coste. **Hay que confirmarlo en la página oficial de modelos y precios de TypeSafe antes de usarlo** en la 003 (bench de fan-out) y la 004 (coste por cada 1.000 llamadas).
 - Azure OpenAI: tomar el precio del deployment concreto en la página oficial de precios de Azure; varía por región y modelo.
-- Si un coste no se conoce, se muestra como "no disponible" (constitución, principio 5).
+- Si un coste no se conoce, se muestra como "no disponible" (constitución, principio IV).
 
 ## Apéndice B: banco de ideas para futuras specs
 

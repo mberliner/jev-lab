@@ -14,8 +14,8 @@ Spec-Driven Development (Spec Kit).
 
 | Documento | Para qué |
 | --- | --- |
-| `docs/roadmap.md` | **Plan vigente**: arquitectura, specs 000–007 y verificación |
-| `.specify/memory/constitution.md` | Principios no negociables (en ratificación, proceso HITL) |
+| `docs/roadmap.md` | **Plan vigente y estado actual**: empezar por «Estado actual y cómo retomar» |
+| `.specify/memory/constitution.md` | Principios no negociables (v0.3.0, ratificada) |
 | `docs/governance.md` | Dónde vive cada regla común: constitución -> presets propios -> estándares |
 | `specs/NNN-*/` | Artefactos SDD de cada feature |
 | `docs/setup.md` | Puesta en marcha en Linux y Windows (se crea en la spec 000) |
@@ -39,7 +39,7 @@ Spec-Driven Development (Spec Kit).
 - Multiplataforma (Linux y Windows): sin symlinks, `pathlib`, UTF-8 explícito, finales de línea
   según `.gitattributes`.
 
-## Reglas básicas (resumen provisional; manda la constitución ratificada)
+## Reglas básicas (resumen; manda la constitución)
 
 - El modelo juzga, el código decide: aritmética, fechas, conteos, permisos e invariantes van en código.
 - Cada Choice incluye una opción de escape (`other`/`none`).
