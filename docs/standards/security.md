@@ -71,3 +71,22 @@ que el resultado no se automatiza sin la confianza exigida.
 
 **Cómo se verifica:** revisión de tareas (la sección «Seguridad» del plan lista los casos) y
 etiqueta `adversarial` en los datos de evaluación.
+
+## 5. Secretos de CI en un repositorio público
+
+**Regla.** El repositorio es público y ningún token, clave o acceso es visible para el público.
+Las claves que necesite la CI viven solo como *secrets* cifrados de GitHub Actions. Los jobs que
+las usan se ejecutan solo en `main` o a mano, nunca en pull requests desde forks, y no usan
+`pull_request_target` sobre código ajeno.
+
+**Motivo.** Un pull request desde un fork ejecuta código de cualquiera; si recibiera los
+*secrets*, podría leerlos.
+
+**Correcto:** el job `live` declara `if: github.ref == 'refs/heads/main'` o se lanza con
+`workflow_dispatch`, y lee la clave de `secrets.TYPESAFE_API_KEY`.
+
+**Incorrecto:** un job con `pull_request_target` que hace checkout del código del pull request y
+lee los *secrets*.
+
+**Cómo se verifica:** revisión de cada workflow; gitleaks en pre-commit y CI para el contenido del
+repositorio; los logs siguen §2.

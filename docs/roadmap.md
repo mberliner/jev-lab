@@ -64,9 +64,12 @@
    (`docs/governance.md` §5). Pendiente: PyYAML en Windows, que se resuelve con `docs/setup.md`
    en la spec 000.
 
-**Después:** el resto de la spec 000 (ver «000: Cimientos»): entorno uv, esqueleto hexagonal, CI
-Linux/Windows, pre-commit con las comprobaciones de los estándares, `README.md` para personas, `docs/setup.md`,
-`.env.example`, la lección y `jevlab doctor`. Luego, la spec 001.
+**Después:** el resto de la spec 000 con Spec Kit.
+- [hecho, 2026-10-12] `/speckit-specify`: `specs/000-cimientos/spec.md`, 4 historias. Aclarado:
+  `jevlab doctor` solo sale a la red con una opción explícita; CI en GitHub Actions sobre un
+  repositorio público (hay que crear el remoto), sin tokens ni accesos visibles para el público
+  (`docs/standards/security.md` §5).
+- **[siguiente]** `/speckit-clarify` (opcional) y `/speckit-plan`. Luego, la spec 001.
 
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.
