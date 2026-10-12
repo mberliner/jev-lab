@@ -11,16 +11,6 @@
       "registered_skills": {},
       "installed_at": "2026-10-12T15:54:55.681514+00:00"
     },
-    "jevlab-spec": {
-      "version": "0.1.1",
-      "source": "local",
-      "manifest_hash": "sha256:76a0a6d7bd36d01ca89055a081a3488a437afe28fa048ec228e1c244e41730b9",
-      "enabled": true,
-      "priority": 10,
-      "registered_commands": {},
-      "registered_skills": {},
-      "installed_at": "2026-10-12T15:56:05.990476+00:00"
-    },
     "jevlab-security": {
       "version": "0.1.1",
       "source": "local",
@@ -64,6 +54,16 @@
         ]
       },
       "installed_at": "2026-10-12T16:20:49.214399+00:00"
+    },
+    "jevlab-spec": {
+      "version": "0.2.0",
+      "source": "local",
+      "manifest_hash": "sha256:8bce3ba7c4aa00c53ff74c9f269f25862f48a60ec575450070ddfad7a8ff3aa7",
+      "enabled": true,
+      "priority": 10,
+      "registered_commands": {},
+      "registered_skills": {},
+      "installed_at": "2026-10-12T17:05:14.598529+00:00"
     }
   }
 }

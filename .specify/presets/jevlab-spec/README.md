@@ -6,7 +6,7 @@ Hace que cada feature cumpla «Cortes verticales que enseñan».
 
 | Plantilla | Estrategia | Qué añade |
 | --- | --- | --- |
-| `spec-template` | `append` | Sección «Corte vertical y lección»: persona, capacidad de extremo a extremo, demostración por historia, número de historias, fuera de alcance y lección |
+| `spec-template` | `append` | Sección «Corte vertical y lección»: persona, capacidad de extremo a extremo, demostración por historia, forma de cada historia («Como / quiero / para»), número de historias, fuera de alcance y lección |
 | `tasks-template` | `append` | Fase final de cierre: lección, demostración de cada historia y retro |
 
 Lo que la plantilla base ya cubre y no se repite: historias priorizadas, *Independent Test* por

@@ -120,7 +120,7 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 2. **Progresión de producción:** las técnicas de producción crecen de menor a mayor, spec a spec.
 3. **Tamaño:** 4 historias P1–P4 por spec, cada una probable y demostrable por sí sola, en el formato de `spec.md` de Spec Kit.
 
-**Usuarios (personas):** Aprendiz, Operador e Integrador, definidos en `docs/personas.md`.
+**Usuarios (personas):** Usuario inicial de Jev, Operador e Integrador, definidos en `docs/personas.md`.
 
 ---
 
@@ -199,7 +199,7 @@ La testabilidad por capa, la cobertura, el bloqueo de red y las pruebas `live` e
 
 | App | Usuario | Nace | Evoluciona |
 | --- | --- | --- | --- |
-| `jevlab` CLI | Aprendiz/Operador | 001 | review (002), eval (004), jagged (005), ask (006) |
+| `jevlab` CLI | Usuario inicial de Jev/Operador | 001 | review (002), eval (004), jagged (005), ask (006) |
 | `jevlab-api` (FastAPI, asíncrona) | Integrador | 003 | /ask (006), /triage endurecido (007) |
 | Informes de evaluación (HTML/MD estáticos) | Operador | 004 | resultados del laboratorio (005) |
 | Stack operativo (`docker compose`): api + Postgres + Redis + OTel Collector + Prometheus/Grafana | Operador | 007 | — |
@@ -225,7 +225,7 @@ jev-lab/
 │   └── specs/<dominio>/*.yaml  # DecisionSpecs versionados
 ├── docs/lessons/NNN-<nombre-descriptivo>.md  # una lección por spec; el nombre dice lo que aporta
 ├── data/<dominio>/*.jsonl    # datasets propios o externos con licencia y cita + cassettes/
-├── tests/{unit,contract,live}/
+├── tests/{unit,contract,integration,live}/
 ├── pyproject.toml (tareas poe) · .gitattributes · .importlinter · .github/workflows/ci.yml · Dockerfile · compose.yaml
 ```
 
@@ -358,7 +358,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
     - **ADRs** (`docs/adr/`, MADR) para decisiones con alternativas; no son una capa de reglas.
     - Precedencia: constitución > preset > estándar > `plan.md`. Cada regla se rastrea hasta un principio.
   - *Temas (decidido 2026-10-12):* `jevlab-spec`, `jevlab-arch`, `jevlab-decision`, `jevlab-testing` (`replace`) y `jevlab-security`; sin tema UX. Detalle en `docs/governance.md` §4.
-  - *Pendiente (HITL):* contenido de cada preset y estándar; ADR-0001 (hexagonal) y ADR-0002 (paridad Claude/agy); comprobar `specify preset add --dev`, PyYAML en Windows y el efecto de `specify integration upgrade` sobre las skills.
+  - *Hecho (HITL, 2026-10-12):* contenido de cada preset y estándar; ADR-0001 y ADR-0002; `specify preset add --dev` y el efecto de `integration upgrade`. Pendiente: PyYAML en Windows (`docs/setup.md`).
 - **Aceptación:**
   - constitución v0.3.0 ratificada por el humano tras los 6 pasos HITL;
   - mecanismos de definiciones globales acordados y aplicados en las plantillas;
@@ -366,7 +366,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
   - pre-commit activo.
 - **Comprobación de humo (no es una historia):** `jevlab doctor` comprueba que `python3` (≥ 3.8) existe para Spec Kit, que el intérprete del proyecto es 3.13, que hay claves, lista los modelos de Jev y llama al deployment de Azure.
 
-### 001: Triaje de un ticket de soporte (Aprendiz)
+### 001: Triaje de un ticket de soporte (Usuario inicial de Jev)
 *Aprende: las tres primitivas y cómo leer la salida nativa.*
 - **US1 (P1):** clasifico un ticket con `jevlab triage "<texto>"` y veo la cola elegida, la distribución completa y la `confidence`. Choice con `other`.
 - **US2 (P2):** veo si el ticket menciona explícitamente un problema urgente (Noul). Lo que cae en la banda incierta se muestra como "incierto", no como "medio".
@@ -375,7 +375,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - *Producción introducida:* cliente reutilizado, `RetryPolicy` por defecto, timeout, errores sin filtrar datos y logs `info` sin *payloads*.
 - *Verificación:* test de contrato con cassette; `confidence.py` reproduce la fórmula oficial a partir de `probabilities`.
 
-### 002: Enrutado con confianza según riesgo (Aprendiz -> Operador)
+### 002: Enrutado con confianza según riesgo (Usuario inicial de Jev -> Operador)
 *Aprende: la confianza como segundo eje de decisión; umbrales por riesgo.*
 - **US1 (P1):** un ticket con confianza alta se enruta solo y la CLI explica el motivo (umbral y valor).
 - **US2 (P2):** si la acción es destructiva (p. ej. reembolso automático), se exige un umbral más alto; si no se alcanza, se pide confirmación.
@@ -399,7 +399,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - **US4 (P4):** comparo con el baseline **Azure OpenAI** (Structured Outputs estricto, mismas preguntas): acierto, latencia p50/p95 y coste por cada 1.000 llamadas. Se advierte que sus "probabilidades" son autodeclaradas.
 - *Producción introducida:* datasets versionados, ejecución reproducible (semilla y modelo fijado, p. ej. `jev-1.13`) y test de regresión al cambiar de modelo.
 
-### 005: Laboratorio de modos de fallo (Aprendiz)
+### 005: Laboratorio de modos de fallo (Usuario inicial de Jev)
 *Aprende: dónde falla Jev y cómo se mitiga, con datos propios.* Cada historia es una comparación entre un diseño ingenuo y su mitigación, con `jevlab jagged <grupo>`, y usa el evaluador de la 004.
 - **US1 (P1), números y tiempo:** matemáticas, conteo, representaciones numéricas, magnitudes de Score y fechas. La mitigación es extraer componentes con Choice y calcular en código.
 - **US2 (P2), redacción:** lectura literal, negación e indirección, instrucciones contradictorias.
@@ -407,7 +407,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - **US4 (P4), contexto:** estado irrelevante o largo (filtro previo y Noul de relevancia) y contenido adversarial. La generación se demuestra con la cascada: candidatos por regex y Jev elige.
 - *Resultado:* tabla "fallo -> mitigación -> Δ medido" generada a partir de los datos.
 
-### 006: Asistente RAG verificado (Aprendiz/Integrador)
+### 006: Asistente RAG verificado (Usuario inicial de Jev/Integrador)
 *Aprende: Jev dentro de un pipeline generativo; Azure genera y Jev decide.*
 - **US1 (P1):** pregunto con `jevlab ask` (y `POST /ask`) sobre un corpus pequeño y original. Solo se usan los pasajes que pasan dos Noul independientes: relevancia e instrucciones incrustadas.
 - **US2 (P2):** los pasajes se re-ordenan con Score antes de generar.
