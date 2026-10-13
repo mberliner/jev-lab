@@ -70,6 +70,12 @@ Los archivos generados por Spec Kit y no editados por el proyecto (`.specify/tem
 estándar, porque muestra los símbolos que prohíbe. Su salida se ajusta mediante
 los presets propios, no editando esos archivos a mano.
 
+Las copias de los presets (`presets/` y `.specify/presets/`) sí se comprueban, aunque partan de
+texto de Spec Kit: son del proyecto y su texto llega a los artefactos. Las skills y las plantillas
+base conservan sus símbolos, porque limpiarlas exigiría sustituir cada comando con `replace`
+(`docs/governance.md` §5, regla 1); si un agente los copia a un artefacto, la puerta lo rechaza en
+el commit.
+
 ## Verificación
 
 - **Automática:** un script del repo, ejecutado en pre-commit y en CI, rechaza los emojis y

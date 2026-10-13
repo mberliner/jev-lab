@@ -220,8 +220,9 @@ no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
    - el paso por cada agente con `integration use` los restaura.
 4. Por cada preset con `replace`: comparar con `git diff` la nueva base (plantilla en
    `.specify/templates/` y comando base) con la anterior, trasladar a nuestra copia las mejoras que
-   no contradigan la constitución, actualizar en su README la versión de Spec Kit de la que parte la
-   copia y subir su `version`.
+   no contradigan la constitución, sustituir los emojis y las flechas que traiga la base
+   (`docs/standards/writing.md`; `uv run poe check-writing` avisa si se escapa alguno), actualizar
+   en su README la versión de Spec Kit de la que parte la copia y subir su `version`.
 5. Comprobar: `specify preset resolve <plantilla>` devuelve la capa esperada, y pre-commit y CI pasan.
    CI incluye una comprobación que falla si «Tests are OPTIONAL» reaparece en la plantilla resuelta
    o en las skills de cualquier agente.
