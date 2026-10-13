@@ -5,7 +5,9 @@
 > **Actualizado: 2026-10-12.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 000 (Cimientos), sin código todavía. Hecho:
+**Dónde estamos:** spec 000 (Cimientos) implementada en la rama `000-cimientos`, publicada en
+https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Falta el cierre (ver
+«Después», más abajo). Hecho:
 - Spec Kit instalado con las integraciones de Claude Code y Antigravity; `AGENTS.md` como única
   fuente de instrucciones (`CLAUDE.md` solo importa `@AGENTS.md`).
 - **Constitución v0.3.1** (v0.3.0 ratificada; PATCH del 2026-10-12: «cuerpos» pasa a *payloads*) (`.specify/memory/constitution.md`), 7 principios. El historial
@@ -76,7 +78,22 @@
 - [hecho, 2026-10-12] `/speckit-tasks`: 64 tareas en `specs/000-cimientos/tasks.md`.
 - [hecho, 2026-10-12] `/speckit-analyze` (con Antigravity): 4 hallazgos de severidad baja,
   corregidos; ninguno con la constitución.
-- **[siguiente]** `/speckit-implement`, empezando por la fase 1 (Setup). Luego, la spec 001.
+- [hecho, 2026-10-12] `/speckit-implement`: 58 de 64 tareas, un commit por historia en la rama
+  `000-cimientos`. `uv run poe check` y la CI pasan. Hallazgos anotados en
+  `specs/000-cimientos/research.md` (R3, R14), `docs/governance.md` §5 (apartar `.venv` al
+  instalar un preset) y `docs/ideas.md` (comprobación de reloj, azar e IDs para la 001).
+- **[siguiente]** Cierre de la spec 000. Las tareas pendientes están en
+  `specs/000-cimientos/tasks.md` (las que siguen con `[ ]`):
+  1. Manuales, del mantenedor: T037 (`.env` con claves reales, `uv run jevlab doctor --remote` y
+     `uv run poe live`) y T053 (`/speckit-specify` de prueba en Claude Code y en Antigravity sobre
+     una rama desechable).
+  2. Con el agente: T061 (validar `quickstart.md`), T062 (revisar la lección), T063 (demostrar
+     cada historia) y T064 (retro en el commit de cierre y actualizar esta sección).
+  3. Integrar `000-cimientos` en `main` (recomendado: PR en GitHub, para que la CI corra sobre él).
+  Luego, la spec 001.
+
+**Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
+(`docs/setup.md`).
 
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.
