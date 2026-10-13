@@ -144,7 +144,7 @@ puerta la rechaza; `/speckit-specify` de prueba en cada agente.
 - [X] T049 [US3] Crear `.pre-commit-config.yaml` (`research.md` R7): `default_install_hook_types: [pre-commit, commit-msg]`; ganchos `repo: local` con `language: system`, `pass_filenames: false` y `always_run: true` que ejecutan `uv run poe check` y, en la fase `commit-msg`, `uv run poe check-commit-msg`; gancho oficial de gitleaks `v8.30.1`
 - [X] T050 [US3] Crear `.github/workflows/ci.yml`: disparadores `push` y `pull_request` (nunca `pull_request_target`); `permissions: contents: read`; matriz `ubuntu-latest` y `windows-latest`; `astral-sh/setup-uv`; `uv sync --locked`; `uv run pre-commit run --all-files`; en `push` y `pull_request`, `uv run poe check-commit-msg --range` sobre los commits nuevos; sin *secrets* (`docs/standards/security.md` §5)
 - [X] T051 [US3] Comprobar cada violación de `quickstart.md`, «US3», en local y deshacerla
-- [ ] T052 [US3] Crear el repositorio público en GitHub (manual, mantenedor: `research.md` R13), añadir el remoto, hacer `git push` y comprobar la CI en verde en Linux y Windows
+- [X] T052 [US3] Crear el repositorio público en GitHub (manual, mantenedor: `research.md` R13), añadir el remoto, hacer `git push` y comprobar la CI en verde en Linux y Windows
 - [ ] T053 [US3] Ejecutar `/speckit-specify` de prueba en Claude Code y en Antigravity sobre una rama desechable, comprobar que los dos usan la plantilla resuelta con las secciones de los presets y borrar la rama
 
 **Checkpoint**: las puertas protegen todo cambio posterior.
@@ -176,7 +176,7 @@ aplicar el procedimiento de un preset.
 
 - [X] T058 [P] Actualizar `AGENTS.md` con los comandos del proyecto (`uv sync`, `uv run poe check`, `uv run jevlab doctor`) y el enlace a `docs/setup.md`
 - [X] T059 [P] Actualizar `docs/governance.md` §4: la columna «Estado» pasa de «previsto en 000» a «creado» en los temas ya hechos, y las comprobaciones automáticas de redacción y control de versiones quedan como hechas
-- [ ] T060 Ejecutar `uv run poe check` y `uv run pre-commit run --all-files` en Linux, y comprobar en el job `ubuntu-latest` de la CI que la suite tarda menos de 1 minuto según pytest (SC-002)
+- [X] T060 Ejecutar `uv run poe check` y `uv run pre-commit run --all-files` en Linux, y comprobar en el job `ubuntu-latest` de la CI que la suite tarda menos de 1 minuto según pytest (SC-002)
 - [ ] T061 Validar `quickstart.md` completo
 
 ---
