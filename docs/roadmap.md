@@ -88,10 +88,11 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Qued
   Python (`poe check-presets` lo comprueba) y salida de `jevlab doctor` en español con tildes.
 - **Aplazada: T037** (`.env` con claves reales, `uv run jevlab doctor --remote` y
   `uv run poe live`). Se hace al tener claves, como muy tarde al grabar las cassettes de la 001.
-- **[siguiente]**
-  1. Integrar `000-cimientos` en `main` (recomendado: PR en GitHub, para que la CI corra sobre él).
-  2. Spec 001 con `/speckit-specify`, revisando antes `docs/ideas.md`. Hasta grabar las cassettes
-     no necesita claves.
+- [hecho, 2026-10-13] `000-cimientos` integrada en `main` con PR y merge commit
+  (`docs/standards/version-control.md` §3).
+- **[siguiente]** Spec 001 con `/speckit-specify`, desde `main`, revisando antes `docs/ideas.md`
+  (tres ideas para la 001) y la sección «001» de este roadmap. Hasta grabar las cassettes no
+  necesita claves.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
