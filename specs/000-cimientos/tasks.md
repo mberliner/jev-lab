@@ -112,6 +112,7 @@ salida; con claves reales, el humo `live`.
 - [X] T035 [P] [US2] Implementar `AzureGeneratorProbe` en `src/jevlab/adapters/azure_probe.py`: `AzureOpenAI` con las variables de `.env`, `chat.completions.create` de un mensaje fijo con `max_completion_tokens=16`; mismo mapeo de errores; no conserva el contenido de la respuesta
 - [X] T036 [US2] Añadir el comando `doctor` con la opción `--remote` en `src/jevlab/entrypoints/cli/main.py`: cableado de `CheckEnvironment` con los adaptadores reales (sustituibles en los tests), salida de `contracts/cli-doctor.md`, código de salida de `DoctorReport.exit_code()` y logger `typesafe_sdk` en `WARNING` salvo `TYPESAFE_LOG_LEVEL`
 - [ ] T037 [US2] Validar la US2 con `quickstart.md`, «US2», incluido `uv run poe live` con claves reales
+  - Aplazada (2026-10-13) hasta tener claves reales; validado todo salvo `doctor --remote` con claves válidas y `poe live`. Se hace al grabar las cassettes de la spec 001.
 
 **Checkpoint**: `jevlab doctor` funciona solo; la US1 sigue en verde.
 
@@ -177,7 +178,8 @@ aplicar el procedimiento de un preset.
 - [X] T058 [P] Actualizar `AGENTS.md` con los comandos del proyecto (`uv sync`, `uv run poe check`, `uv run jevlab doctor`) y el enlace a `docs/setup.md`
 - [X] T059 [P] Actualizar `docs/governance.md` §4: la columna «Estado» pasa de «previsto en 000» a «creado» en los temas ya hechos, y las comprobaciones automáticas de redacción y control de versiones quedan como hechas
 - [X] T060 Ejecutar `uv run poe check` y `uv run pre-commit run --all-files` en Linux, y comprobar en el job `ubuntu-latest` de la CI que la suite tarda menos de 1 minuto según pytest (SC-002)
-- [ ] T061 Validar `quickstart.md` completo
+- [X] T061 Validar `quickstart.md` completo
+  - Salvo `doctor --remote` con claves válidas, que queda con T037.
 
 ---
 
@@ -186,8 +188,8 @@ aplicar el procedimiento de un preset.
 > Deriva de: Constitución §VII y *Governance* (revisión periódica)
 
 - [X] T062 Revisar la lección escrita en T057 contra lo que se ha implementado: qué se aprende, cómo se ejecuta, qué puede fallar y su mitigación
-- [ ] T063 Demostrar cada historia con el comando de la tabla «Corte vertical y lección» de la spec
-- [ ] T064 Retro: ¿algún principio estorbó?, ¿faltó alguno?, ¿alguno no se pudo verificar? Respuestas en el commit de cierre; cada «sí» abre su cambio o se anota en `docs/ideas.md`. Actualizar «Estado actual y cómo retomar» en `docs/roadmap.md`
+- [X] T063 Demostrar cada historia con el comando de la tabla «Corte vertical y lección» de la spec
+- [X] T064 Retro: ¿algún principio estorbó?, ¿faltó alguno?, ¿alguno no se pudo verificar? Respuestas en el commit de cierre; cada «sí» abre su cambio o se anota en `docs/ideas.md`. Actualizar «Estado actual y cómo retomar» en `docs/roadmap.md`
 
 ---
 

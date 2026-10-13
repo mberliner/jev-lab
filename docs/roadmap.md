@@ -2,12 +2,12 @@
 
 ## Estado actual y cómo retomar
 
-> **Actualizado: 2026-10-12.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> **Actualizado: 2026-10-13.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 000 (Cimientos) implementada en la rama `000-cimientos`, publicada en
-https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Falta el cierre (ver
-«Después», más abajo). Hecho:
+**Dónde estamos:** spec 000 (Cimientos) cerrada en la rama `000-cimientos`, publicada en
+https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Queda aplazada T037
+(ver «Después», más abajo). Hecho:
 - Spec Kit instalado con las integraciones de Claude Code y Antigravity; `AGENTS.md` como única
   fuente de instrucciones (`CLAUDE.md` solo importa `@AGENTS.md`).
 - **Constitución v0.3.1** (v0.3.0 ratificada; PATCH del 2026-10-12: «cuerpos» pasa a *payloads*) (`.specify/memory/constitution.md`), 7 principios. El historial
@@ -19,7 +19,7 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Falt
 - Entorno de la máquina Linux comprobado: uv 0.9.18, Python 3.13.11 (uv), `python3` 3.8.10 con
   PyYAML 5.3.1 y `specify` 1.1.4.dev0.
 
-**En curso: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
+**Hecho: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
 «Espacio reservado»).
 1. [hecho, 2026-10-12] Temas, principios y presets en `docs/governance.md` §4:
    - `jevlab-spec` (VII), `jevlab-arch` (III), `jevlab-decision` (I, II, IV), `jevlab-testing`
@@ -83,15 +83,15 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Falt
   `000-cimientos`. `uv run poe check` y la CI pasan. Hallazgos anotados en
   `specs/000-cimientos/research.md` (R3, R14), `docs/governance.md` §5 (apartar `.venv` al
   instalar un preset) y `docs/ideas.md` (comprobación de reloj, azar e IDs para la 001).
-- **[siguiente]** Cierre de la spec 000. Las tareas pendientes están en
-  `specs/000-cimientos/tasks.md` (las que siguen con `[ ]`):
-  1. Manuales, del mantenedor: T037 (`.env` con claves reales, `uv run jevlab doctor --remote` y
-     `uv run poe live`) y T053 (`/speckit-specify` de prueba en Claude Code y en Antigravity sobre
-     una rama desechable).
-  2. Con el agente: T061 (validar `quickstart.md`), T062 (revisar la lección), T063 (demostrar
-     cada historia) y T064 (retro en el commit de cierre y actualizar esta sección).
-  3. Integrar `000-cimientos` en `main` (recomendado: PR en GitHub, para que la CI corra sobre él).
-  Luego, la spec 001.
+- [hecho, 2026-10-13] Cierre de la spec 000: 63 de 64 tareas; retro en el commit de cierre.
+  Cambios del cierre: `main` integrado (`jevlab-testing` 0.2.2), `.specify/scripts/` solo con
+  Python (`poe check-presets` lo comprueba) y salida de `jevlab doctor` en español con tildes.
+- **Aplazada: T037** (`.env` con claves reales, `uv run jevlab doctor --remote` y
+  `uv run poe live`). Se hace al tener claves, como muy tarde al grabar las cassettes de la 001.
+- **[siguiente]**
+  1. Integrar `000-cimientos` en `main` (recomendado: PR en GitHub, para que la CI corra sobre él).
+  2. Spec 001 con `/speckit-specify`, revisando antes `docs/ideas.md`. Hasta grabar las cassettes
+     no necesita claves.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
