@@ -4,6 +4,7 @@ import pytest
 from typer.testing import CliRunner, Result
 
 import jevlab.entrypoints.cli.main as cli
+from checks.writing import check_text
 from jevlab.domain.diagnostics import ProviderRejected, ProviderUnavailable
 from tests.fakes import FakeGeneratorProbe, FakeLocalEnvironment, FakeModelCatalog
 
@@ -54,7 +55,7 @@ def test_missing_key_fails_with_fix_line(monkeypatch: pytest.MonkeyPatch) -> Non
 
 
 def test_remote_unavailable_shows_nd_and_fails(monkeypatch: pytest.MonkeyPatch) -> None:
-    down = ProviderUnavailable("sin conexion")
+    down = ProviderUnavailable("sin conexión")
 
     result = _invoke(
         monkeypatch,
@@ -64,8 +65,8 @@ def test_remote_unavailable_shows_nd_and_fails(monkeypatch: pytest.MonkeyPatch) 
     )
 
     assert result.exit_code == 1
-    assert "[n/d]  typesafe        no disponible: sin conexion" in result.output
-    assert "[n/d]  azure           no disponible: sin conexion" in result.output
+    assert "[n/d]  typesafe        no disponible: sin conexión" in result.output
+    assert "[n/d]  azure           no disponible: sin conexión" in result.output
     assert result.output.splitlines()[-1] == "Resultado: 2 no disponibles"
 
 
@@ -83,14 +84,14 @@ def test_mixed_summary(monkeypatch: pytest.MonkeyPatch) -> None:
         ["doctor", "--remote"],
         local=FakeLocalEnvironment(missing_keys=["TYPESAFE_API_KEY"]),
         catalog=FakeModelCatalog(error=ProviderRejected(401)),
-        generator=FakeGeneratorProbe(error=ProviderUnavailable("sin conexion")),
+        generator=FakeGeneratorProbe(error=ProviderUnavailable("sin conexión")),
     )
 
     assert result.exit_code == 1
     assert result.output.splitlines()[-1] == "Resultado: 2 fallas, 1 no disponible"
 
 
-def test_output_is_ascii_and_has_no_secret(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_output_follows_writing_standard_and_has_no_secret(monkeypatch: pytest.MonkeyPatch) -> None:
     result = _invoke(
         monkeypatch,
         ["doctor", "--remote"],
@@ -100,7 +101,8 @@ def test_output_is_ascii_and_has_no_secret(monkeypatch: pytest.MonkeyPatch) -> N
     )
 
     assert _SECRET not in result.output
-    assert result.output.isascii()
+    assert check_text("salida", result.output) == []
+    assert "clave rechazada (código 401)" in result.output
 
 
 def test_without_remote_providers_are_not_called(monkeypatch: pytest.MonkeyPatch) -> None:

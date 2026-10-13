@@ -141,7 +141,7 @@ def test_empty_model_list_fails() -> None:
 
 @pytest.mark.parametrize("name", ["typesafe", "azure"])
 def test_unavailable_provider_is_reported_as_unavailable(name: str) -> None:
-    error = ProviderUnavailable("sin conexion")
+    error = ProviderUnavailable("sin conexión")
     results = _run(
         remote=True,
         catalog=FakeModelCatalog(error=error),

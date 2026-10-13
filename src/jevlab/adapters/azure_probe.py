@@ -49,7 +49,7 @@ class AzureGeneratorProbe:
                     max_completion_tokens=16,
                 )
         except APIConnectionError as error:
-            raise ProviderUnavailable("sin conexion con Azure OpenAI") from error
+            raise ProviderUnavailable("sin conexión con Azure OpenAI") from error
         except APIStatusError as error:
             if error.status_code >= 500:
                 raise ProviderUnavailable(f"Azure responde {error.status_code}") from error

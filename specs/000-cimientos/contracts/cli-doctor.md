@@ -19,14 +19,15 @@ uv run jevlab doctor --remote   # añade TypeSafe y Azure OpenAI
 
 ## Salida
 
-Una línea por comprobación, en el orden de la tabla, y una línea de resumen. Solo ASCII.
+Una línea por comprobación, en el orden de la tabla, y una línea de resumen. En español con tildes y sin emojis
+ni pictogramas (`docs/standards/writing.md`): el estado va en marcas de texto.
 
 ```
 [ok]   speckit-python  python3 3.8.10 con PyYAML 5.3.1
 [ok]   project-python  Python 3.13.11
 [fail] env-keys        faltan: AZURE_OPENAI_API_KEY
        arreglo: copia .env.example a .env y rellena las variables que faltan
-[n/d]  typesafe        no disponible: sin conexión con api.typesafe.ai
+[n/d]  typesafe        no disponible: sin conexión con TypeSafe
        arreglo: comprueba la red y vuelve a ejecutar con --remote
 Resultado: 1 falla, 1 no disponible
 ```

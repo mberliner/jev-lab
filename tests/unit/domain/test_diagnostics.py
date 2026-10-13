@@ -90,4 +90,4 @@ def test_results_are_immutable() -> None:
 def test_provider_errors_carry_their_cause() -> None:
     assert ProviderRejected(401).status == 401
     assert ProviderRejected(None).status is None
-    assert ProviderUnavailable("sin conexion").reason == "sin conexion"
+    assert ProviderUnavailable("sin conexión").reason == "sin conexión"

@@ -1,7 +1,7 @@
 """Caso de uso de `jevlab doctor`: comprueba el entorno y, si se pide, los proveedores.
 
-Los textos de `detail` y `fix` son ASCII porque se muestran en cualquier terminal
-(specs/000-cimientos/contracts/cli-doctor.md).
+Los textos de `detail` y `fix` siguen docs/standards/writing.md: español con tildes,
+sin emojis ni pictogramas (specs/000-cimientos/contracts/cli-doctor.md).
 """
 
 from jevlab.domain.diagnostics import (
@@ -76,7 +76,7 @@ class CheckEnvironment:
                 "project-python",
                 Scope.LOCAL,
                 f"{detail}; se esperaba 3.13",
-                "ejecuta uv sync en la raiz del repositorio y usa uv run jevlab",
+                "ejecuta uv sync en la raíz del repositorio y usa uv run jevlab",
             )
         return _ok("project-python", Scope.LOCAL, detail)
 
@@ -112,7 +112,7 @@ class CheckEnvironment:
             return _fail(
                 name,
                 Scope.REMOTE,
-                f"el modelo por defecto {default} no esta disponible; modelos: {listed}",
+                f"el modelo por defecto {default} no está disponible; modelos: {listed}",
                 "pon en TYPESAFE_DEFAULT_MODEL un modelo de la lista o jev-latest",
             )
         return _ok(name, Scope.REMOTE, f"modelos: {listed} (por defecto: {default})")
@@ -132,7 +132,7 @@ def _speckit_detail(info: PythonInfo) -> str:
     assert info.version is not None
     detail = f"python3 {_version(info.version)} con PyYAML {info.yaml_version}"
     if info.yaml_via_override:
-        detail += " (via SPECKIT_PYTHON_EXECUTABLE)"
+        detail += " (vía SPECKIT_PYTHON_EXECUTABLE)"
     return detail
 
 
@@ -140,30 +140,30 @@ def _typesafe_rejection(status: int | None) -> tuple[str, str]:
     if status is None:
         return "falta la clave", "define TYPESAFE_API_KEY en .env"
     if status in (401, 403):
-        return f"clave rechazada (codigo {status})", "revisa TYPESAFE_API_KEY en .env"
+        return f"clave rechazada (código {status})", "revisa TYPESAFE_API_KEY en .env"
     if status == 404:
-        return "modelo o recurso inexistente (codigo 404)", "revisa TYPESAFE_DEFAULT_MODEL en .env"
-    return f"peticion rechazada (codigo {status})", "revisa la configuracion de TypeSafe en .env"
+        return "modelo o recurso inexistente (código 404)", "revisa TYPESAFE_DEFAULT_MODEL en .env"
+    return f"petición rechazada (código {status})", "revisa la configuración de TypeSafe en .env"
 
 
 def _azure_rejection(status: int | None) -> tuple[str, str]:
     if status is None:
         return (
-            "configuracion incompleta",
+            "configuración incompleta",
             (
                 "define AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_API_KEY, AZURE_OPENAI_DEPLOYMENT y "
                 "AZURE_OPENAI_API_VERSION en .env"
             ),
         )
     if status in (401, 403):
-        return f"clave rechazada (codigo {status})", "revisa AZURE_OPENAI_API_KEY en .env"
+        return f"clave rechazada (código {status})", "revisa AZURE_OPENAI_API_KEY en .env"
     if status == 404:
         return (
-            "deployment no encontrado (codigo 404)",
+            "deployment no encontrado (código 404)",
             "revisa AZURE_OPENAI_DEPLOYMENT y AZURE_OPENAI_API_VERSION en .env",
         )
     return (
-        f"peticion rechazada (codigo {status})",
+        f"petición rechazada (código {status})",
         "revisa AZURE_OPENAI_ENDPOINT y AZURE_OPENAI_API_VERSION en .env",
     )
 

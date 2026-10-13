@@ -42,7 +42,7 @@ class TypeSafeModelCatalog:
             ) as client:
                 response = client.models.list()
         except TypeSafeAPIConnectionError as error:
-            raise ProviderUnavailable("sin conexion con TypeSafe") from error
+            raise ProviderUnavailable("sin conexión con TypeSafe") from error
         except TypeSafeAPIError as error:
             if error.status >= 500:
                 raise ProviderUnavailable(f"TypeSafe responde {error.status}") from error
