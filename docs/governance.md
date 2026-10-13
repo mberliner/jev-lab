@@ -168,10 +168,11 @@ admitir la versión instalada (hoy `>=1.1.3`, la estable de PyPI).
    specify integration use agy
    specify integration use claude
    ```
-   `integration use` quita el bit de ejecución a `.specify/scripts/bash/*.sh`; se restaura con
-   `git checkout -- .specify/scripts/bash/`. En Windows, además, crea `.specify/scripts/powershell/`
-   y sus entradas en `.specify/integrations/speckit.manifest.json`: se borra la carpeta y se
-   revierte el manifiesto.
+   Con `script: py`, `integration use` copia también la variante de shell del sistema
+   (`.specify/scripts/bash/` en Linux, `.specify/scripts/powershell/` en Windows) y la anota en
+   `.specify/integrations/speckit.manifest.json`. Solo se usaría con un comando o una extensión
+   sin variante de Python; el proyecto usa solo Python. Las carpetas están en `.gitignore` y se
+   quitan sus entradas del manifiesto (`poe check-presets` lo detecta).
 4. Comprobar:
    - `specify preset resolve <plantilla>` muestra las capas esperadas;
    - `.specify/presets/.registry` lista el comando en `registered_skills` para los dos agentes;

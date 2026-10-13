@@ -84,7 +84,9 @@ decisión, motivo y alternativas. Versiones consultadas en PyPI y GitHub el 2026
     skills `speckit-tasks` de los dos agentes;
   - paridad: el cuerpo (sin *frontmatter*) de cada skill sustituida por un preset es igual en
     `.claude/skills/` y `.agents/skills/` (hoy solo difieren en el *frontmatter*);
-  - bit de ejecución: `git ls-files -s .specify/scripts/bash/` da modo `100755`, también en Windows.
+  - solo Python: no se versionan `.specify/scripts/bash/` ni `.specify/scripts/powershell/`, ni
+    figuran en `.specify/integrations/speckit.manifest.json` (Spec Kit copia la variante de shell
+    del sistema junto a la de Python; cambio del cierre de la spec 000).
 - **Motivo:** la CLI es una prerelease (1.1.4.dev0) que la CI no necesita instalar.
 - **Alternativas:** `specify preset resolve` en CI (dependencia y red innecesarias).
 

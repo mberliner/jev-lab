@@ -133,7 +133,7 @@ repositorio y no parte de la CLI; se prueban con la misma suite y cuentan en la 
 | `test-integration` | Tests `integration` con la red bloqueada | `testing.md` §2 |
 | `check-writing` | Redacción de los `.md` | `writing.md` |
 | `check-commit-msg` | Mensaje de commit (gancho `commit-msg`) | `version-control.md` |
-| `check-presets` | Copia instalada, «Tests are OPTIONAL», paridad de skills, bit de ejecución | `governance.md` §5, ADR-0002 |
+| `check-presets` | Copia instalada, «Tests are OPTIONAL», paridad de skills, sin scripts de shell | `governance.md` §5, ADR-0002 |
 | `check-paths` | Rutas absolutas de máquina y enlaces simbólicos | §VI |
 | `check-agents` | `CLAUDE.md` solo importa `AGENTS.md` | §VI, ADR-0002 |
 | `check` | Todas las anteriores salvo `test` y `check-commit-msg`: cada test se ejecuta una sola vez por commit | |

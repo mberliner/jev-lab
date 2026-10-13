@@ -143,8 +143,8 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
   cómo resolverlo (`docs/governance.md` §5, nota técnica).
 - Un clon en Windows convierte finales de línea: las reglas de `.gitattributes` mantienen LF salvo
   en los archivos de Windows.
-- `specify integration use` quita el bit de ejecución a `.specify/scripts/bash/*.sh`: la puerta de
-  presets lo detecta.
+- `specify integration use` copia los scripts de shell del sistema junto a los de Python: no se
+  versionan y la puerta de presets lo detecta.
 - `specify integration upgrade --force` devuelve a la base las skills del agente no activo: la
   puerta de paridad lo detecta.
 - Sin red durante `jevlab doctor` con comprobaciones remotas: el comando informa «no disponible»
@@ -187,8 +187,8 @@ lección, explica el flujo SDD y aplica el procedimiento de un preset.
   6. formato del mensaje de commit, sin atribuciones de agentes
      (`docs/standards/version-control.md`);
   7. presets: copia instalada igual a la fuente, sin «Tests are OPTIONAL» en la plantilla resuelta
-     ni en las skills, skills de los comandos sustituidos iguales en los dos agentes y bit de
-     ejecución en `.specify/scripts/bash/`;
+     ni en las skills, skills de los comandos sustituidos iguales en los dos agentes y sin
+     scripts de shell en `.specify/scripts/`;
   8. `CLAUDE.md` solo importa `AGENTS.md`;
   9. ausencia de rutas absolutas de máquina.
 - **FR-018**: Los dos agentes MUST ejecutar el flujo de Spec Kit sobre los mismos artefactos y con
@@ -292,4 +292,4 @@ No aplica: esta spec no pregunta nada al modelo; `jevlab doctor` solo comprueba 
     composición por prioridad, agente único activo); el entorno de dos intérpretes.
   - Qué puede fallar y su mitigación: `python3` antiguo o sin PyYAML; un preset con comandos
     registrado solo en el agente activo; `integration upgrade --force` que devuelve skills a la
-    base; el bit de ejecución perdido; finales de línea en Windows.
+    base; los scripts de shell que copia `integration use`; finales de línea en Windows.

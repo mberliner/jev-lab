@@ -20,6 +20,7 @@ provides:
       file: "commands/speckit.tasks.md"
       strategy: "replace"
 """
+_SPECKIT_MANIFEST = ".specify/integrations/speckit.manifest.json"
 _SKILL_BODY = "# Speckit Tasks Skill\n\nLos tests son obligatorios.\n"
 
 
@@ -29,7 +30,7 @@ def _skill(front: str, body: str = _SKILL_BODY) -> str:
 
 @pytest.fixture
 def project(repo: Path, git: Git) -> Path:
-    """Repositorio mínimo coherente: fuente, copia instalada, registro, skills y scripts."""
+    """Repositorio mínimo coherente: fuente, copia instalada, registro, skills y manifiesto."""
     for base in ("presets/jevlab-testing", ".specify/presets/jevlab-testing"):
         write(repo, f"{base}/preset.yml", _TASKS_TESTING)
         write(repo, f"{base}/templates/tasks-template.md", "# Tareas\n\nTests MANDATORY.\n")
@@ -46,9 +47,10 @@ def project(repo: Path, git: Git) -> Path:
     write(repo, ".specify/templates/tasks-template.md", "**Tests**: Tests are OPTIONAL\n")
     write(repo, ".claude/skills/speckit-tasks/SKILL.md", _skill("user-invocable: true\n"))
     write(repo, ".agents/skills/speckit-tasks/SKILL.md", _skill("compatibility: x\n"))
-    write(repo, ".specify/scripts/bash/common.sh", "#!/usr/bin/env bash\n")
+    write(
+        repo, _SPECKIT_MANIFEST, json.dumps({"files": {".specify/scripts/python/common.py": "x"}})
+    )
     git("add", "-A")
-    git("update-index", "--chmod=+x", ".specify/scripts/bash/common.sh")
     return repo
 
 
@@ -126,9 +128,21 @@ def test_skill_using_the_virtualenv_python(project: Path, venv: str) -> None:
     assert all(".venv" in e for e in errors)
 
 
-def test_bash_script_without_exec_bit(project: Path, git: Git) -> None:
-    git("update-index", "--chmod=-x", ".specify/scripts/bash/common.sh")
+@pytest.mark.parametrize("script", ["bash/common.sh", "powershell/common.ps1"])
+def test_shell_script_versioned(project: Path, git: Git, script: str) -> None:
+    write(project, f".specify/scripts/{script}", "# script\n")
+    git("add", "-f", f".specify/scripts/{script}")
     errors = check_presets(project)
     assert len(errors) == 1
-    assert "common.sh" in errors[0]
-    assert "100755" in errors[0]
+    assert script in errors[0]
+    assert "solo Python" in errors[0]
+
+
+@pytest.mark.parametrize("script", ["bash/common.sh", "powershell/common.ps1"])
+def test_shell_script_in_speckit_manifest(project: Path, script: str) -> None:
+    files = {".specify/scripts/python/common.py": "x", f".specify/scripts/{script}": "y"}
+    write(project, _SPECKIT_MANIFEST, json.dumps({"files": files}))
+    errors = check_presets(project)
+    assert len(errors) == 1
+    assert _SPECKIT_MANIFEST in errors[0]
+    assert script in errors[0]

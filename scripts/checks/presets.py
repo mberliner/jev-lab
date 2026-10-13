@@ -4,7 +4,8 @@ Lee los archivos versionados; no ejecuta la CLI de Spec Kit. Comprueba:
 - la copia instalada de cada preset (`.specify/presets/<id>/`) es igual a su fuente (`presets/<id>/`);
 - «Tests are OPTIONAL» no aparece en la plantilla de tareas resuelta ni en las skills de tareas;
 - cada skill sustituida por un preset está registrada en los dos agentes y tiene el mismo cuerpo;
-- los scripts de `.specify/scripts/bash/` tienen modo 100755 en el índice de Git;
+- no se versionan ni se registran en el manifiesto de Spec Kit los scripts de shell
+  (`.specify/scripts/bash/`, `.specify/scripts/powershell/`): el proyecto usa solo Python;
 - ninguna skill lanza los scripts con el Python de `.venv/` en vez de `python3`.
 """
 
@@ -21,6 +22,8 @@ FORBIDDEN = "Tests are OPTIONAL"
 TASKS_SKILL = "speckit-tasks"
 TASKS_TEMPLATE = "tasks-template"
 VENV_PYTHONS = (".venv/bin/python", ".venv/Scripts/python")
+SHELL_SCRIPTS = (".specify/scripts/bash/", ".specify/scripts/powershell/")
+SPECKIT_MANIFEST = ".specify/integrations/speckit.manifest.json"
 
 
 def _files(directory: Path) -> set[str]:
@@ -121,18 +124,22 @@ def _check_parity(root: Path) -> list[str]:
     return errors
 
 
-def _check_exec_bit(root: Path) -> list[str]:
-    errors = []
-    for line in git(root, "ls-files", "-s", "-z", ".specify/scripts/bash/").split("\0"):
-        if not line:
-            continue
-        mode, _, rest = line.partition(" ")
-        name = rest.split("\t", 1)[1]
-        if mode != "100755":
-            errors.append(
-                f"{name}: governance.md §5 (bit de ejecución): modo {mode}, se espera 100755; "
-                "restaura con git checkout -- .specify/scripts/bash/"
-            )
+def _check_shell_scripts(root: Path) -> list[str]:
+    """Spec Kit copia la variante de shell del sistema junto a la de Python; no se usa."""
+    rule = "governance.md §5 (solo Python)"
+    errors = [
+        f"{name}: {rule}: script de shell versionado; quítalo con git rm --cached"
+        for name in git(root, "ls-files", "-z", *SHELL_SCRIPTS).split("\0")
+        if name
+    ]
+    manifest_path = root / SPECKIT_MANIFEST
+    if manifest_path.is_file():
+        files = json.loads(manifest_path.read_text(encoding="utf-8")).get("files", {})
+        errors += [
+            f"{SPECKIT_MANIFEST}: {rule}: registra {name}; quita la entrada"
+            for name in sorted(files)
+            if name.startswith(SHELL_SCRIPTS)
+        ]
     return errors
 
 
@@ -154,7 +161,7 @@ def check_presets(root: Path) -> list[str]:
         *_check_copies(root),
         *_check_tests_optional(root),
         *_check_parity(root),
-        *_check_exec_bit(root),
+        *_check_shell_scripts(root),
         *_check_skill_interpreter(root),
     ]
 

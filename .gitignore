@@ -21,3 +21,7 @@ Thumbs.db
 
 # Cachés de Spec Kit (catálogos de presets/extensiones descargados)
 .specify/**/.cache/
+
+# Scripts de shell que Spec Kit copia junto a los de Python; el proyecto usa solo Python
+.specify/scripts/bash/
+.specify/scripts/powershell/

@@ -99,13 +99,12 @@ agente y se vuelve al de por defecto:
 specify preset add --dev presets/jevlab-testing --priority 90
 specify integration use agy
 specify integration use claude
-git checkout -- .specify/scripts/bash/      # integration use quita el bit de ejecución
 ```
 
 **Comprobación.** `uv run poe check-presets` verifica lo que se puede olvidar: que la copia
 instalada en `.specify/presets/` es igual a la fuente de `presets/`, que «Tests are OPTIONAL» no
 reaparece en la plantilla resuelta ni en las skills, que la skill es igual en los dos agentes y
-que los scripts de bash conservan el bit de ejecución.
+que no se versionan los scripts de shell que Spec Kit copia junto a los de Python.
 
 ## 4. Dos intérpretes, dos papeles
 
@@ -145,7 +144,7 @@ Azure quedan detrás de puertos con fakes para los tests
 | `python3` sin PyYAML | Spec Kit ignora los presets: la plantilla vuelve a la base sin avisar | Instalar PyYAML o definir `SPECKIT_PYTHON_EXECUTABLE`; `jevlab doctor` lo detecta |
 | Preset con comandos instalado con un solo agente activo | El otro agente sigue usando la skill base, con «Tests are OPTIONAL» | Pasar por cada agente con `specify integration use`; `poe check-presets` lo detecta |
 | `specify integration upgrade --force` | Las skills del agente no activo vuelven a la base | Mismo paso por cada agente; `poe check-presets` lo detecta |
-| Bit de ejecución perdido tras `integration use` | Los scripts de bash dejan de ejecutarse en Linux | `git checkout -- .specify/scripts/bash/`; `poe check-presets` lo detecta |
+| `integration use` copia los scripts de shell del sistema (`bash/` en Linux, `powershell/` en Windows) | El repo cambia según el sistema de quien instala | Están en `.gitignore` y se quitan sus entradas del manifiesto de Spec Kit; `poe check-presets` lo detecta |
 | Instalar un preset con `.venv/` presente | Las skills llaman a `.venv/bin/python` en vez de `python3`, que falla en otra máquina o en Windows | Apartar `.venv/` mientras se instala (`docs/governance.md` §5); `poe check-presets` lo detecta |
 | El agente copia un emoji de una skill de Spec Kit a un artefacto | El commit de `spec.md` o `plan.md` falla | Cambiarlo por una palabra; `poe check-writing` señala archivo y línea |
 | Finales de línea convertidos en Windows | Diferencias en todo el archivo y scripts rotos | `.gitattributes` fija LF salvo en `*.ps1`, `*.cmd` y `*.bat` |
