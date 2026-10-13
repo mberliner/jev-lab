@@ -145,7 +145,7 @@ puerta la rechaza; `/speckit-specify` de prueba en cada agente.
 - [X] T050 [US3] Crear `.github/workflows/ci.yml`: disparadores `push` y `pull_request` (nunca `pull_request_target`); `permissions: contents: read`; matriz `ubuntu-latest` y `windows-latest`; `astral-sh/setup-uv`; `uv sync --locked`; `uv run pre-commit run --all-files`; en `push` y `pull_request`, `uv run poe check-commit-msg --range` sobre los commits nuevos; sin *secrets* (`docs/standards/security.md` §5)
 - [X] T051 [US3] Comprobar cada violación de `quickstart.md`, «US3», en local y deshacerla
 - [X] T052 [US3] Crear el repositorio público en GitHub (manual, mantenedor: `research.md` R13), añadir el remoto, hacer `git push` y comprobar la CI en verde en Linux y Windows
-- [ ] T053 [US3] Ejecutar `/speckit-specify` de prueba en Claude Code y en Antigravity sobre una rama desechable, comprobar que los dos usan la plantilla resuelta con las secciones de los presets y borrar la rama
+- [X] T053 [US3] Ejecutar `/speckit-specify` de prueba en Claude Code y en Antigravity sobre una rama desechable, comprobar que los dos usan la plantilla resuelta con las secciones de los presets y borrar la rama
 
 **Checkpoint**: las puertas protegen todo cambio posterior.
 
