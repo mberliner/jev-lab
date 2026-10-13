@@ -27,3 +27,4 @@ cambiada que obliga a adaptar algo ya hecho, o una mejora detectada al trabajar.
 | Origen (spec, fecha) | Idea | Principio o capa | Spec que la recoge |
 | --- | --- | --- | --- |
 | 000, 2026-10-12 (plan, research R3) | El SDK de TypeSafe y `openai` 3.x usan `httpx2`; `respx` y `vcrpy` interceptan `httpx`. Comprobar si `vcrpy` graba `httpx2`; si no, un grabador propio sobre el parámetro `transport` del cliente y ajustar `docs/standards/testing.md` §0 y §1 | IV, estándar de testing | 001 |
+| 000, 2026-10-12 (implementación) | Comprobación automática de `docs/standards/architecture.md` §5: prohibir con ruff (TID251, `banned-api`) `datetime.now`, `time.time`, `random` y `uuid.uuid4` salvo en `src/jevlab/adapters/` y `tests/`, con un test que confirme que la puerta salta. Se añade con el primer puerto `Clock` o `IdGenerator`; después, quitar de §5 la frase «se decide al configurar el lint en la spec de cimientos» | IV, estándar de arquitectura | 001 |
