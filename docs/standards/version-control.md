@@ -2,7 +2,7 @@
 
 > Concreta: Constitución §VI · Exigido por: *(sin preset)* · ADRs: *(ninguno)*
 
-Convenciones para los mensajes de commit y las descripciones de PR. Se aplican igual a lo que
+Convenciones para los mensajes de commit, las descripciones de PR y la integración en `main`. Se aplican igual a lo que
 escribe una persona y a lo que genera un agente.
 
 ## 1. Formato del mensaje: Conventional Commits
@@ -52,10 +52,37 @@ atribuciones de agentes o herramientas, como `Co-Authored-By: <agente>` o `Gener
 integra el cambio, que es quien lo aprueba. Una firma de herramienta no aporta información útil
 al historial y lo hace depender del agente que se usó.
 
+## 3. Integración de una spec en `main`
+
+**Regla.** Cada spec se trabaja en su rama (`NNN-nombre`) y se integra en `main` con un PR y
+**merge commit**, no con *squash* ni *rebase*. El título del merge MUST seguir §1; el título por
+defecto de GitHub («Merge pull request #N from …») se sustituye.
+
+**Motivo.** El merge conserva cada commit con su SHA: un commit por historia, el tipo de cada
+cambio y la retro en el commit de cierre (preset `jevlab-spec`). Además, marca en `main` dónde
+entra cada spec. Un *squash* lo junta todo en un solo commit, y un *rebase* descarta los merges
+de la rama y obliga a resolver de nuevo sus conflictos. En GitHub conviene dejar activada solo
+la opción «Allow merge commits».
+
+**Correcto:**
+
+```text
+feat(spec-000): cimientos de jev-lab (#1)
+```
+
+**Incorrecto:**
+
+```text
+Merge pull request #1 from mberliner/000-cimientos
+feat (spec 000): cimientos de jev-lab
+```
+
 ## Verificación
 
 - **Automática:** un hook `commit-msg` en pre-commit valida las dos reglas: el formato de
   Conventional Commits y la ausencia de pies de atribución. La longitud del resumen como mucho
   genera un aviso, nunca un rechazo. Lo implementa `scripts/checks/commit_msg.py`
   (`uv run poe check-commit-msg`), que la CI aplica también a los commits nuevos de cada push.
-- **Revisión:** «¿el mensaje dice qué cambia y por qué, sin firmas?».
+  Los commits de merge se omiten: el título de §3 se revisa al integrar.
+- **Revisión:** «¿el mensaje dice qué cambia y por qué, sin firmas?» y, al integrar un PR,
+  «¿es un merge commit con título en formato de §1?».
