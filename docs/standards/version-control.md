@@ -56,5 +56,6 @@ al historial y lo hace depender del agente que se usó.
 
 - **Automática:** un hook `commit-msg` en pre-commit valida las dos reglas: el formato de
   Conventional Commits y la ausencia de pies de atribución. La longitud del resumen como mucho
-  genera un aviso, nunca un rechazo. Se implementa en la spec 000.
+  genera un aviso, nunca un rechazo. Lo implementa `scripts/checks/commit_msg.py`
+  (`uv run poe check-commit-msg`), que la CI aplica también a los commits nuevos de cada push.
 - **Revisión:** «¿el mensaje dice qué cambia y por qué, sin firmas?».

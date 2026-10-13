@@ -169,14 +169,14 @@ Every task MUST strictly follow this format:
 
 **Examples**:
 
-- ✅ CORRECT: `- [ ] T001 Create project structure per implementation plan`
-- ✅ CORRECT: `- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
-- ✅ CORRECT: `- [ ] T012 [P] [US1] Create User model in src/models/user.py`
-- ✅ CORRECT: `- [ ] T014 [US1] Implement UserService in src/services/user_service.py`
-- ❌ WRONG: `- [ ] Create User model` (missing ID and Story label)
-- ❌ WRONG: `T001 [US1] Create model` (missing checkbox)
-- ❌ WRONG: `- [ ] [US1] Create User model` (missing Task ID)
-- ❌ WRONG: `- [ ] T001 [US1] Create model` (missing file path)
+- CORRECT: `- [ ] T001 Create project structure per implementation plan`
+- CORRECT: `- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
+- CORRECT: `- [ ] T012 [P] [US1] Create User model in src/models/user.py`
+- CORRECT: `- [ ] T014 [US1] Implement UserService in src/services/user_service.py`
+- WRONG: `- [ ] Create User model` (missing ID and Story label)
+- WRONG: `T001 [US1] Create model` (missing checkbox)
+- WRONG: `- [ ] [US1] Create User model` (missing Task ID)
+- WRONG: `- [ ] T001 [US1] Create model` (missing file path)
 
 ### Task Organization
 
@@ -190,26 +190,26 @@ Every task MUST strictly follow this format:
    - Mark story dependencies (most stories should be independent)
 
 2. **From Contracts**:
-   - Map each interface contract → to the user story it serves
-   - Each interface contract → contract test task [P] before implementation in that story's phase
+   - Map each interface contract -> to the user story it serves
+   - Each interface contract -> contract test task [P] before implementation in that story's phase
 
 3. **From Data Model**:
    - Map each entity to the user story(ies) that need it
    - If entity serves multiple stories: Put in earliest story or Setup phase
-   - Relationships → service layer tasks in appropriate story phase
+   - Relationships -> service layer tasks in appropriate story phase
    - For each field with constraints in data-model.md (max length, nullable/required, enum values, validation rules), quote the constraint verbatim in the task description so it is not left to implementation-time discretion
 
 4. **From Setup/Infrastructure**:
-   - Shared infrastructure → Setup phase (Phase 1)
-   - Foundational/blocking tasks → Foundational phase (Phase 2)
-   - Story-specific setup → within that story's phase
+   - Shared infrastructure -> Setup phase (Phase 1)
+   - Foundational/blocking tasks -> Foundational phase (Phase 2)
+   - Story-specific setup -> within that story's phase
 
 ### Phase Structure
 
 - **Phase 1**: Setup (project initialization)
 - **Phase 2**: Foundational (blocking prerequisites - MUST complete before user stories)
 - **Phase 3+**: User Stories in priority order (P1, P2, P3...)
-  - Within each story: Tests → Models → Services → Endpoints → Integration
+  - Within each story: Tests -> Models -> Services -> Endpoints -> Integration
   - Each phase should be a complete, independently testable increment
 - **Final Phase**: Polish & Cross-Cutting Concerns
 

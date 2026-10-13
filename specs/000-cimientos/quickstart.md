@@ -49,7 +49,7 @@ Comprobar que cada puerta rechaza su violación (después, deshacer el cambio):
 | Un emoji en un `.md` | `poe check-writing` |
 | Un archivo de `.specify/presets/jevlab-testing/` distinto de `presets/jevlab-testing/` | `poe check-presets` |
 | `.agents/skills/speckit-tasks/SKILL.md` vuelto a la base (con «Tests are OPTIONAL») | `poe check-presets` |
-| Una ruta `/home/usuario/...` en un archivo versionado | `poe check-paths` |
+| Una ruta `/home/<usuario>/...` en un archivo versionado | `poe check-paths` |
 | Una clave con forma de API key en un archivo | gitleaks |
 
 En CI: el workflow pasa en `ubuntu-latest` y `windows-latest` tras `git push`.

@@ -20,7 +20,8 @@ Spec-Driven Development (Spec Kit).
 | `docs/ideas.md` | Ideas abiertas para specs futuras (de dominio y de las retros); revisar al planificar una spec |
 | `docs/governance.md` | Dónde vive cada regla común: constitución -> presets propios -> estándares |
 | `specs/NNN-*/` | Artefactos SDD de cada feature |
-| `docs/setup.md` | Puesta en marcha en Linux y Windows (se crea en la spec 000) |
+| `docs/setup.md` | Puesta en marcha en Linux y Windows, claves y agentes |
+| `docs/lessons/` | Una lección por spec (`NNN-<nombre>.md`) |
 
 ## Flujo de trabajo (Spec Kit)
 
@@ -42,6 +43,24 @@ Spec-Driven Development (Spec Kit).
   `docs/setup.md`).
 - Multiplataforma (Linux y Windows): sin symlinks, `pathlib`, UTF-8 explícito, finales de línea
   según `.gitattributes`.
+
+## Comandos
+
+Puesta en marcha completa: `docs/setup.md`. Todos los comandos son iguales en Linux y Windows.
+
+| Comando | Para qué |
+| --- | --- |
+| `uv sync` | Instala Python 3.13 y las dependencias en `.venv/` |
+| `uv run poe test` | Suite salvo `live`, con la red bloqueada |
+| `uv run poe check` | Todas las puertas de calidad (lo que ejecutan pre-commit y CI) |
+| `uv run jevlab doctor` | Comprueba el entorno local; `--remote` añade TypeSafe y Azure OpenAI |
+| `uv run poe live` | Tests contra servicios reales: necesitan `.env` y tienen tope de coste |
+| `uv run pre-commit install` | Activa los ganchos `pre-commit` y `commit-msg` |
+
+- Las puertas propias viven en `scripts/checks/` (una por módulo) y se lanzan con
+  `uv run poe check-<nombre>`. Un cambio está listo cuando `uv run poe check` pasa.
+- Código en `src/jevlab/` con las capas de `docs/standards/architecture.md`; `import-linter`
+  comprueba la regla de dependencias.
 
 ## Reglas básicas (resumen; manda la constitución)
 

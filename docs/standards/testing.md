@@ -117,8 +117,9 @@ tests.
 
 **Incorrecto:** un test sin marca que llama a TypeSafe si encuentra la clave en el entorno.
 
-**Cómo se verifica:** revisión de tareas. El mecanismo que corta la ejecución al alcanzar el tope
-se decide al configurar pytest en la spec de cimientos.
+**Cómo se verifica:** revisión de tareas. Cada test declara `@pytest.mark.live(max_usd=...)` y
+`tests/live/conftest.py` aborta la sesión antes de empezar si la suma de los topes seleccionados
+supera `JEVLAB_LIVE_BUDGET_USD` (0,10 USD por defecto) o si algún test no declara su tope.
 
 ## 7. Procedencia de los datos de prueba
 

@@ -1,0 +1,32 @@
+# Puertas de calidad: una sola definición, la misma en pre-commit, CI y cualquier agente
+# (research.md R7). La lógica vive en las tareas poe de pyproject.toml.
+default_install_hook_types: [pre-commit, commit-msg]
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      # En cada commit: secretos en los cambios preparados.
+      - id: gitleaks
+        stages: [pre-commit]
+      # En CI (fase manual): secretos en toda la historia, con el mismo binario.
+      - id: gitleaks
+        alias: gitleaks-history
+        name: Detect hardcoded secrets (history)
+        entry: gitleaks git --redact --verbose
+        stages: [manual]
+
+  - repo: local
+    hooks:
+      - id: poe-check
+        name: puertas de calidad (uv run poe check)
+        entry: uv run poe check
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit, manual]
+      - id: commit-msg
+        name: mensaje de commit (uv run poe check-commit-msg)
+        entry: uv run poe check-commit-msg
+        language: system
+        stages: [commit-msg]

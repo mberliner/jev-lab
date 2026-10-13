@@ -95,14 +95,14 @@ preset, estándar o ambos, según lo necesite.
 
 | Tema | Principio(s) | Preset (plantillas, estrategia) | Estándar(es) | Estado |
 | --- | --- | --- | --- | --- |
-| Forma de la spec (corte vertical, historias, lección) | VII | `jevlab-spec` (spec, checklist de cierre; `append`) | *(no necesita)* | previsto en 000 |
-| Arquitectura | III | `jevlab-arch` (plan; `append`) | `architecture.md` | previsto en 000 |
-| Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | previsto en 000 |
-| Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | previsto en 000 |
-| Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | previsto en 000 |
+| Forma de la spec (corte vertical, historias, lección) | VII | `jevlab-spec` (spec, checklist de cierre; `append`) | *(no necesita)* | creado |
+| Arquitectura | III | `jevlab-arch` (plan; `append`) | `architecture.md` | creado |
+| Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | creado |
+| Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | creado |
+| Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | creado |
 | Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | *(no necesita)* | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
-| Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática en 000 |
-| Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática en 000 |
+| Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática (`poe check-writing`) |
+| Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática (gancho `commit-msg`) |
 
 Esta tabla se actualiza al crear o retirar un tema.
 
@@ -145,7 +145,7 @@ presets/jevlab-<tema>/          # fuente versionada (la que se edita)
 En `preset.yml`, cada entrada de `provides.templates` declara `type` (`template` o `command`),
 `name` (nombre base de la plantilla, como `tasks-template`, o del comando, como `speckit.tasks`),
 `file` y `strategy`. **Si no se indica `strategy`, es `replace`.** `requires.speckit_version` debe
-admitir la versión instalada, incluidas las prerelease (hoy `>=1.1.4.dev0`).
+admitir la versión instalada (hoy `>=1.1.3`, la estable de PyPI).
 
 ### Instalar o cambiar un preset
 
@@ -156,7 +156,10 @@ admitir la versión instalada, incluidas las prerelease (hoy `>=1.1.4.dev0`).
    specify preset add --dev presets/jevlab-<tema> --priority <n>
    ```
    Copia el preset a `.specify/presets/` (se versiona, para que un clon nuevo funcione sin pasos
-   extra) y lo anota en `.specify/presets/.registry`. La copia instalada no se sincroniza sola con
+   extra) y lo anota en `.specify/presets/.registry`. **Antes, apartar `.venv/`** (por ejemplo,
+   `mv .venv .venv.off` y restaurarlo al terminar el paso 3): si existe, Spec Kit escribe en las
+   skills `.venv/bin/python` en lugar de `python3`, que solo vale en esa máquina y ese sistema
+   (comprobado con 1.1.4.dev0; `poe check-presets` lo detecta). La copia instalada no se sincroniza sola con
    la fuente: sin reinstalar, Spec Kit sigue usando la anterior.
 3. **Solo si el preset trae comandos:** Spec Kit registra los comandos únicamente en la integración
    activa (regla de agente único activo). Para mantener la paridad, se pasa por cada agente y se
@@ -165,8 +168,11 @@ admitir la versión instalada, incluidas las prerelease (hoy `>=1.1.4.dev0`).
    specify integration use agy
    specify integration use claude
    ```
-   `integration use` quita el bit de ejecución a `.specify/scripts/bash/*.sh`; se restaura con
-   `git checkout -- .specify/scripts/bash/`.
+   Con `script: py`, `integration use` copia también la variante de shell del sistema
+   (`.specify/scripts/bash/` en Linux, `.specify/scripts/powershell/` en Windows) y la anota en
+   `.specify/integrations/speckit.manifest.json`. Solo se usaría con un comando o una extensión
+   sin variante de Python; el proyecto usa solo Python. Las carpetas están en `.gitignore` y se
+   quitan sus entradas del manifiesto (`poe check-presets` lo detecta).
 4. Comprobar:
    - `specify preset resolve <plantilla>` muestra las capas esperadas;
    - `.specify/presets/.registry` lista el comando en `registered_skills` para los dos agentes;
@@ -217,15 +223,17 @@ no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
    - el paso por cada agente con `integration use` los restaura.
 4. Por cada preset con `replace`: comparar con `git diff` la nueva base (plantilla en
    `.specify/templates/` y comando base) con la anterior, trasladar a nuestra copia las mejoras que
-   no contradigan la constitución, actualizar en su README la versión de Spec Kit de la que parte la
-   copia y subir su `version`.
+   no contradigan la constitución, sustituir los emojis y las flechas que traiga la base
+   (`docs/standards/writing.md`; `uv run poe check-writing` avisa si se escapa alguno), actualizar
+   en su README la versión de Spec Kit de la que parte la copia y subir su `version`.
 5. Comprobar: `specify preset resolve <plantilla>` devuelve la capa esperada, y pre-commit y CI pasan.
    CI incluye una comprobación que falla si «Tests are OPTIONAL» reaparece en la plantilla resuelta
    o en las skills de cualquier agente.
 6. Commit `chore(speckit): actualizar a <versión>`.
 
 La reinstalación de presets y el efecto de `integration upgrade` (pasos 2 y 3) están verificados
-en Linux; el de `specify self upgrade` se verificará en la primera actualización.
+en Linux; la reinstalación de presets, también en Windows. El de `specify self upgrade` se
+verificará en la primera actualización.
 
 ### Nota técnica
 
@@ -233,6 +241,12 @@ La composición de plantillas con `preset.yml` necesita **PyYAML en el `python3`
 scripts de Spec Kit**. Si no está disponible (habitual en Windows), se puede apuntar
 `SPECKIT_PYTHON_EXECUTABLE` a un intérprete que lo tenga, por ejemplo el del `uv tool` de
 `specify-cli`. `docs/setup.md` documenta cómo.
+
+Al escribir un comando en las skills, Spec Kit elige el intérprete en este orden: `.venv` del
+proyecto, `python3` del PATH, `python` del PATH y, si ninguno arranca, la ruta absoluta de su
+propio intérprete. En Windows, los alias de Microsoft Store (`WindowsApps\python3.exe`) no
+arrancan: si van antes en el PATH que un Python real, las skills reciben esa ruta absoluta. Antes
+de instalar un preset o cambiar de integración, `python3` debe resolver a un Python real.
 
 ## 6. Estándares: convenciones
 

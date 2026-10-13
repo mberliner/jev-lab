@@ -2,10 +2,12 @@
 
 ## Estado actual y cómo retomar
 
-> **Actualizado: 2026-10-12.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> **Actualizado: 2026-10-13.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 000 (Cimientos), sin código todavía. Hecho:
+**Dónde estamos:** spec 000 (Cimientos) cerrada en la rama `000-cimientos`, publicada en
+https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Queda aplazada T037
+(ver «Después», más abajo). Hecho:
 - Spec Kit instalado con las integraciones de Claude Code y Antigravity; `AGENTS.md` como única
   fuente de instrucciones (`CLAUDE.md` solo importa `@AGENTS.md`).
 - **Constitución v0.3.1** (v0.3.0 ratificada; PATCH del 2026-10-12: «cuerpos» pasa a *payloads*) (`.specify/memory/constitution.md`), 7 principios. El historial
@@ -17,7 +19,7 @@
 - Entorno de la máquina Linux comprobado: uv 0.9.18, Python 3.13.11 (uv), `python3` 3.8.10 con
   PyYAML 5.3.1 y `specify` 1.1.4.dev0.
 
-**En curso: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
+**Hecho: sesión HITL de mecanismos de arquitectura y definiciones globales** (spec 000,
 «Espacio reservado»).
 1. [hecho, 2026-10-12] Temas, principios y presets en `docs/governance.md` §4:
    - `jevlab-spec` (VII), `jevlab-arch` (III), `jevlab-decision` (I, II, IV), `jevlab-testing`
@@ -58,11 +60,12 @@
    Code/Antigravity), aceptados, en `docs/adr/` (MADR). Los pasos de instalación de la paridad
    pasan a `docs/setup.md` en la spec 000.
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
-   absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
-   `speckit_version: ">=1.1.4.dev0"`. [hecho, 2026-10-12] `integration upgrade --force` devuelve
+   absolutas. [hecho, 2026-10-13] Los presets declaran `speckit_version: ">=1.1.3"` (estable de
+   PyPI, comprobada): basta `uv tool install specify-cli`. [hecho, 2026-10-12] `integration upgrade --force` devuelve
    a la base las skills de las integraciones no activas; el paso por cada agente las restaura
-   (`docs/governance.md` §5). Pendiente: PyYAML en Windows, que se resuelve con `docs/setup.md`
-   en la spec 000.
+   (`docs/governance.md` §5). [hecho, 2026-10-13] Entorno de Windows comprobado (uv, Python 3.13,
+   `python3` con PyYAML, `specify`) y reinstalación de presets verificada; falta documentarlo en
+   `docs/setup.md` en la spec 000.
 
 **Después:** el resto de la spec 000 con Spec Kit.
 - [hecho, 2026-10-12] `/speckit-specify`: `specs/000-cimientos/spec.md`, 4 historias. Aclarado:
@@ -76,7 +79,22 @@
 - [hecho, 2026-10-12] `/speckit-tasks`: 64 tareas en `specs/000-cimientos/tasks.md`.
 - [hecho, 2026-10-12] `/speckit-analyze` (con Antigravity): 4 hallazgos de severidad baja,
   corregidos; ninguno con la constitución.
-- **[siguiente]** `/speckit-implement`, empezando por la fase 1 (Setup). Luego, la spec 001.
+- [hecho, 2026-10-12] `/speckit-implement`: 58 de 64 tareas, un commit por historia en la rama
+  `000-cimientos`. `uv run poe check` y la CI pasan. Hallazgos anotados en
+  `specs/000-cimientos/research.md` (R3, R14), `docs/governance.md` §5 (apartar `.venv` al
+  instalar un preset) y `docs/ideas.md` (comprobación de reloj, azar e IDs para la 001).
+- [hecho, 2026-10-13] Cierre de la spec 000: 63 de 64 tareas; retro en el commit de cierre.
+  Cambios del cierre: `main` integrado (`jevlab-testing` 0.2.2), `.specify/scripts/` solo con
+  Python (`poe check-presets` lo comprueba) y salida de `jevlab doctor` en español con tildes.
+- **Aplazada: T037** (`.env` con claves reales, `uv run jevlab doctor --remote` y
+  `uv run poe live`). Se hace al tener claves, como muy tarde al grabar las cassettes de la 001.
+- **[siguiente]**
+  1. Integrar `000-cimientos` en `main` (recomendado: PR en GitHub, para que la CI corra sobre él).
+  2. Spec 001 con `/speckit-specify`, revisando antes `docs/ideas.md`. Hasta grabar las cassettes
+     no necesita claves.
+
+**Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
+(`docs/setup.md`).
 
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.
@@ -136,23 +154,9 @@ Queremos un proyecto **propio** de aprendizaje con rigor, que vaya de lo básico
 
 ## Funcionamiento igual en Claude Code y Antigravity (`agy`)
 
-La decisión y sus alternativas están en [ADR-0002](adr/0002-paridad-de-agentes.md). Lo que sigue
-es el procedimiento, que pasará a `docs/setup.md` en la spec 000.
-
-Spec Kit admite varias integraciones en el mismo proyecto. Según la [referencia de integraciones](https://github.github.io/spec-kit/reference/integrations.html):
-- claves `claude` -> `.claude/skills/` y `agy` -> `.agents/skills/`;
-- `agy` no está declarada como segura para instalarse junto a otras, así que hace falta `--force`;
-- la integración por defecto queda en `.specify/integration.json`.
-
-**Cómo se consigue la paridad:**
-1. `specify init . --integration claude` y después `specify integration install agy --force`. Comprobar con `specify integration status --json`. Las dos comparten `.specify/` (constitución, plantillas y scripts) y `specs/`, de modo que **los artefactos SDD son los mismos para los dos agentes**.
-2. **Una sola fuente de instrucciones:** `AGENTS.md` (convenciones, comandos, constitución resumida y puesta en marcha). `CLAUDE.md` solo contiene `@AGENTS.md`, sin reglas propias. Antigravity lee `AGENTS.md` y `.agents/`.
-3. **Neutralidad de herramientas:** todo flujo se ejecuta con comandos del repo (`uv run poe <tarea>`, multiplataforma). Un *hook* o comando de agente se admite solo con implementación neutral: su lógica vive en una tarea del repo y existe de forma equivalente en todos los agentes, o no se usa en ninguno (constitución, VI). Las puertas de calidad son pre-commit y CI, que se aplican igual uses el agente que uses.
-4. **Skill de TypeSafe:** se instala por usuario, no se copia en el repo. En Claude Code va como plugin oficial. En `agy` se instala la misma skill en su directorio de usuario si la licencia lo permite; si no, `AGENTS.md` enlaza la documentación oficial (`docs.typesafe.ai/llms.txt`).
-5. **Invocación:** en Claude Code las skills de Spec Kit se llaman `/speckit-*` y en Antigravity también `/speckit-*`. La guía `docs/agents.md` documenta las dos.
-6. **Verificación de paridad (CI):** `specify integration status` muestra las dos integraciones; un test comprueba que `CLAUDE.md` solo importa `AGENTS.md`. La spec 000 se valida corriendo `/speckit-specify` de prueba en cada agente.
-
-> Antes de instalar, confirmar con `specify init --help` y `specify integration list` en la versión instalada, porque los flags han cambiado (`--ai` -> `--integration`).
+La decisión y sus alternativas están en [ADR-0002](adr/0002-paridad-de-agentes.md). El
+procedimiento (integraciones, fuente única de instrucciones, skill de TypeSafe e invocación) está
+en [`docs/setup.md`](setup.md), «Agentes: Claude Code y Antigravity».
 
 ## Funcionamiento igual en Windows y Linux
 
@@ -355,7 +359,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 - `specify init . --integration claude` + `specify integration install agy --force`, `AGENTS.md` y `CLAUDE.md` (`@AGENTS.md`), y constitución.
 - Esqueleto hexagonal vacío (`domain/ports/adapters/entrypoints`) + `import-linter` en CI + tareas `poe` + `.gitattributes` + CI con matriz Linux/Windows.
 - Script de comprobación de `docs/standards/writing.md` (emojis y caracteres de caja fuera de bloques de código) en pre-commit y CI, y hook `commit-msg` de `docs/standards/version-control.md` (Conventional Commits, sin atribución de agentes).
-- Comprobaciones de presets en pre-commit y CI: la copia instalada coincide con la fuente; «Tests are OPTIONAL» no aparece en la plantilla resuelta ni en las skills; las skills de los comandos sustituidos son iguales en los dos agentes; los scripts de `.specify/scripts/bash/` conservan el bit de ejecución.
+- Comprobaciones de presets en pre-commit y CI: la copia instalada coincide con la fuente; «Tests are OPTIONAL» no aparece en la plantilla resuelta ni en las skills; las skills de los comandos sustituidos son iguales en los dos agentes; no se versionan los scripts de shell de `.specify/scripts/`.
 - Lección `docs/lessons/000-<nombre-descriptivo>.md` (principio VII; el nombre dice lo que aporta): método SDD, capas de reglas, entorno y fallos típicos con su mitigación; reutiliza `docs/setup.md`. Incluye cómo se aplica un preset paso a paso (caso `jevlab-testing`: `replace` de plantilla y comando, composición por prioridad, agente único activo) con su procedimiento en `docs/governance.md` §5.
 - `README.md` para personas (las instrucciones para agentes siguen en `AGENTS.md`): qué es jev-lab, estado con puntero al roadmap, inicio rápido de 3–4 comandos con enlace a `docs/setup.md`, y mapa de documentos. Sin licencia por ahora. Se escribe junto a `docs/setup.md`, cuando los comandos existan.
 - `docs/setup.md` con la puesta en marcha en Linux y Windows: uv, Python 3.13, el enlace `python3.exe` en Windows (`New-Item -ItemType HardLink -Path "$dir\python3.exe" -Target "$dir\python.exe"`), Git Bash y los dos agentes.
