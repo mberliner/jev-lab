@@ -141,6 +141,7 @@ Azure quedan detrás de puertos con fakes para los tests
 | Fallo | Síntoma | Mitigación |
 | --- | --- | --- |
 | `python3` antiguo o inexistente (habitual en Windows) | Los comandos de Spec Kit fallan al arrancar | Enlace `python3.exe` de la guía de puesta en marcha; `jevlab doctor` lo detecta |
+| Alias de Microsoft Store (`WindowsApps\python3.exe`) antes que un Python real en el PATH | Al instalar un preset, las skills reciben la ruta absoluta del intérprete de Spec Kit | Poner antes un Python real (`docs/governance.md` §5, nota técnica); `poe check-paths` lo detecta |
 | `python3` sin PyYAML | Spec Kit ignora los presets: la plantilla vuelve a la base sin avisar | Instalar PyYAML o definir `SPECKIT_PYTHON_EXECUTABLE`; `jevlab doctor` lo detecta |
 | Preset con comandos instalado con un solo agente activo | El otro agente sigue usando la skill base, con «Tests are OPTIONAL» | Pasar por cada agente con `specify integration use`; `poe check-presets` lo detecta |
 | `specify integration upgrade --force` | Las skills del agente no activo vuelven a la base | Mismo paso por cada agente; `poe check-presets` lo detecta |

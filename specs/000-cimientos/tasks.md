@@ -185,7 +185,7 @@ aplicar el procedimiento de un preset.
 
 > Deriva de: Constitución §VII y *Governance* (revisión periódica)
 
-- [ ] T062 Revisar la lección escrita en T057 contra lo que se ha implementado: qué se aprende, cómo se ejecuta, qué puede fallar y su mitigación
+- [X] T062 Revisar la lección escrita en T057 contra lo que se ha implementado: qué se aprende, cómo se ejecuta, qué puede fallar y su mitigación
 - [ ] T063 Demostrar cada historia con el comando de la tabla «Corte vertical y lección» de la spec
 - [ ] T064 Retro: ¿algún principio estorbó?, ¿faltó alguno?, ¿alguno no se pudo verificar? Respuestas en el commit de cierre; cada «sí» abre su cambio o se anota en `docs/ideas.md`. Actualizar «Estado actual y cómo retomar» en `docs/roadmap.md`
 
