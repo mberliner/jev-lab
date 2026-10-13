@@ -145,7 +145,7 @@ presets/jevlab-<tema>/          # fuente versionada (la que se edita)
 En `preset.yml`, cada entrada de `provides.templates` declara `type` (`template` o `command`),
 `name` (nombre base de la plantilla, como `tasks-template`, o del comando, como `speckit.tasks`),
 `file` y `strategy`. **Si no se indica `strategy`, es `replace`.** `requires.speckit_version` debe
-admitir la versión instalada, incluidas las prerelease (hoy `>=1.1.4.dev0`).
+admitir la versión instalada (hoy `>=1.1.3`, la estable de PyPI).
 
 ### Instalar o cambiar un preset
 
@@ -166,7 +166,9 @@ admitir la versión instalada, incluidas las prerelease (hoy `>=1.1.4.dev0`).
    specify integration use claude
    ```
    `integration use` quita el bit de ejecución a `.specify/scripts/bash/*.sh`; se restaura con
-   `git checkout -- .specify/scripts/bash/`.
+   `git checkout -- .specify/scripts/bash/`. En Windows, además, crea `.specify/scripts/powershell/`
+   y sus entradas en `.specify/integrations/speckit.manifest.json`: se borra la carpeta y se
+   revierte el manifiesto.
 4. Comprobar:
    - `specify preset resolve <plantilla>` muestra las capas esperadas;
    - `.specify/presets/.registry` lista el comando en `registered_skills` para los dos agentes;
@@ -225,7 +227,8 @@ no toca `presets/` ni `.specify/presets/`. Procedimiento, en una rama propia:
 6. Commit `chore(speckit): actualizar a <versión>`.
 
 La reinstalación de presets y el efecto de `integration upgrade` (pasos 2 y 3) están verificados
-en Linux; el de `specify self upgrade` se verificará en la primera actualización.
+en Linux; la reinstalación de presets, también en Windows. El de `specify self upgrade` se
+verificará en la primera actualización.
 
 ### Nota técnica
 
@@ -233,6 +236,12 @@ La composición de plantillas con `preset.yml` necesita **PyYAML en el `python3`
 scripts de Spec Kit**. Si no está disponible (habitual en Windows), se puede apuntar
 `SPECKIT_PYTHON_EXECUTABLE` a un intérprete que lo tenga, por ejemplo el del `uv tool` de
 `specify-cli`. `docs/setup.md` documenta cómo.
+
+Al escribir un comando en las skills, Spec Kit elige el intérprete en este orden: `.venv` del
+proyecto, `python3` del PATH, `python` del PATH y, si ninguno arranca, la ruta absoluta de su
+propio intérprete. En Windows, los alias de Microsoft Store (`WindowsApps\python3.exe`) no
+arrancan: si van antes en el PATH que un Python real, las skills reciben esa ruta absoluta. Antes
+de instalar un preset o cambiar de integración, `python3` debe resolver a un Python real.
 
 ## 6. Estándares: convenciones
 
