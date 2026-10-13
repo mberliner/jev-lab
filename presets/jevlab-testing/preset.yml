@@ -3,11 +3,11 @@ schema_version: "1.0"
 preset:
   id: "jevlab-testing"
   name: "jev-lab: tests obligatorios"
-  version: "0.2.1"
+  version: "0.2.2"
   description: "Sustituye la plantilla y el comando de tareas para que los tests sean obligatorios y vayan antes de la implementación (Constitución IV)."
 
 requires:
-  speckit_version: ">=1.1.4.dev0"
+  speckit_version: ">=1.1.3"
 
 provides:
   templates:

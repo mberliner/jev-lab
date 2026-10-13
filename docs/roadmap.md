@@ -60,11 +60,12 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Falt
    Code/Antigravity), aceptados, en `docs/adr/` (MADR). Los pasos de instalación de la paridad
    pasan a `docs/setup.md` en la spec 000.
 4. [hecho en Linux] `specify preset add --dev` funciona y `.specify/presets/` no guarda rutas
-   absolutas. La CLI instalada es `1.1.4.dev0` (prerelease): los presets declaran
-   `speckit_version: ">=1.1.4.dev0"`. [hecho, 2026-10-12] `integration upgrade --force` devuelve
+   absolutas. [hecho, 2026-10-13] Los presets declaran `speckit_version: ">=1.1.3"` (estable de
+   PyPI, comprobada): basta `uv tool install specify-cli`. [hecho, 2026-10-12] `integration upgrade --force` devuelve
    a la base las skills de las integraciones no activas; el paso por cada agente las restaura
-   (`docs/governance.md` §5). Pendiente: PyYAML en Windows, que se resuelve con `docs/setup.md`
-   en la spec 000.
+   (`docs/governance.md` §5). [hecho, 2026-10-13] Entorno de Windows comprobado (uv, Python 3.13,
+   `python3` con PyYAML, `specify`) y reinstalación de presets verificada; falta documentarlo en
+   `docs/setup.md` en la spec 000.
 
 **Después:** el resto de la spec 000 con Spec Kit.
 - [hecho, 2026-10-12] `/speckit-specify`: `specs/000-cimientos/spec.md`, 4 historias. Aclarado:
