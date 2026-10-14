@@ -78,6 +78,15 @@ def test_range_from_zero_sha_or_single_rev_checks_whole_history(repo: Path, git:
     assert main(["--root", str(repo), "--range", "HEAD"]) == 1
 
 
+def test_range_from_unknown_sha_checks_whole_history(repo: Path, git: Git) -> None:
+    # Tras un push forzado, el inicio del rango es un commit que ya no existe en el clon.
+    git("config", "user.email", "prueba@example.invalid")
+    git("config", "user.name", "Prueba")
+    git("commit", "-q", "--allow-empty", "-m", "sin formato")
+    git("commit", "-q", "--allow-empty", "-m", "docs: bien")
+    assert main(["--root", str(repo), "--range", "1" * 40 + "..HEAD"]) == 1
+
+
 def test_merge_commits_are_skipped(repo: Path, git: Git) -> None:
     git("config", "user.email", "prueba@example.invalid")
     git("config", "user.name", "Prueba")

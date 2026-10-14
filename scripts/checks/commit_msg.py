@@ -2,10 +2,12 @@
 
 Uso: `commit_msg.py <archivo-del-mensaje>` (gancho `commit-msg`) o
 `commit_msg.py --range <a>..<b>` (CI). Un rango sin `..`, o que empieza en el SHA nulo de un
-push nuevo, comprueba toda la historia alcanzable. Los commits de merge se omiten.
+push nuevo o en un commit que ya no existe tras un push forzado, comprueba toda la historia
+alcanzable. Los commits de merge se omiten.
 """
 
 import re
+import subprocess
 from pathlib import Path
 
 from checks._common import git, report, root_parser
@@ -34,17 +36,25 @@ def check_message(text: str) -> list[str]:
     return errors
 
 
-def _revisions(spec: str) -> list[str]:
+def _is_commit(root: Path, revision: str) -> bool:
+    try:
+        git(root, "cat-file", "-e", f"{revision}^{{commit}}")
+    except subprocess.CalledProcessError:
+        return False
+    return True
+
+
+def _revisions(root: Path, spec: str) -> list[str]:
     start, sep, end = spec.partition("..")
     if not sep:
         return [spec]
-    if not start or set(start) == {"0"} or start == _NULL_SHA:
+    if not start or set(start) == {"0"} or start == _NULL_SHA or not _is_commit(root, start):
         return [end or "HEAD"]
     return [f"{start}..{end or 'HEAD'}"]
 
 
 def check_range(root: Path, spec: str) -> list[str]:
-    output = git(root, "log", "--no-merges", "--format=%H%x00%B%x1e", *_revisions(spec))
+    output = git(root, "log", "--no-merges", "--format=%H%x00%B%x1e", *_revisions(root, spec))
     errors = []
     for entry in output.split("\x1e"):
         sha, _, body = entry.strip("\n").partition("\0")
