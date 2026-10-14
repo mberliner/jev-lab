@@ -138,7 +138,15 @@ aplazada, se completó el 2026-10-14. Hecho:
 - [hecho, 2026-10-14] `/speckit-specify` con 3 aclaraciones: el reembolso sin confianza
   suficiente queda en la cola de revisión pendiente de confirmación; umbrales provisionales 0,90
   (mover a cola) y 0,97 (reembolsar); el reembolso depende de una Choice nueva, `solicitud`.
-- **[siguiente]** `/speckit-clarify` y `/speckit-plan`.
+- [hecho, 2026-10-14] `/speckit-clarify` con 3 aclaraciones: el reembolso automático exige
+  además la cola automatizada a `facturacion`; un elemento de revisión por petición; huella del
+  contenido de la política junto a su versión.
+- [hecho, 2026-10-14] `/speckit-plan`: plan, research, data-model, contratos de `route` y
+  `review` y quickstart. Decisiones: petición genérica (`ResolvedRequest`) para no tocar el
+  comportamiento de `triage` (R1); política en `src/jevlab/policies/soporte/enrutado.yaml` (R3);
+  SQLite de la biblioteca estándar en el directorio de estado del usuario o `JEVLAB_STATE_DIR`
+  (R5); sin dependencias nuevas.
+- **[siguiente]** `/speckit-tasks` y `/speckit-analyze` (guardar el informe en `analysis.md`).
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
