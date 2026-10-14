@@ -138,8 +138,8 @@ Formato del archivo en [contracts/recording.md](contracts/recording.md). En el d
 | Campo | Regla |
 | --- | --- |
 | `name` | Único; `[a-z0-9-]+`; coincide con el nombre del archivo |
-| `text` | Texto del ticket de ejemplo |
-| `synthetic` | Siempre `true` en esta feature (tickets propios, `docs/standards/testing.md` §7) |
+| `text` | Texto del ticket de ejemplo, ya normalizado (se valida); es el que viaja en `state` al grabar y al reproducir |
+| `synthetic` | Siempre `true` en esta feature (tickets propios, `docs/standards/testing.md` §7); en el archivo se escribe `origen: sintetico` y lo traduce `YamlRecordingLibrary` |
 | `model`, `recorded_on` | Obligatorios; un test falla si faltan |
 | `spec_versions` | Versión de la petición y de cada decisión con las que se grabó |
 | `request`, `response` | Cuerpo de la petición y estado y cuerpo de la respuesta; sin cabeceras |
@@ -161,7 +161,7 @@ Se reutilizan `ProviderUnavailable` y `ProviderRejected` de `domain/diagnostics.
 
 | Puerto | Métodos | Adaptador real | Fake |
 | --- | --- | --- | --- |
-| `JudgePort` | `ask(spec, ticket) -> TriageAnswers` | `TypeSafeJudge` (cliente del SDK; en vivo o con `ReplayTransport`) | `FakeJudge` |
+| `JudgePort` | `ask(spec, ticket) -> TriageAnswers`, `last_exchange() -> Exchange \| None` (petición y respuesta sin cabeceras; `None` si el transporte no graba) | `TypeSafeJudge` (cliente del SDK; en vivo o con `ReplayTransport`) | `FakeJudge` |
 | `RecordingLibrary` | `all() -> list[Recording]`, `save(recording)` | `YamlRecordingLibrary` | `InMemoryRecordingLibrary` |
 | `SpecLoader` | `load_request(name) -> TriageSpec` (carga y valida la petición y sus decisiones) | `YamlSpecLoader` | Definición construida en el test |
 | `Clock` | `today() -> date` | `SystemClock` | `FrozenClock` |
