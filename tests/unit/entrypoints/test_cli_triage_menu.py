@@ -1,5 +1,6 @@
 """Menú de ejemplos de `jevlab triage` sin texto ni nombre (FR-010a, research.md R9)."""
 
+import os
 from contextlib import nullcontext
 
 import pytest
@@ -67,3 +68,9 @@ def test_without_terminal_lists_examples_and_exits_with_usage(
         "error: falta TEXTO o --ejemplo; ejemplos: cobro-duplicado, servicio-caido"
     )
     assert replayed == []
+
+
+def test_null_device_is_not_a_terminal() -> None:
+    # En Windows, `isatty()` es cierto para `NUL`; el menú no debe salir con la entrada redirigida.
+    with open(os.devnull, encoding="utf-8") as null:
+        assert not cli.is_terminal(null)

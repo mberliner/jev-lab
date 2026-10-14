@@ -122,9 +122,9 @@ aplazada, se completó el 2026-10-14. Hecho:
   - Decisión del agente, a revisar: si faltan grabaciones, los tests que las leen se saltan con
     motivo visible (`tests/conftest.py`) en vez de fallar.
 - **[siguiente]** Tareas pendientes de `specs/001-triaje-ticket/tasks.md`:
-  - [hecho, 2026-10-14] T058: US4 validada, incluido `uv run poe live`. Hallazgo a decidir: en
-    Windows, `jevlab triage < NUL` saca el menú (código 1) en vez de la lista (código 2), porque
-    `isatty()` es `True` para `NUL`.
+  - [hecho, 2026-10-14] T058: US4 validada, incluido `uv run poe live`. Hallazgo corregido: en
+    Windows, `jevlab triage < NUL` sacaba el menú (código 1) en vez de la lista (código 2), porque
+    `isatty()` es `True` para `NUL`; ahora se exige además un modo de consola.
   - T065: anotar el tiempo de la suite en el job `ubuntu-latest` de la CI (en local, unos 15 s;
     triaje grabado, unos 0,03 s por ejecución).
   - T066: quickstart en Windows, en PowerShell y con `| cat` en Git Bash, incluido el menú en una

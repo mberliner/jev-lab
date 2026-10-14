@@ -6,7 +6,7 @@ import sys
 from contextlib import AbstractContextManager
 from importlib.metadata import version
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, TextIO
 
 import typer
 
@@ -171,8 +171,22 @@ def live_judge(api_key: str) -> AbstractContextManager[JudgePort]:
     return TypeSafeJudge.live(api_key)
 
 
+def is_terminal(stream: TextIO) -> bool:
+    """En Windows, `isatty()` también es cierto para `NUL`; solo una consola tiene modo de consola."""
+    if not stream.isatty():
+        return False
+    if sys.platform != "win32":
+        return True
+    import ctypes
+    import msvcrt
+
+    handle = msvcrt.get_osfhandle(stream.fileno())
+    mode = ctypes.c_ulong()
+    return bool(ctypes.windll.kernel32.GetConsoleMode(handle, ctypes.byref(mode)))
+
+
 def stdin_is_terminal() -> bool:
-    return sys.stdin.isatty()
+    return is_terminal(sys.stdin)
 
 
 def _fail(message: str, code: int) -> typer.Exit:
