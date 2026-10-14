@@ -46,7 +46,7 @@ uv run jevlab doctor
 | Documento | Para qué |
 | --- | --- |
 | [docs/setup.md](docs/setup.md) | Puesta en marcha en Linux y Windows, claves y agentes |
-| [docs/lessons/](docs/lessons/000-metodo-sdd-y-entorno-reproducible.md) | Una lección por spec; la 000 explica el método y el entorno |
+| [docs/lessons/](docs/lessons/000-metodo-sdd-y-entorno-reproducible.md) | Una lección por spec; la 000 explica el método y el entorno, y la 001, las tres primitivas y la confianza |
 | [docs/roadmap.md](docs/roadmap.md) | Plan de specs y estado actual |
 | [Constitución](.specify/memory/constitution.md) | Principios que cumple todo el proyecto |
 | [docs/governance.md](docs/governance.md) | Dónde vive cada regla: constitución, presets y estándares |

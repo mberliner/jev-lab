@@ -197,7 +197,8 @@ grabación; con claves, `--en-vivo` (quickstart, «US4»).
 - [X] T062 [P] Actualizar `docs/standards/security.md` §2 con `jev-1.13.0` en el ejemplo de log (research R4)
 - [X] T063 [P] Actualizar `docs/standards/architecture.md` §5: la regla `TID251` sustituye a «se decide al configurar el lint en la spec de cimientos» (research R8)
 - [X] T064 [P] Añadir `uv run poe record` a la tabla de comandos de `AGENTS.md` y a `docs/setup.md`
-- [ ] T065 Ejecutar `uv run poe check` (cobertura del dominio ≥ 95 %). Medir los objetivos de rendimiento del plan con ejecuciones reproducibles (Constitución §IV): `uv run pytest tests/integration/test_triage_offline.py --durations=0` para el triaje grabado (menos de 1 s por ejemplo) y el tiempo que informa pytest en el job `ubuntu-latest` de la CI para la suite por defecto (menos de 1 minuto); anotar las cifras, el comando y la fecha en el commit de cierre
+- [X] T065 Ejecutar `uv run poe check` (cobertura del dominio ≥ 95 %). Medir los objetivos de rendimiento del plan con ejecuciones reproducibles (Constitución §IV): `uv run pytest tests/integration/test_triage_offline.py --durations=0` para el triaje grabado (menos de 1 s por ejemplo) y el tiempo que informa pytest en el job `ubuntu-latest` de la CI para la suite por defecto (menos de 1 minuto); anotar las cifras, el comando y la fecha en el commit de cierre
+  - 2026-10-14: `uv run poe check` pasa; cobertura total del 97 % y del dominio del 99 %. Triaje grabado: `uv run pytest tests/integration/test_triage_offline.py --durations=0` da 1,41 s para 24 ejecuciones (6 ejemplos por 4 formas), unos 0,06 s cada una. CI de `ec39b1a`: el paso «Puertas de calidad» del job `ubuntu-latest` dura 50 s en total (lint, mypy y las dos pasadas de pytest), así que la suite por defecto tarda menos de 1 minuto; la cifra exacta de pytest está en el log del job.
 - [ ] T066 Validar quickstart completo, incluida la tubería de Git Bash (`uv run jevlab triage --ejemplo cobro-duplicado | cat`) y PowerShell en Windows (FR-017)
 
 ---
@@ -206,8 +207,10 @@ grabación; con claves, `--en-vivo` (quickstart, «US4»).
 
 > Deriva de: Constitución §VII y *Governance* (revisión periódica)
 
-- [ ] T067 Escribir la lección `docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md` indicada en la spec: qué se aprende, cómo se ejecuta, qué puede fallar y su mitigación, con las cifras reales de un ejemplo grabado y la fórmula de la confianza; enlazarla en el test de enlaces de `tests/integration/test_doc_links.py`
-- [ ] T068 Demostrar cada historia con el comando de la tabla «Corte vertical y lección» de la spec
+- [X] T067 Escribir la lección `docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md` indicada en la spec: qué se aprende, cómo se ejecuta, qué puede fallar y su mitigación, con las cifras reales de un ejemplo grabado y la fórmula de la confianza; enlazarla en el test de enlaces de `tests/integration/test_doc_links.py`
+  - 2026-10-14: con los ejemplos `cobro-duplicado`, `instruccion-incrustada`, `pregunta-fuera-de-ambito`, `urgencia-ambigua` y `servicio-caido`; enlazada también desde `README.md`.
+- [X] T068 Demostrar cada historia con el comando de la tabla «Corte vertical y lección» de la spec
+  - 2026-10-14: US1 con el texto de `cobro-duplicado` (`facturacion`); US2 y US3 con el de `servicio-caido` (urgencia «sí» con 0,99; umbral alcanzado con 3,00); US4 con el texto de `cobro-duplicado` sin `.env` (`Origen: grabado`) y con `--en-vivo` (`Origen: en vivo · jev-1.13.0`). Código 0 en todos.
 - [ ] T069 Retro: ¿algún principio estorbó?, ¿faltó alguno?, ¿alguno no se pudo verificar? Respuestas en el commit de cierre; cada «sí» abre su cambio o se anota en `docs/ideas.md`. Actualizar «Estado actual y cómo retomar» en `docs/roadmap.md`
 
 ---

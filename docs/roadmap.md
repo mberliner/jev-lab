@@ -6,7 +6,7 @@
 > cualquier agente.
 
 **Dónde estamos:** spec 001 (Triaje) en curso en la rama `001-triaje-ticket`: implementada y con
-los ejemplos grabados (64 de 69 tareas); quedan Windows, la lección y el
+los ejemplos grabados (67 de 69 tareas); quedan la validación en Windows y el
 cierre (ver «Spec 001 en curso», más abajo). La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
@@ -121,18 +121,18 @@ aplazada, se completó el 2026-10-14. Hecho:
     0,01, decidido por la persona (research R3).
   - Decisión del agente, a revisar: si faltan grabaciones, los tests que las leen se saltan con
     motivo visible (`tests/conftest.py`) en vez de fallar.
+- [hecho, 2026-10-14] T058 (US4 con claves reales), T065 (cifras de cobertura y tiempos),
+  T067 (lección `docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md`) y T068
+  (demostración por historia). Rama subida; CI en verde en Linux y Windows. Hallazgo corregido: en
+  Windows, `jevlab triage < NUL` sacaba el menú (código 1) en vez de la lista (código 2), porque
+  `isatty()` es `True` para `NUL`; ahora se exige además un modo de consola.
 - **[siguiente]** Tareas pendientes de `specs/001-triaje-ticket/tasks.md`:
-  - [hecho, 2026-10-14] T058: US4 validada, incluido `uv run poe live`. Hallazgo corregido: en
-    Windows, `jevlab triage < NUL` sacaba el menú (código 1) en vez de la lista (código 2), porque
-    `isatty()` es `True` para `NUL`; ahora se exige además un modo de consola.
-  - T065: anotar el tiempo de la suite en el job `ubuntu-latest` de la CI (en local, unos 15 s;
-    triaje grabado, unos 0,03 s por ejecución).
   - T066: quickstart en Windows, en PowerShell y con `| cat` en Git Bash, incluido el menú en una
     terminal real.
-  - T067: lección `docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md` con las cifras
-    reales; buen ejemplo: `cobro-duplicado`, con `alta` como nivel más probable y el umbral no
-    alcanzado (1,81 < 2).
-  - T068 y T069: demostración por historia, retro y actualización de este apartado.
+  - T069: retro en el commit de cierre (con las cifras de T065) y actualización de este apartado.
+    Revisar también la decisión de saltar los tests si faltan grabaciones y los hallazgos LOW
+    I2-I5 del análisis.
+  - Después: PR de `001-triaje-ticket` a `main`.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
