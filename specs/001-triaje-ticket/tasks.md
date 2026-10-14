@@ -199,7 +199,8 @@ grabación; con claves, `--en-vivo` (quickstart, «US4»).
 - [X] T064 [P] Añadir `uv run poe record` a la tabla de comandos de `AGENTS.md` y a `docs/setup.md`
 - [X] T065 Ejecutar `uv run poe check` (cobertura del dominio ≥ 95 %). Medir los objetivos de rendimiento del plan con ejecuciones reproducibles (Constitución §IV): `uv run pytest tests/integration/test_triage_offline.py --durations=0` para el triaje grabado (menos de 1 s por ejemplo) y el tiempo que informa pytest en el job `ubuntu-latest` de la CI para la suite por defecto (menos de 1 minuto); anotar las cifras, el comando y la fecha en el commit de cierre
   - 2026-10-14: `uv run poe check` pasa; cobertura total del 97 % y del dominio del 99 %. Triaje grabado: `uv run pytest tests/integration/test_triage_offline.py --durations=0` da 1,41 s para 24 ejecuciones (6 ejemplos por 4 formas), unos 0,06 s cada una. CI de `ec39b1a`: el paso «Puertas de calidad» del job `ubuntu-latest` dura 50 s en total (lint, mypy y las dos pasadas de pytest), así que la suite por defecto tarda menos de 1 minuto; la cifra exacta de pytest está en el log del job.
-- [ ] T066 Validar quickstart completo, incluida la tubería de Git Bash (`uv run jevlab triage --ejemplo cobro-duplicado | cat`) y PowerShell en Windows (FR-017)
+- [X] T066 Validar quickstart completo, incluida la tubería de Git Bash (`uv run jevlab triage --ejemplo cobro-duplicado | cat`) y PowerShell en Windows (FR-017)
+  - 2026-10-14: en PowerShell, los cinco ejemplos con `--ejemplo`, `--en-vivo` y `$null |` (lista, código 2); en Git Bash, `| cat` con tildes y «·» correctos, texto sin grabación y `TEXTO` con `--ejemplo` (código 2). La persona comprobó en una terminal real el menú y el triaje del ejemplo elegido.
 
 ---
 
