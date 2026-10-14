@@ -6,7 +6,7 @@
 > cualquier agente.
 
 **Dónde estamos:** spec 001 (Triaje) en curso en la rama `001-triaje-ticket`: implementada y con
-los ejemplos grabados (63 de 69 tareas); quedan la validación con claves, Windows, la lección y el
+los ejemplos grabados (64 de 69 tareas); quedan Windows, la lección y el
 cierre (ver «Spec 001 en curso», más abajo). La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
@@ -122,10 +122,13 @@ aplazada, se completó el 2026-10-14. Hecho:
   - Decisión del agente, a revisar: si faltan grabaciones, los tests que las leen se saltan con
     motivo visible (`tests/conftest.py`) en vez de fallar.
 - **[siguiente]** Tareas pendientes de `specs/001-triaje-ticket/tasks.md`:
-  - T058: `uv run poe live` con la clave (valida la US4).
+  - [hecho, 2026-10-14] T058: US4 validada, incluido `uv run poe live`. Hallazgo a decidir: en
+    Windows, `jevlab triage < NUL` saca el menú (código 1) en vez de la lista (código 2), porque
+    `isatty()` es `True` para `NUL`.
   - T065: anotar el tiempo de la suite en el job `ubuntu-latest` de la CI (en local, unos 15 s;
     triaje grabado, unos 0,03 s por ejecución).
-  - T066: quickstart en Windows, en PowerShell y con `| cat` en Git Bash.
+  - T066: quickstart en Windows, en PowerShell y con `| cat` en Git Bash, incluido el menú en una
+    terminal real.
   - T067: lección `docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md` con las cifras
     reales; buen ejemplo: `cobro-duplicado`, con `alta` como nivel más probable y el umbral no
     alcanzado (1,81 < 2).

@@ -181,7 +181,9 @@ grabación; con claves, `--en-vivo` (quickstart, «US4»).
 
 - [X] T056 [US4] Añadir `--en-vivo` al comando `triage` en `src/jevlab/entrypoints/cli/main.py`: incompatibilidades de opciones; `TYPESAFE_API_KEY` desde `ProviderSettings` o `MissingApiKey`; `TicketTooLong` con `max_chars` de la definición antes de llamar; un `TypeSafeClient` por ejecución con `RetryPolicy()` y `timeout=10.0` dentro de un `with`; `Origin` en vivo con el modelo de la respuesta (research R6)
 - [X] T057 [US4] Añadir el menú numerado con `typer.prompt` y la comprobación de terminal sustituible en `src/jevlab/entrypoints/cli/main.py`; sin terminal, lista y código 2 (research R9)
-- [ ] T058 [US4] Validar la US4 con quickstart, «US4», incluido `uv run poe live` con claves reales
+- [X] T058 [US4] Validar la US4 con quickstart, «US4», incluido `uv run poe live` con claves reales
+  - Validado el 2026-10-14 en Windows: texto sin `.env` igual que `--ejemplo`, texto sin grabación con código 2, sin terminal por tubería con lista y código 2, `--en-vivo` con código 0 y `uv run poe live` (3 tests). `poe record` se valida con su test `live`, que graba en una carpeta temporal; no se regrabaron los ejemplos. El menú en una terminal real queda para T066.
+  - Hallazgo: en Windows, con la entrada redirigida desde `NUL` (`< /dev/null` en Git Bash), `sys.stdin.isatty()` devuelve `True`; sale el menú y termina con código 1 en vez de 2.
 
 **Checkpoint**: las cuatro historias se demuestran por separado.
 
