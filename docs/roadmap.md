@@ -5,8 +5,8 @@
 > **Actualizado: 2026-10-14.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 001 (Triaje) cerrada en la rama `001-triaje-ticket` (69 de 69 tareas);
-falta integrarla en `main` con un PR (ver «Spec 001», más abajo). La spec 000
+**Dónde estamos:** spec 001 (Triaje) cerrada (69 de 69 tareas) e integrada en `main`; lo
+siguiente es la spec 002 (ver «Spec 001», más abajo). La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
 aplazada, se completó el 2026-10-14. Hecho:
@@ -129,9 +129,9 @@ aplazada, se completó el 2026-10-14. Hecho:
   `isatty()` es `True` para `NUL`; ahora se exige además un modo de consola.
 - [hecho, 2026-10-14] T069: retro en el commit de cierre. Lo que genera, en `docs/ideas.md`:
   guardar el informe de `/speckit-analyze` en cada spec.
-- **[siguiente]** PR de `001-triaje-ticket` a `main` con merge commit
-  (`docs/standards/version-control.md` §3). Después, la spec 002 desde `main`; al planificarla,
-  revisar `docs/ideas.md`.
+- [hecho, 2026-10-14] `001-triaje-ticket` integrada en `main` con PR y merge commit
+  (`docs/standards/version-control.md` §3).
+- **[siguiente]** Spec 002 desde `main`; al planificarla, revisar `docs/ideas.md`.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
