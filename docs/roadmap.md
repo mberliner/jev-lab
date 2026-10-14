@@ -146,7 +146,8 @@ aplazada, se completó el 2026-10-14. Hecho:
   comportamiento de `triage` (R1); política en `src/jevlab/policies/soporte/enrutado.yaml` (R3);
   SQLite de la biblioteca estándar en el directorio de estado del usuario o `JEVLAB_STATE_DIR`
   (R5); sin dependencias nuevas.
-- **[siguiente]** `/speckit-tasks` y `/speckit-analyze` (guardar el informe en `analysis.md`).
+- [hecho, 2026-10-14] `/speckit-tasks`: 56 tareas en `specs/002-enrutado-confianza/tasks.md`.
+- **[siguiente]** `/speckit-analyze` (guardar el informe en `analysis.md`).
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
