@@ -2,15 +2,15 @@
 
 ## Estado actual y cómo retomar
 
-> **Actualizado: 2026-10-13.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> **Actualizado: 2026-10-14.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
 **Dónde estamos:** spec 001 (Triaje) en curso en la rama `001-triaje-ticket`: implementada y con
 los ejemplos grabados (63 de 69 tareas); quedan la validación con claves, Windows, la lección y el
 cierre (ver «Spec 001 en curso», más abajo). La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
-https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Queda aplazada T037
-(ver «Después», más abajo). Hecho:
+https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
+aplazada, se completó el 2026-10-14. Hecho:
 - Spec Kit instalado con las integraciones de Claude Code y Antigravity; `AGENTS.md` como única
   fuente de instrucciones (`CLAUDE.md` solo importa `@AGENTS.md`).
 - **Constitución v0.3.1** (v0.3.0 ratificada; PATCH del 2026-10-12: «cuerpos» pasa a *payloads*) (`.specify/memory/constitution.md`), 7 principios. El historial
@@ -89,8 +89,8 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Qued
 - [hecho, 2026-10-13] Cierre de la spec 000: 63 de 64 tareas; retro en el commit de cierre.
   Cambios del cierre: `main` integrado (`jevlab-testing` 0.2.2), `.specify/scripts/` solo con
   Python (`poe check-presets` lo comprueba) y salida de `jevlab doctor` en español con tildes.
-- **Aplazada: T037** (`.env` con claves reales, `uv run jevlab doctor --remote` y
-  `uv run poe live`). Se hace al tener claves, como muy tarde al grabar las cassettes de la 001.
+- [hecho, 2026-10-14] T037: `.env` con claves reales, `uv run jevlab doctor --remote` y
+  `uv run poe live` validados. La spec 000 queda con sus 64 tareas hechas.
 - [hecho, 2026-10-13] `000-cimientos` integrada en `main` con PR y merge commit
   (`docs/standards/version-control.md` §3).
 - [hecho, 2026-10-13] Spec 001 iniciada desde `main` (ver «Spec 001 en curso»).
@@ -130,7 +130,6 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Qued
     reales; buen ejemplo: `cobro-duplicado`, con `alta` como nivel más probable y el umbral no
     alcanzado (1,81 < 2).
   - T068 y T069: demostración por historia, retro y actualización de este apartado.
-  - T037 de la 000: `uv run jevlab doctor --remote`, que necesita también las claves de Azure.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
