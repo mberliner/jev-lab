@@ -131,7 +131,14 @@ aplazada, se completó el 2026-10-14. Hecho:
   guardar el informe de `/speckit-analyze` en cada spec.
 - [hecho, 2026-10-14] `001-triaje-ticket` integrada en `main` con PR y merge commit
   (`docs/standards/version-control.md` §3).
-- **[siguiente]** Spec 002 desde `main`; al planificarla, revisar `docs/ideas.md`.
+- [hecho, 2026-10-14] Idea de la retro 001 recogida en `main`: el informe de `/speckit-analyze`
+  se guarda en `specs/NNN-*/analysis.md` (regla en `AGENTS.md`, sin preset).
+
+**Spec 002** (rama `002-enrutado-confianza`, artefactos en `specs/002-enrutado-confianza/`):
+- [hecho, 2026-10-14] `/speckit-specify` con 3 aclaraciones: el reembolso sin confianza
+  suficiente queda en la cola de revisión pendiente de confirmación; umbrales provisionales 0,90
+  (mover a cola) y 0,97 (reembolsar); el reembolso depende de una Choice nueva, `solicitud`.
+- **[siguiente]** `/speckit-clarify` y `/speckit-plan`.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
