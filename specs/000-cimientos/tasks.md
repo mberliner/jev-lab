@@ -179,7 +179,7 @@ aplicar el procedimiento de un preset.
 - [X] T059 [P] Actualizar `docs/governance.md` §4: la columna «Estado» pasa de «previsto en 000» a «creado» en los temas ya hechos, y las comprobaciones automáticas de redacción y control de versiones quedan como hechas
 - [X] T060 Ejecutar `uv run poe check` y `uv run pre-commit run --all-files` en Linux, y comprobar en el job `ubuntu-latest` de la CI que la suite tarda menos de 1 minuto según pytest (SC-002)
 - [X] T061 Validar `quickstart.md` completo
-  - Salvo `doctor --remote` con claves válidas, que queda con T037.
+  - `doctor --remote` con claves válidas se completó con T037 el 2026-10-14.
 
 ---
 
