@@ -1,4 +1,4 @@
-"""Informe de `jevlab doctor`: estados, resultados y código de salida (data-model.md)."""
+"""Informe de `jevlab doctor` y errores de los proveedores (data-model.md de 000 y 001)."""
 
 from enum import StrEnum
 from typing import Self
@@ -65,3 +65,25 @@ class ProviderRejected(Exception):
     def __init__(self, status: int | None) -> None:
         super().__init__(status)
         self.status = status
+
+
+class InvalidProviderResponse(Exception):
+    """El SDK no pudo decodificar la respuesta; el mensaje no lleva el cuerpo."""
+
+    def __init__(self) -> None:
+        super().__init__("TypeSafe devolvió una respuesta no válida")
+
+
+class RecordingOutdated(Exception):
+    """La petición que genera la definición actual no coincide con la grabada."""
+
+    def __init__(self, name: str) -> None:
+        super().__init__(
+            f"la grabación {name} no corresponde a la definición actual; hay que regrabar"
+        )
+        self.name = name
+
+
+class MissingApiKey(Exception):
+    def __init__(self) -> None:
+        super().__init__("falta TYPESAFE_API_KEY; ver .env.example y jevlab doctor")

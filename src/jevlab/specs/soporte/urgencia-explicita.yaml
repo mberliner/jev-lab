@@ -1,0 +1,8 @@
+# Decisión urgencia-explicita (spec 001). La banda es provisional hasta la evaluación de la 004.
+version: 0.1.0
+model: jev-1.13.0
+primitive: noul
+instructions: ¿El ticket menciona explícitamente un problema urgente?
+criteria_true: El texto dice de forma explícita que el problema es urgente o bloqueante.
+criteria_false: El texto no menciona urgencia de forma explícita.
+uncertain_band: {low: 0.30, high: 0.70, justification: provisional}

@@ -12,6 +12,7 @@ DOCS = (
     "README.md",
     "docs/setup.md",
     "docs/lessons/000-metodo-sdd-y-entorno-reproducible.md",
+    "docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md",
 )
 _LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 _EXTERNAL = ("http://", "https://", "mailto:", "#")

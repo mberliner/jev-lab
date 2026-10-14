@@ -1,0 +1,71 @@
+# Respuestas sintéticas de POST /v1/systemone, solo para tests (research.md R10).
+# Imitan la forma de la respuesta del SDK 0.7.4; no son grabaciones de TypeSafe.
+origen: sintetico
+
+valida:
+  status: 200
+  body:
+    model: jev-1.13.0
+    usage: {input_tokens: 120, output_tokens: 0}
+    answers:
+      cola:
+        type: choice
+        choice: facturacion
+        confidence: 0.84
+        probabilities: {facturacion: 0.88, tecnico: 0.06, cuenta: 0.04, other: 0.02}
+      urgencia: {type: noul, noul: 0.12}
+      prioridad:
+        type: score
+        score: 1.1
+        confidence: 0.5
+        legend: {"0": "baja", "1": "media", "2": "alta", "3": "critica"}
+        probabilities: {"0": 0.2, "1": 0.55, "2": 0.2, "3": 0.05}
+
+sin-urgencia:
+  status: 200
+  body:
+    model: jev-1.13.0
+    usage: {input_tokens: 120, output_tokens: 0}
+    answers:
+      cola:
+        type: choice
+        choice: tecnico
+        confidence: 0.6
+        probabilities: {facturacion: 0.1, tecnico: 0.7, cuenta: 0.1, other: 0.1}
+      prioridad:
+        type: score
+        score: 2.4
+        confidence: 0.4
+        legend: {"0": "baja", "1": "media", "2": "alta", "3": "critica"}
+        probabilities: {"0": 0.05, "1": 0.1, "2": 0.25, "3": 0.6}
+
+opcion-ajena:
+  status: 200
+  body:
+    model: jev-1.13.0
+    usage: {input_tokens: 120, output_tokens: 0}
+    answers:
+      cola:
+        type: choice
+        choice: envios
+        confidence: 0.5
+        probabilities: {envios: 0.6, facturacion: 0.2, tecnico: 0.1, cuenta: 0.1}
+      urgencia: {type: noul, noul: 0.5}
+      prioridad:
+        type: score
+        score: 0.2
+        confidence: 0.8
+        legend: {"0": "baja", "1": "media", "2": "alta", "3": "critica"}
+        probabilities: {"0": 0.85, "1": 0.1, "2": 0.05, "3": 0.0}
+
+mal-formada:
+  status: 200
+  content: '{"model": "jev-1.13.0", "answers": '
+
+caido:
+  status: 503
+  body: {detail: sintetico}
+
+sin-permiso:
+  status: 401
+  body: {detail: sintetico}

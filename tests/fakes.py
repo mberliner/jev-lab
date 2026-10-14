@@ -1,7 +1,11 @@
 """Fakes en memoria de los puertos (docs/standards/architecture.md §3)."""
 
 from dataclasses import dataclass, field
+from datetime import date
 
+from jevlab.domain.decision_spec import TriageSpec
+from jevlab.domain.examples import Exchange, Recording
+from jevlab.domain.triage import TriageAnswers
 from jevlab.ports.environment import PythonInfo
 
 
@@ -53,3 +57,57 @@ class FakeGeneratorProbe:
         self.calls += 1
         if self.error is not None:
             raise self.error
+
+
+@dataclass
+class FakeJudge:
+    """Responde lo programado para cada texto (o `default`) y registra las llamadas."""
+
+    default: TriageAnswers | None = None
+    by_text: dict[str, TriageAnswers] = field(default_factory=dict)
+    exchanges: dict[str, Exchange] = field(default_factory=dict)
+    error: Exception | None = None
+    calls: list[tuple[TriageSpec, str]] = field(default_factory=list)
+    last: str | None = None
+
+    def ask(self, spec: TriageSpec, ticket: str) -> TriageAnswers:
+        self.calls.append((spec, ticket))
+        if self.error is not None:
+            raise self.error
+        answers = self.by_text.get(ticket, self.default)
+        if answers is None:
+            raise AssertionError("FakeJudge sin respuesta programada para ese texto")
+        self.last = ticket
+        return answers
+
+    def last_exchange(self) -> Exchange | None:
+        return None if self.last is None else self.exchanges.get(self.last)
+
+
+@dataclass
+class InMemoryRecordingLibrary:
+    recordings: list[Recording] = field(default_factory=list)
+
+    def all(self) -> list[Recording]:
+        return sorted(self.recordings, key=lambda r: r.name)
+
+    def save(self, recording: Recording) -> None:
+        self.recordings = [r for r in self.recordings if r.name != recording.name] + [recording]
+
+
+@dataclass
+class FrozenClock:
+    day: date = date(2026, 10, 20)
+
+    def today(self) -> date:
+        return self.day
+
+
+@dataclass
+class StaticSpecLoader:
+    spec: TriageSpec
+    requested: list[str] = field(default_factory=list)
+
+    def load_request(self, name: str) -> TriageSpec:
+        self.requested.append(name)
+        return self.spec

@@ -111,8 +111,8 @@ salida; con claves reales, el humo `live`.
 - [X] T034 [P] [US2] Implementar `TypeSafeModelCatalog` en `src/jevlab/adapters/typesafe_catalog.py`: `TypeSafeClient.models.list()`; `TypeSafeAPIConnectionError` y 5xx a `ProviderUnavailable`; 401, 403 y 404 a `ProviderRejected`
 - [X] T035 [P] [US2] Implementar `AzureGeneratorProbe` en `src/jevlab/adapters/azure_probe.py`: `AzureOpenAI` con las variables de `.env`, `chat.completions.create` de un mensaje fijo con `max_completion_tokens=16`; mismo mapeo de errores; no conserva el contenido de la respuesta
 - [X] T036 [US2] Añadir el comando `doctor` con la opción `--remote` en `src/jevlab/entrypoints/cli/main.py`: cableado de `CheckEnvironment` con los adaptadores reales (sustituibles en los tests), salida de `contracts/cli-doctor.md`, código de salida de `DoctorReport.exit_code()` y logger `typesafe_sdk` en `WARNING` salvo `TYPESAFE_LOG_LEVEL`
-- [ ] T037 [US2] Validar la US2 con `quickstart.md`, «US2», incluido `uv run poe live` con claves reales
-  - Aplazada (2026-10-13) hasta tener claves reales; validado todo salvo `doctor --remote` con claves válidas y `poe live`. Se hace al grabar las cassettes de la spec 001.
+- [X] T037 [US2] Validar la US2 con `quickstart.md`, «US2», incluido `uv run poe live` con claves reales
+  - Validado el resto el 2026-10-13; completado `doctor --remote` con claves válidas y `poe live` el 2026-10-14.
 
 **Checkpoint**: `jevlab doctor` funciona solo; la US1 sigue en verde.
 
@@ -179,7 +179,7 @@ aplicar el procedimiento de un preset.
 - [X] T059 [P] Actualizar `docs/governance.md` §4: la columna «Estado» pasa de «previsto en 000» a «creado» en los temas ya hechos, y las comprobaciones automáticas de redacción y control de versiones quedan como hechas
 - [X] T060 Ejecutar `uv run poe check` y `uv run pre-commit run --all-files` en Linux, y comprobar en el job `ubuntu-latest` de la CI que la suite tarda menos de 1 minuto según pytest (SC-002)
 - [X] T061 Validar `quickstart.md` completo
-  - Salvo `doctor --remote` con claves válidas, que queda con T037.
+  - `doctor --remote` con claves válidas se completó con T037 el 2026-10-14.
 
 ---
 

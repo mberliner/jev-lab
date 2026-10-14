@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = "==3.13.*"
 
 [[package]]
@@ -320,6 +320,7 @@ dependencies = [
     { name = "openai" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
+    { name = "pyyaml" },
     { name = "typer" },
     { name = "typesafe-sdk" },
 ]
@@ -334,7 +335,6 @@ dev = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-socket" },
-    { name = "pyyaml" },
     { name = "ruff" },
     { name = "types-pyyaml" },
 ]
@@ -344,6 +344,7 @@ requires-dist = [
     { name = "openai", specifier = "==3.29.0" },
     { name = "pydantic", specifier = "==2.14.1" },
     { name = "pydantic-settings", specifier = "==2.15.0" },
+    { name = "pyyaml", specifier = "==6.0.3" },
     { name = "typer", specifier = "==0.27.3" },
     { name = "typesafe-sdk", specifier = "==0.7.4" },
 ]
@@ -358,7 +359,6 @@ dev = [
     { name = "pytest", specifier = "==9.1.1" },
     { name = "pytest-cov", specifier = "==7.1.0" },
     { name = "pytest-socket", specifier = "==0.8.1" },
-    { name = "pyyaml", specifier = "==6.0.3" },
     { name = "ruff", specifier = "==0.17.0" },
     { name = "types-pyyaml", specifier = "==6.0.12.20260906" },
 ]

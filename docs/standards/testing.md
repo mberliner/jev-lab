@@ -4,9 +4,12 @@
 
 ## 0. Definición: *cassette*
 
-Una *cassette* es un archivo que guarda una petición HTTP real a un servicio externo y la respuesta
-que devolvió. Se graba una vez, con red y clave; después, el test la reproduce sin conectarse
-(`pytest-recording`, sobre `vcrpy`).
+Una *cassette* (en el proyecto, «grabación») es un archivo que guarda una petición HTTP real a un
+servicio externo y la respuesta que devolvió, sin cabeceras. Se graba una vez, con red y clave;
+después, el test o la CLI la reproduce sin conectarse. El formato es propio y se graba en el
+transporte de `httpx2` (`RecordingTransport` y `ReplayTransport` en `adapters/`), de modo que la
+respuesta reproducida pasa por el mismo cliente y el mismo decodificador del SDK que en vivo
+(`specs/001-triaje-ticket/contracts/recording.md`).
 
 ```
 Grabación:     test -> adaptador -> red -> servicio -> respuesta real ─┐
@@ -31,7 +34,7 @@ módulo tarda menos de 1 s.
 | --- | --- | --- | --- |
 | `domain/` | Unitario y de propiedades (`hypothesis`) | Sin dependencias: funciones y modelos Pydantic | La fórmula de confianza coincide con la oficial; las bandas de política son monótonas; `other` siempre va a revisión; una `DecisionSpec` sin escape falla su validación |
 | `application/` | Unitario | Puertos inyectados con fakes en memoria (`FakeJudge` con respuestas programables, `InMemoryReviewQueue`, `FrozenClock`) | `TriageTicket` con confianza 0,4 encola revisión y audita; modo degradado si `JudgePort` lanza un error |
-| `adapters/` | Contrato | *Cassettes*; SQLite en memoria; `respx` para HTTP | `TypeSafeJudge` traduce la respuesta del SDK a tipos de dominio; un 429 simulado provoca reintentos |
+| `adapters/` | Contrato | *Cassettes*; SQLite en memoria; `httpx2.MockTransport` con respuestas sintéticas para HTTP | `TypeSafeJudge` traduce la respuesta del SDK a tipos de dominio; un 429 simulado provoca reintentos |
 | `entrypoints/` | Unitario | `typer.testing.CliRunner`; `TestClient` de FastAPI con dependencias sustituidas | Códigos HTTP, validación de entrada, salida de la CLI |
 
 **Motivo.** Si cada capa se prueba sola, un fallo señala su causa y la suite es rápida y gratuita.
@@ -124,13 +127,20 @@ supera `JEVLAB_LIVE_BUDGET_USD` (0,10 USD por defecto) o si algún test no decla
 ## 7. Procedencia de los datos de prueba
 
 **Regla.** Cada *cassette* registra el modelo y la fecha de la grabación. Los datos sintéticos se
-etiquetan como tales.
+etiquetan como tales. Cada respuesta grabada vive en un sitio según su uso:
+
+| Uso | Dónde | Etiqueta |
+| --- | --- | --- |
+| Ejemplos reales que reproduce la CLI | `src/jevlab/recordings/<dominio>/<petición>/<nombre>.yaml`, dentro del paquete | `origen: sintetico` (el ticket es propio; la respuesta, real) |
+| Respuestas inventadas solo para tests (errores, respuestas mal formadas) | `tests/contract/fixtures/` | `origen: sintetico` |
+| Datasets de evaluación | `data/<dominio>/` | Según su procedencia y licencia |
 
 **Motivo.** Una cifra sacada de una grabación vale para ese modelo y esa fecha; un dato inventado
 no puede pasar por real.
 
-**Correcto:** una *cassette* con `modelo: jev-1.13` y `grabada: 2026-10-20`; un conjunto de
-tickets con `origen: sintético`.
+**Correcto:** una *cassette* con `model: jev-1.13.0` y `recorded_on: 2026-10-20`; un conjunto de
+tickets con `origen: sintetico`. El modelo es el identificador fijado (`jev-1.13.0`), nunca un
+alias móvil.
 
 **Incorrecto:** una *cassette* sin modelo ni fecha que alimenta un informe de precisión.
 

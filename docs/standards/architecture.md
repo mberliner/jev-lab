@@ -89,8 +89,10 @@ prueba aislada»).
 
 **Incorrecto:** `datetime.now()` en un caso de uso.
 
-**Cómo se verifica:** revisión de código. La comprobación automática se decide al configurar el
-lint en la spec de cimientos.
+**Cómo se verifica:** regla `TID251` de ruff (`[tool.ruff.lint.flake8-tidy-imports.banned-api]`
+en `pyproject.toml`), que prohíbe `datetime.now`, `date.today`, `time.time`, `random` y
+`uuid.uuid4` fuera de `src/jevlab/adapters/` y `tests/`; se ejecuta en `uv run poe lint`.
+`tests/unit/test_banned_api.py` comprueba que la regla salta.
 
 ## 6. Una sola definición de decisión
 

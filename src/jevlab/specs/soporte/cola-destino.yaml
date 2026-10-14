@@ -1,0 +1,11 @@
+# Decisión cola-destino (spec 001, «Decisiones Jev»). Sin umbral: no se automatiza nada.
+version: 0.1.0
+model: jev-1.13.0
+primitive: choice
+instructions: ¿A qué cola de soporte pertenece este ticket?
+options:
+  facturacion: Cobros, facturas, reembolsos o métodos de pago.
+  tecnico: Fallos, errores o mal funcionamiento del producto.
+  cuenta: Acceso, contraseña, datos del perfil o alta y baja de la cuenta.
+  other: Ninguna de las anteriores.
+escape: other

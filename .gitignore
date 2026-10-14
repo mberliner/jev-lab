@@ -25,3 +25,7 @@ Thumbs.db
 # Scripts de shell que Spec Kit copia junto a los de Python; el proyecto usa solo Python
 .specify/scripts/bash/
 .specify/scripts/powershell/
+
+# Artefactos de build (uv build)
+dist/
+*.egg-info/
