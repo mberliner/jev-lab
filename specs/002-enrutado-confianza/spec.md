@@ -29,6 +29,15 @@ las bandas son monótonas. Fuente: sección «002» de `docs/roadmap.md`."
 - Q: ¿De qué decisión depende el reembolso? -> A: de una Choice nueva, `solicitud` («¿Qué pide el
   cliente en este ticket?»), con `reembolso`, `consulta`, `incidencia` y `other`, porque tiene
   confianza y un Noul no.
+- Q: Si la solicitud es `reembolso` con confianza suficiente pero la cola no se mueve sola, ¿se
+  reembolsa automáticamente? -> A: no; el reembolso solo se automatiza si además la cola se movió
+  sola a `facturacion`; si no, queda pendiente de confirmación.
+- Q: Si una petición no automatiza ninguna de sus dos acciones, ¿cuántos elementos crea en la cola
+  de revisión? -> A: uno por petición, con sus acciones pendientes; el reembolso solo se confirma
+  cuando la cola es `facturacion`, y asignar otra cola o descartar el elemento lo rechaza.
+- Q: Si cambia un umbral de la política sin subir su versión, ¿qué pasa? -> A: la salida, la
+  auditoría y la cola de revisión guardan la versión semver y una huella corta del contenido,
+  calculada por el código, que distingue los dos contenidos; no se bloquea el cambio.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -78,7 +87,7 @@ la cola de revisión como pendiente de confirmación.
 **Acceptance Scenarios**:
 
 1. **Given** un ticket cuya solicitud es `reembolso` con una confianza mayor o igual que el umbral
-   de «reembolsar», **When** la persona lo enruta, **Then** la salida dice que el reembolso se
+   de «reembolsar» y cuya cola se mueve sola a `facturacion`, **When** la persona lo enruta, **Then** la salida dice que el reembolso se
    ejecutaría automáticamente (simulado), con la confianza, el umbral y el riesgo `alto`.
 2. **Given** un ticket cuya solicitud es `reembolso` con una confianza por debajo del umbral de
    «reembolsar», aunque supere el de «mover a cola», **When** lo enruta, **Then** el reembolso no
@@ -88,6 +97,9 @@ la cola de revisión como pendiente de confirmación.
    «reembolsar» (riesgo alto) es mayor o igual que el de «mover a cola» (riesgo bajo).
 4. **Given** un ticket que no pide un reembolso, **When** lo enruta, **Then** no se propone ningún
    reembolso.
+5. **Given** un ticket cuya solicitud es `reembolso` con confianza suficiente pero cuya cola no se
+   mueve sola a `facturacion`, **When** lo enruta, **Then** el reembolso queda pendiente de
+   confirmación y la salida explica que la cola no se automatizó a `facturacion`.
 
 ---
 
@@ -106,21 +118,28 @@ deja de estar pendiente y que la resolución queda en la auditoría.
 
 **Acceptance Scenarios**:
 
-1. **Given** tickets enrutados con confianza baja o con resultado `other`, **When** el Operador
-   ejecuta `jevlab review`, **Then** ve un elemento pendiente por cada uno, con su identificador,
-   el motivo, la cola propuesta (o «sin cola»), la confianza, el umbral, la versión de la política
-   y el inicio del texto del ticket.
+1. **Given** tickets enrutados con alguna acción no automatizada, **When** el Operador ejecuta
+   `jevlab review`, **Then** ve un elemento pendiente por petición, con su identificador, el
+   inicio del texto del ticket, la versión de la política y, por cada acción pendiente, el motivo,
+   el valor propuesto (o «sin cola»), la confianza y el umbral.
 2. **Given** un elemento pendiente, **When** el Operador lo resuelve asignando una cola válida,
    **Then** el elemento deja de estar pendiente y la resolución queda en la auditoría con el
    identificador de la petición original.
 3. **Given** un elemento pendiente, **When** el Operador lo descarta, **Then** deja de estar
    pendiente y la auditoría registra que se descartó.
-4. **Given** un reembolso pendiente de confirmación, **When** el Operador lo confirma o lo
-   rechaza, **Then** deja de estar pendiente y la auditoría registra la resolución; si lo
-   confirma, la salida dice que el reembolso se ejecutaría (simulado).
-5. **Given** la cola sin elementos pendientes, **When** el Operador ejecuta `jevlab review`,
+4. **Given** un elemento con un reembolso pendiente de confirmación y la cola ya en
+   `facturacion` (automática o asignada por el Operador), **When** el Operador confirma o rechaza
+   el reembolso, **Then** la auditoría registra la resolución; si lo confirma, la salida dice que
+   el reembolso se ejecutaría (simulado).
+5. **Given** un elemento con la cola y el reembolso pendientes, **When** el Operador intenta
+   confirmar el reembolso antes de asignar la cola, **Then** el comando lo rechaza y explica que
+   primero hay que asignar `facturacion`; **When** asigna otra cola o descarta el elemento,
+   **Then** el reembolso queda rechazado y así consta en la auditoría.
+6. **Given** un elemento, **When** el Operador resuelve todas sus acciones pendientes, **Then**
+   el elemento deja de estar pendiente.
+7. **Given** la cola sin elementos pendientes, **When** el Operador ejecuta `jevlab review`,
    **Then** la salida dice que no hay pendientes.
-6. **Given** la cola de revisión con elementos, **When** se cierra la terminal y se vuelve a
+8. **Given** la cola de revisión con elementos, **When** se cierra la terminal y se vuelve a
    ejecutar `jevlab review`, **Then** los elementos siguen ahí (persistencia local).
 
 ---
@@ -142,7 +161,7 @@ versión de cada política y que una política no válida se rechaza sin automat
 **Acceptance Scenarios**:
 
 1. **Given** la política inicial, **When** la persona enruta un ticket, **Then** la salida muestra
-   la versión de la política aplicada y, para cada umbral, si es provisional.
+   la versión de la política aplicada, con su huella, y, para cada umbral, si es provisional.
 2. **Given** una política con el umbral de «mover a cola» por encima de la confianza de un ticket
    que antes se movía, **When** lo enruta de nuevo, **Then** el ticket ya no se mueve, sin ningún
    cambio en el código, y la salida muestra la nueva versión.
@@ -152,6 +171,9 @@ versión de cada política y que una política no válida se rechaza sin automat
    dice qué está mal y dónde, y no automatiza nada.
 4. **Given** cualquier decisión registrada, **When** se consulta la auditoría, **Then** incluye la
    versión de la política con la que se tomó.
+5. **Given** una política con un umbral cambiado pero la misma versión semver, **When** la persona
+   enruta un ticket, **Then** la salida y la auditoría muestran una huella distinta de la
+   anterior.
 
 ---
 
@@ -159,13 +181,13 @@ versión de cada política y que una política no válida se rechaza sin automat
 
 - Confianza exactamente igual al umbral: se automatiza (mayor o igual), como en la 001.
 - Confianza de la cola alta pero resultado `other`: nunca se mueve; el escape gana a la confianza.
-- Ticket que pide un reembolso y cuya cola no alcanza su umbral: las dos acciones se deciden por
-  separado y la salida muestra cada una con su motivo.
-- Solicitud `reembolso` con cola distinta de `facturacion`: el reembolso se decide solo con la
-  decisión de solicitud; la salida muestra las dos sin contradecirse.
+- Solicitud `reembolso` con confianza suficiente, pero la cola no se mueve sola (`other`,
+  confianza baja o respuesta no válida) o se mueve a una cola distinta de `facturacion`: el
+  reembolso no se automatiza, queda pendiente de confirmación y la salida da el motivo de cada
+  acción.
 - El mismo ticket enrutado dos veces: son dos peticiones con identificadores distintos y, si van a
   revisión, dos elementos; no hay deduplicación.
-- Resolver un elemento que no existe o que ya está resuelto: error que lo dice, sin cambios.
+- Resolver un elemento que no existe o una acción ya resuelta: error que lo dice, sin cambios.
 - Resolver con una cola que no existe en la definición: error que lista las colas válidas.
 - Archivo de cola de revisión inexistente: se crea al primer uso; `jevlab review` sobre una cola
   nueva dice que no hay pendientes.
@@ -195,16 +217,27 @@ versión de cada política y que una política no válida se rechaza sin automat
 - **FR-005**: Las acciones automatizadas MUST ser simuladas: se registran y se muestran, sin
   efectos fuera de jev-lab.
 - **FR-006**: La acción «reembolsar» MUST tener riesgo `alto` y la acción «mover a cola», riesgo
-  `bajo`. Si la solicitud es `reembolso` y no alcanza su umbral, el reembolso MUST quedar en la
-  cola de revisión como «pendiente de confirmación».
-- **FR-007**: Todo ticket cuya acción «mover a cola» no se automatiza (confianza baja, `other` o
-  respuesta no válida) MUST entrar en una cola de revisión persistente y local, con el motivo.
-- **FR-008**: `jevlab review` MUST listar los elementos pendientes y permitir resolver cada uno:
-  asignar una cola válida o descartarlo, o, si es un reembolso pendiente, confirmarlo o
-  rechazarlo. Una resolución MUST quedar en la auditoría.
+  `bajo`. El reembolso MUST automatizarse solo si la solicitud es `reembolso` con confianza
+  mayor o igual que su umbral **y** la acción «mover a cola» se automatizó a `facturacion` en la
+  misma petición; la composición la hace el código. Si la solicitud es `reembolso` y falta
+  cualquiera de las dos condiciones, el reembolso MUST quedar en la cola de revisión como
+  «pendiente de confirmación».
+- **FR-007**: Toda petición con alguna acción no automatizada (cola con confianza baja, `other` o
+  respuesta no válida, o reembolso pendiente de confirmación) MUST crear un único elemento en una
+  cola de revisión persistente y local, con sus acciones pendientes y el motivo de cada una.
+- **FR-008**: `jevlab review` MUST listar los elementos pendientes y permitir resolver sus
+  acciones: asignar una cola válida o descartar el elemento, y confirmar o rechazar un reembolso
+  pendiente. Un reembolso MUST poder confirmarse solo cuando la cola del elemento es
+  `facturacion`; asignar otra cola o descartar el elemento MUST rechazarlo. Un elemento deja de
+  estar pendiente cuando no le quedan acciones pendientes. Cada resolución MUST quedar en la
+  auditoría.
 - **FR-009**: Los umbrales MUST vivir en `policy.yaml`, versionado en el repositorio, con una
   versión semver y, por acción, el riesgo, el umbral y su justificación (una evaluación o
   `provisional`) (`docs/standards/decision-design.md` §6).
+- **FR-009a**: Al cargar la política, el código MUST calcular una huella corta de su contenido. En
+  esta spec, «versión de la política» significa la versión semver más esa huella: la salida, la
+  auditoría y la cola de revisión MUST mostrar o guardar las dos, de modo que dos contenidos con
+  la misma versión semver se distingan.
 - **FR-010**: La política MUST validarse al cargarla. Una política no válida MUST hacer terminar el
   comando con un error que indica el campo y el motivo, sin automatizar nada. Es no válida si una
   acción de más riesgo tiene un umbral menor que una de menos riesgo.
@@ -217,7 +250,8 @@ versión de cada política y que una política no válida se rechaza sin automat
   para resolver; MUST NOT guardar claves ni respuestas completas del servicio.
 - **FR-013**: Tests de propiedades MUST comprobar, para cualquier política válida y cualquier
   confianza: que nada por debajo del umbral se automatiza; que el escape siempre termina en
-  revisión; y que las bandas son monótonas (si una confianza se automatiza, cualquier confianza
+  revisión; que ningún reembolso se automatiza sin que la cola se haya movido sola a
+  `facturacion`; y que las bandas son monótonas (si una confianza se automatiza, cualquier confianza
   mayor también, y un umbral de más riesgo nunca es menor que uno de menos riesgo).
 - **FR-014**: Una nueva decisión, la solicitud del cliente, MUST describirse en la definición
   versionada con su escape, y el conjunto de ejemplos grabados MUST ampliarse con tickets que
@@ -229,14 +263,16 @@ versión de cada política y que una política no válida se rechaza sin automat
 
 ### Key Entities
 
-- **Política**: archivo versionado con su versión y, por acción, riesgo, umbral y justificación.
+- **Política**: archivo versionado con su versión semver y, por acción, riesgo, umbral y
+  justificación; el código le calcula una huella de contenido al cargarla.
 - **Acción**: algo que el sistema puede hacer solo (mover a cola, reembolsar), con su riesgo y la
   decisión de la que depende.
 - **Petición de enrutado**: una ejecución de `jevlab route`, con su identificador único.
 - **Registro de auditoría**: lo que se decidió para cada acción de una petición, o una resolución
   del Operador; solo metadatos, sin *payloads*.
-- **Elemento de revisión**: ticket pendiente de una persona, con el motivo, la cola propuesta, la
-  confianza, el umbral, la versión de la política, el estado (pendiente o resuelto) y la
+- **Elemento de revisión**: una petición pendiente de una persona (uno por petición), con el
+  texto del ticket, la versión de la política, el estado (pendiente o resuelto) y sus acciones
+  pendientes; cada acción, con el motivo, el valor propuesto, la confianza, el umbral y su
   resolución.
 
 ## Success Criteria *(mandatory)*
@@ -284,7 +320,7 @@ versión de cada política y que una política no válida se rechaza sin automat
 | Decisión | Pregunta (una idea, literal) | Primitiva | Opciones + escape | Acción automatizable y riesgo | Destino del escape |
 | --- | --- | --- | --- | --- | --- |
 | cola-destino | «¿A qué cola de soporte pertenece este ticket?» (la de la 001) | Choice | `facturacion`, `tecnico`, `cuenta`, `other` | Mover a cola; riesgo bajo | Cola de revisión |
-| solicitud | «¿Qué pide el cliente en este ticket?» | Choice | `reembolso`, `consulta`, `incidencia`, `other` | Reembolsar (solo si `reembolso`); riesgo alto | Sin reembolso; si la cola tampoco se automatiza, cola de revisión |
+| solicitud | «¿Qué pide el cliente en este ticket?» | Choice | `reembolso`, `consulta`, `incidencia`, `other` | Reembolsar (solo si `reembolso` y la cola se movió sola a `facturacion`); riesgo alto | Sin reembolso; si la cola tampoco se automatiza, cola de revisión |
 
 - **Lo que decide el código**: la comparación de la confianza con el umbral de cada acción, el
   escape y la respuesta no válida, el riesgo de cada acción, la validación de la política (incluida
