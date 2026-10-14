@@ -5,14 +5,14 @@ import pytest
 from jevlab.adapters.yaml_files import YamlRecordingLibrary
 from jevlab.domain.examples import Recording
 
-# Las grabaciones reales llegan con T031 de la spec 001, que necesita TYPESAFE_API_KEY. Hasta
-# entonces, los tests que las leen se saltan con este motivo, visible en el resumen de pytest.
-PENDING_RECORDINGS = "sin grabaciones reales todavía: pendiente `uv run poe record` (T031 de 001)"
+# Las grabaciones reales vienen con el paquete desde T031 de la spec 001. Si faltan, los tests que
+# las leen fallan: saltarlos dejaría la CI en verde con las grabaciones borradas.
+MISSING_RECORDINGS = "no hay grabaciones reales: regrabar con `uv run poe record` (necesita `.env`)"
 
 
 @pytest.fixture
 def real_recordings() -> list[Recording]:
     recordings = YamlRecordingLibrary().all()
     if not recordings:
-        pytest.skip(PENDING_RECORDINGS)
+        pytest.fail(MISSING_RECORDINGS)
     return recordings

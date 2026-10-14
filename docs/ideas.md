@@ -26,3 +26,4 @@ cambiada que obliga a adaptar algo ya hecho, o una mejora detectada al trabajar.
 
 | Origen (spec, fecha) | Idea | Principio o capa | Spec que la recoge |
 | --- | --- | --- | --- |
+| 001, 2026-10-14 | Guardar el informe de `/speckit-analyze` en `specs/NNN-*/analysis.md`, con el estado de cada hallazgo. Se perdieron los LOW I2-I5 de la 001, que solo quedaron en la sesión | VII; preset `jevlab-spec` | |

@@ -5,9 +5,8 @@
 > **Actualizado: 2026-10-14.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 001 (Triaje) en curso en la rama `001-triaje-ticket`: implementada y con
-los ejemplos grabados (68 de 69 tareas); queda el
-cierre (ver «Spec 001 en curso», más abajo). La spec 000
+**Dónde estamos:** spec 001 (Triaje) cerrada en la rama `001-triaje-ticket` (69 de 69 tareas);
+falta integrarla en `main` con un PR (ver «Spec 001», más abajo). La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
 aplazada, se completó el 2026-10-14. Hecho:
@@ -93,14 +92,14 @@ aplazada, se completó el 2026-10-14. Hecho:
   `uv run poe live` validados. La spec 000 queda con sus 64 tareas hechas.
 - [hecho, 2026-10-13] `000-cimientos` integrada en `main` con PR y merge commit
   (`docs/standards/version-control.md` §3).
-- [hecho, 2026-10-13] Spec 001 iniciada desde `main` (ver «Spec 001 en curso»).
+- [hecho, 2026-10-13] Spec 001 iniciada desde `main` (ver «Spec 001»).
 
-**Spec 001 en curso** (rama `001-triaje-ticket`, artefactos en `specs/001-triaje-ticket/`):
+**Spec 001** (rama `001-triaje-ticket`, artefactos en `specs/001-triaje-ticket/`):
 - [hecho, 2026-10-13] `/speckit-specify` y `/speckit-clarify`: 4 historias y 5 aclaraciones. Modo
   grabado por defecto y `--en-vivo` explícito; ejemplo por texto, por `--ejemplo` o con menú;
   umbral de prioridad con el `score` esperado frente a la posición de `alta`; banda incierta del
   Noul de 0,30 a 0,70; máximo de 4.000 caracteres en vivo.
-- [hecho, 2026-10-13] `/speckit-plan` (commit `9f3a3d5`). Decisiones de la persona:
+- [hecho, 2026-10-13] `/speckit-plan` (commit `d12d261`). Decisiones de la persona:
   - una definición por decisión (`cola-destino`, `urgencia-explicita`, `prioridad`) y una de
     petición (`triaje`) que las agrupa, según `docs/standards/architecture.md` §6;
   - respuestas grabadas, un sitio por uso: ejemplos reales que reproduce la CLI en el paquete,
@@ -109,7 +108,8 @@ aplazada, se completó el 2026-10-14. Hecho:
     (research R5); el modelo fijado es `jev-1.13.0`, no `jev-1.13` (R4).
   - Las tres ideas de la retro 000 quedan recogidas (R5, R7 y R8) y borradas de `docs/ideas.md`.
 - [hecho, 2026-10-13] `/speckit-tasks` (69 tareas) y `/speckit-analyze`, sin conflictos con la
-  constitución; los 6 hallazgos MEDIUM resueltos (commit `933ae48`). Quedan abiertos los LOW I2-I5.
+  constitución; los 6 hallazgos MEDIUM resueltos (commit `c1d9e3e`). Los LOW I2-I5 no se
+  guardaron y se dieron por perdidos en la retro.
 - [hecho, 2026-10-13] `/speckit-implement`, salvo las tareas de abajo: `jevlab triage` con
   `--ejemplo`, menú y `--en-vivo`; definiciones en `src/jevlab/specs/soporte/`; grabaciones
   propias sobre el transporte de `httpx2`; regla TID251; `docs/standards/cli-ux.md`.
@@ -119,19 +119,19 @@ aplazada, se completó el 2026-10-14. Hecho:
     límite de la banda.
   - Hallazgo: la API redondea probabilidades y confianzas a 2 decimales; SC-003 pasa de 0,001 a
     0,01, decidido por la persona (research R3).
-  - Decisión del agente, a revisar: si faltan grabaciones, los tests que las leen se saltan con
-    motivo visible (`tests/conftest.py`) en vez de fallar.
+  - Si faltan grabaciones, los tests que las leen fallan (`tests/conftest.py`); se saltaban
+    mientras T031 esperaba las claves, y la persona decidió el cambio en la retro.
 - [hecho, 2026-10-14] T058 (US4 con claves reales), T065 (cifras de cobertura y tiempos),
   T066 (quickstart en Windows, con el menú en una terminal real), T067 (lección
   `docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md`) y T068 (demostración por
   historia). Rama subida; CI en verde en Linux y Windows. Hallazgo corregido: en
   Windows, `jevlab triage < NUL` sacaba el menú (código 1) en vez de la lista (código 2), porque
   `isatty()` es `True` para `NUL`; ahora se exige además un modo de consola.
-- **[siguiente]** Tareas pendientes de `specs/001-triaje-ticket/tasks.md`:
-  - T069: retro en el commit de cierre (con las cifras de T065) y actualización de este apartado.
-    Revisar también la decisión de saltar los tests si faltan grabaciones y los hallazgos LOW
-    I2-I5 del análisis.
-  - Después: PR de `001-triaje-ticket` a `main`.
+- [hecho, 2026-10-14] T069: retro en el commit de cierre. Lo que genera, en `docs/ideas.md`:
+  guardar el informe de `/speckit-analyze` en cada spec.
+- **[siguiente]** PR de `001-triaje-ticket` a `main` con merge commit
+  (`docs/standards/version-control.md` §3). Después, la spec 002 desde `main`; al planificarla,
+  revisar `docs/ideas.md`.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
