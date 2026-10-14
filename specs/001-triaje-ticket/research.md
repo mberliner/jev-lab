@@ -41,7 +41,8 @@ documentación oficial de TypeSafe consultada el 2026-10-13.
 - **Motivo:** FR-006 y SC-003; la lección explica la fórmula con las mismas cifras de la salida.
 - **Hallazgo al grabar (2026-10-13):** la API devuelve probabilidades y confianzas con 2 decimales.
   En `instruccion-incrustada`, `p_max = 0,93` da 0,9067 y el servicio devuelve 0,91, calculado con
-  la probabilidad sin redondear. La tolerancia de SC-003 pasa de 0,001 a 0,01: un error de fórmula
+  la probabilidad sin redondear. Son las cifras de la primera grabación; tras regrabar, la
+  grabación actual da `p_max = 0,90` y confianza 0,87, que coinciden al redondear. La tolerancia de SC-003 pasa de 0,001 a 0,01: un error de fórmula
   da diferencias de décimas, no de milésimas. La cota teórica del redondeo en una Choice de 4
   opciones es 0,005 / 0,75 + 0,005 ≈ 0,012; si algún día se supera, se revisa la tolerancia.
 - **Riesgos:** con `n = 1` las dos fórmulas dividen por cero; la validación de la definición exige
