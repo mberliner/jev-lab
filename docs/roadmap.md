@@ -5,7 +5,9 @@
 > **Actualizado: 2026-10-13.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 000 (Cimientos) cerrada en la rama `000-cimientos`, publicada en
+**Dónde estamos:** spec 001 (Triaje) en curso en la rama `001-triaje-ticket`, con la spec y el
+plan hechos; siguiente paso, `/speckit-tasks` (ver «Spec 001 en curso», más abajo). La spec 000
+(Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Queda aplazada T037
 (ver «Después», más abajo). Hecho:
 - Spec Kit instalado con las integraciones de Claude Code y Antigravity; `AGENTS.md` como única
@@ -90,9 +92,25 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Qued
   `uv run poe live`). Se hace al tener claves, como muy tarde al grabar las cassettes de la 001.
 - [hecho, 2026-10-13] `000-cimientos` integrada en `main` con PR y merge commit
   (`docs/standards/version-control.md` §3).
-- **[siguiente]** Spec 001 con `/speckit-specify`, desde `main`, revisando antes `docs/ideas.md`
-  (tres ideas para la 001) y la sección «001» de este roadmap. Hasta grabar las cassettes no
-  necesita claves.
+- [hecho, 2026-10-13] Spec 001 iniciada desde `main` (ver «Spec 001 en curso»).
+
+**Spec 001 en curso** (rama `001-triaje-ticket`, artefactos en `specs/001-triaje-ticket/`):
+- [hecho, 2026-10-13] `/speckit-specify` y `/speckit-clarify`: 4 historias y 5 aclaraciones. Modo
+  grabado por defecto y `--en-vivo` explícito; ejemplo por texto, por `--ejemplo` o con menú;
+  umbral de prioridad con el `score` esperado frente a la posición de `alta`; banda incierta del
+  Noul de 0,30 a 0,70; máximo de 4.000 caracteres en vivo.
+- [hecho, 2026-10-13] `/speckit-plan` (commit `9f3a3d5`). Decisiones de la persona:
+  - una definición por decisión (`cola-destino`, `urgencia-explicita`, `prioridad`) y una de
+    petición (`triaje`) que las agrupa, según `docs/standards/architecture.md` §6;
+  - respuestas grabadas, un sitio por uso: ejemplos reales que reproduce la CLI en el paquete,
+    respuestas sintéticas en `tests/contract/fixtures/` y datasets de la 004 en `data/`.
+  - Hallazgos: `vcrpy` 8.3.0 sí graba `httpx2`, pero se usa un formato propio sobre el transporte
+    (research R5); el modelo fijado es `jev-1.13.0`, no `jev-1.13` (R4).
+  - Las tres ideas de la retro 000 quedan recogidas (R5, R7 y R8) y borradas de `docs/ideas.md`.
+- **[siguiente]** `/speckit-tasks`, después `/speckit-analyze` y `/speckit-implement`.
+- **Bloqueo para cerrar la 001:** grabar los ejemplos reales necesita la clave de TypeSafe (T037
+  de la 000). Hasta entonces se avanza con tests unitarios y de contrato sobre respuestas
+  sintéticas.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
