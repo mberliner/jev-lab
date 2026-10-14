@@ -1,0 +1,23 @@
+# Grabación sintética con el formato de contracts/recording.md, solo para tests: la respuesta es
+# inventada, no viene de TypeSafe.
+name: grabacion-sintetica
+text: Me habéis cobrado dos veces la cuota de octubre.
+origen: sintetico
+covers: [cola-facturacion, urgencia-no]
+model: jev-1.13.0
+recorded_on: 2026-10-20
+spec_versions:
+  triaje: 0.1.0
+  cola-destino: 0.1.0
+  urgencia-explicita: 0.1.0
+  prioridad: 0.1.0
+request:
+  state: Me habéis cobrado dos veces la cuota de octubre.
+  model: jev-1.13.0
+  questions: {}
+response:
+  status: 200
+  body:
+    model: jev-1.13.0
+    usage: {input_tokens: 120, output_tokens: 0}
+    answers: {}

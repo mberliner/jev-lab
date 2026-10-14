@@ -55,6 +55,8 @@ Puesta en marcha completa: `docs/setup.md`. Todos los comandos son iguales en Li
 | `uv run poe check` | Todas las puertas de calidad (lo que ejecutan pre-commit y CI) |
 | `uv run jevlab doctor` | Comprueba el entorno local; `--remote` añade TypeSafe y Azure OpenAI |
 | `uv run poe live` | Tests contra servicios reales: necesitan `.env` y tienen tope de coste |
+| `uv run poe record` | Regraba los ejemplos de `jevlab triage` (necesita `.env`; mismo tope que `live`) |
+| `uv run jevlab triage` | Triaje de un ticket de ejemplo grabado, sin red; `--en-vivo` llama a TypeSafe |
 | `uv run pre-commit install` | Activa los ganchos `pre-commit` y `commit-msg` |
 
 - Las puertas propias viven en `scripts/checks/` (una por módulo) y se lanzan con

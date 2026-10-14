@@ -1,0 +1,72 @@
+name: pregunta-fuera-de-ambito
+text: ¿Tenéis previsto abrir una tienda física en Valencia el año que viene?
+origen: sintetico
+covers:
+- cola-other
+model: jev-1.13.0
+recorded_on: 2026-10-13
+spec_versions:
+  triaje: 0.1.0
+  cola-destino: 0.1.0
+  urgencia-explicita: 0.1.0
+  prioridad: 0.1.0
+request:
+  state: ¿Tenéis previsto abrir una tienda física en Valencia el año que viene?
+  model: jev-1.13.0
+  questions:
+    cola:
+      type: choice
+      instructions: ¿A qué cola de soporte pertenece este ticket?
+      criteria:
+        facturacion: Cobros, facturas, reembolsos o métodos de pago.
+        tecnico: Fallos, errores o mal funcionamiento del producto.
+        cuenta: Acceso, contraseña, datos del perfil o alta y baja de la cuenta.
+        other: Ninguna de las anteriores.
+    urgencia:
+      type: noul
+      instructions: ¿El ticket menciona explícitamente un problema urgente?
+      criteria:
+        'true': El texto dice de forma explícita que el problema es urgente o bloqueante.
+        'false': El texto no menciona urgencia de forma explícita.
+    prioridad:
+      type: score
+      instructions: ¿Qué prioridad de atención necesita este ticket?
+      criteria:
+      - 'baja: Puede esperar.'
+      - 'media: Atender esta semana.'
+      - 'alta: Atender hoy.'
+      - 'critica: Atender de inmediato.'
+response:
+  status: 200
+  body:
+    model: jev-1.13.0
+    answers:
+      cola:
+        type: choice
+        choice: other
+        confidence: 1.0
+        probabilities:
+          facturacion: 0.0
+          tecnico: 0.0
+          cuenta: 0.0
+          other: 1.0
+      urgencia:
+        type: noul
+        noul: 0.02
+      prioridad:
+        type: score
+        score: 0.34
+        confidence: 0.65
+        legend:
+          '0': 'baja: Puede esperar.'
+          '1': 'media: Atender esta semana.'
+          '2': 'alta: Atender hoy.'
+          '3': 'critica: Atender de inmediato.'
+        probabilities:
+          '0': 0.6799999999999999
+          '1': 0.29
+          '2': 0.03
+          '3': 0.0
+    usage:
+      input_tokens: 537
+      output_tokens: 83

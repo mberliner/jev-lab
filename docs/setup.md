@@ -122,6 +122,7 @@ Todas se ejecutan igual en Linux y en Windows con `uv run poe <tarea>`:
 | `test` | Toda la suite salvo los tests `live`, con la red bloqueada |
 | `check` | Todas las puertas de calidad (la ejecuta pre-commit en cada commit) |
 | `live` | Tests contra servicios reales; necesitan `.env` y tienen tope de coste |
+| `record` | Regraba los ejemplos de `jevlab triage` con la clave real; mismo tope que `live` |
 | `lint`, `typecheck`, `lint-imports`, `cov` | Puertas sueltas, para depurar |
 
 El tope de coste de los tests `live` se fija con `JEVLAB_LIVE_BUDGET_USD` (por defecto 0,10 USD).

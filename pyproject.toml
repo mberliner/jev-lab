@@ -12,6 +12,7 @@ dependencies = [
     "openai==3.29.0",
     "pydantic==2.14.1",
     "pydantic-settings==2.15.0",
+    "pyyaml==6.0.3",
     "typer==0.27.3",
     "typesafe-sdk==0.7.4",
 ]
@@ -33,7 +34,6 @@ dev = [
     "pytest==9.1.1",
     "pytest-cov==7.1.0",
     "pytest-socket==0.8.1",
-    "pyyaml==6.0.3",
     "ruff==0.17.0",
     "types-pyyaml==6.0.12.20260906",
 ]
@@ -60,7 +60,21 @@ src = ["src", "scripts", "."]
 extend-exclude = [".specify"]
 
 [tool.ruff.lint]
-extend-select = ["I", "UP", "B"]
+extend-select = ["I", "UP", "B", "TID251"]
+
+# Reloj, azar e IDs solo en adaptadores y tests (docs/standards/architecture.md §5).
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"datetime.datetime.now".msg = "usa el puerto Clock (jevlab.ports.clock)"
+"datetime.datetime.today".msg = "usa el puerto Clock (jevlab.ports.clock)"
+"datetime.datetime.utcnow".msg = "usa el puerto Clock (jevlab.ports.clock)"
+"datetime.date.today".msg = "usa el puerto Clock (jevlab.ports.clock)"
+"time.time".msg = "usa el puerto Clock (jevlab.ports.clock)"
+"random".msg = "el azar va detrás de un puerto, en adapters/"
+"uuid.uuid4".msg = "los identificadores van detrás de un puerto, en adapters/"
+
+[tool.ruff.lint.per-file-ignores]
+"src/jevlab/adapters/**" = ["TID251"]
+"tests/**" = ["TID251"]
 
 [tool.mypy]
 strict = true
@@ -86,6 +100,8 @@ cov = [
 ]
 test-integration = "pytest -m integration"
 live = "pytest -m live --force-enable-socket"
+# Regraba los ejemplos de src/jevlab/recordings/ con claves reales (research.md R11).
+record = { cmd = "pytest -m live --force-enable-socket tests/live/test_record_triage.py", env = { JEVLAB_RECORD = "1" } }
 check-writing = "python -m checks.writing"
 check-commit-msg = "python -m checks.commit_msg"
 check-presets = "python -m checks.presets"

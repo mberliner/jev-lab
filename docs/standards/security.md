@@ -37,7 +37,7 @@ para depurar es un cambio local que no se versiona.
 ([*Usage*](https://docs.typesafe.ai/sdk/python/usage.md)). Los logs se copian y se conservan
 fuera de control.
 
-**Correcto:** `triage ticket=T-123 modelo=jev-1.13 estado=200 latencia=340ms resultado=técnico confianza=0.62`
+**Correcto:** `triage ticket=T-123 modelo=jev-1.13.0 estado=200 latencia=340ms resultado=técnico confianza=0.62`
 
 **Incorrecto:** `request payload: {"state": "Hola, soy Ana García, mi tarjeta 4111… no funciona"}`
 

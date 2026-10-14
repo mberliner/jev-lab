@@ -1,0 +1,11 @@
+# Decisión prioridad (spec 001). El umbral es provisional hasta la evaluación de la 004.
+version: 0.1.0
+model: jev-1.13.0
+primitive: score
+instructions: ¿Qué prioridad de atención necesita este ticket?
+levels:
+  - {name: baja, description: Puede esperar.}
+  - {name: media, description: Atender esta semana.}
+  - {name: alta, description: Atender hoy.}
+  - {name: critica, description: Atender de inmediato.}
+threshold: {level: alta, justification: provisional}

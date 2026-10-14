@@ -1,0 +1,7 @@
+# Petición de triaje: las decisiones que viajan juntas, con el mismo estado (data-model.md).
+version: 0.1.0
+max_chars: 4000
+questions:
+  cola: cola-destino
+  urgencia: urgencia-explicita
+  prioridad: prioridad

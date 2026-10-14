@@ -1,0 +1,76 @@
+name: servicio-caido
+text: 'La aplicación está caída desde esta mañana y no podemos atender a ningún cliente. Es urgente: lo
+  necesitamos funcionando ya.'
+origen: sintetico
+covers:
+- cola-tecnico
+- urgencia-si
+- prioridad-alcanza-umbral
+model: jev-1.13.0
+recorded_on: 2026-10-13
+spec_versions:
+  triaje: 0.1.0
+  cola-destino: 0.1.0
+  urgencia-explicita: 0.1.0
+  prioridad: 0.1.0
+request:
+  state: 'La aplicación está caída desde esta mañana y no podemos atender a ningún cliente. Es urgente:
+    lo necesitamos funcionando ya.'
+  model: jev-1.13.0
+  questions:
+    cola:
+      type: choice
+      instructions: ¿A qué cola de soporte pertenece este ticket?
+      criteria:
+        facturacion: Cobros, facturas, reembolsos o métodos de pago.
+        tecnico: Fallos, errores o mal funcionamiento del producto.
+        cuenta: Acceso, contraseña, datos del perfil o alta y baja de la cuenta.
+        other: Ninguna de las anteriores.
+    urgencia:
+      type: noul
+      instructions: ¿El ticket menciona explícitamente un problema urgente?
+      criteria:
+        'true': El texto dice de forma explícita que el problema es urgente o bloqueante.
+        'false': El texto no menciona urgencia de forma explícita.
+    prioridad:
+      type: score
+      instructions: ¿Qué prioridad de atención necesita este ticket?
+      criteria:
+      - 'baja: Puede esperar.'
+      - 'media: Atender esta semana.'
+      - 'alta: Atender hoy.'
+      - 'critica: Atender de inmediato.'
+response:
+  status: 200
+  body:
+    model: jev-1.13.0
+    answers:
+      cola:
+        type: choice
+        choice: tecnico
+        confidence: 1.0
+        probabilities:
+          facturacion: 0.0
+          tecnico: 1.0
+          cuenta: 0.0
+          other: 0.0
+      urgencia:
+        type: noul
+        noul: 0.99
+      prioridad:
+        type: score
+        score: 3.0
+        confidence: 1.0
+        legend:
+          '0': 'baja: Puede esperar.'
+          '1': 'media: Atender esta semana.'
+          '2': 'alta: Atender hoy.'
+          '3': 'critica: Atender de inmediato.'
+        probabilities:
+          '0': 0.0
+          '1': 0.0
+          '2': 0.0
+          '3': 1.0
+    usage:
+      input_tokens: 544
+      output_tokens: 85

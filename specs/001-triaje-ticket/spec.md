@@ -258,7 +258,9 @@ y la fecha de la grabación.
 - **SC-002**: El 100 % de las salidas muestra resultado, distribución, confianza (en Choice y Score)
   y origen; ninguna muestra una cola cuando el resultado es `other` o no hay respuesta válida.
 - **SC-003**: La confianza recalculada coincide con la del servicio, con una diferencia máxima de
-  0,001, en el 100 % de las grabaciones.
+  0,01, en el 100 % de las grabaciones. El servicio devuelve probabilidades y confianzas con 2
+  decimales, y recalcular a partir de valores redondeados da diferencias de algunas milésimas
+  (ajustado el 2026-10-13 tras la primera grabación; antes, 0,001).
 - **SC-004**: La suite por defecto, con la red bloqueada, reproduce todos los ejemplos grabados con
   0 conexiones y 0 coste, y dos ejecuciones dan salidas idénticas.
 - **SC-005**: En la suite, 0 apariciones del texto de un ticket, de una respuesta o de una clave en

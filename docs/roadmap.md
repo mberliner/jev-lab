@@ -5,8 +5,9 @@
 > **Actualizado: 2026-10-13.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 001 (Triaje) en curso en la rama `001-triaje-ticket`, con la spec y el
-plan hechos; siguiente paso, `/speckit-tasks` (ver «Spec 001 en curso», más abajo). La spec 000
+**Dónde estamos:** spec 001 (Triaje) en curso en la rama `001-triaje-ticket`: implementada y con
+los ejemplos grabados (63 de 69 tareas); quedan la validación con claves, Windows, la lección y el
+cierre (ver «Spec 001 en curso», más abajo). La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Queda aplazada T037
 (ver «Después», más abajo). Hecho:
@@ -107,10 +108,29 @@ https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows. Qued
   - Hallazgos: `vcrpy` 8.3.0 sí graba `httpx2`, pero se usa un formato propio sobre el transporte
     (research R5); el modelo fijado es `jev-1.13.0`, no `jev-1.13` (R4).
   - Las tres ideas de la retro 000 quedan recogidas (R5, R7 y R8) y borradas de `docs/ideas.md`.
-- **[siguiente]** `/speckit-tasks`, después `/speckit-analyze` y `/speckit-implement`.
-- **Bloqueo para cerrar la 001:** grabar los ejemplos reales necesita la clave de TypeSafe (T037
-  de la 000). Hasta entonces se avanza con tests unitarios y de contrato sobre respuestas
-  sintéticas.
+- [hecho, 2026-10-13] `/speckit-tasks` (69 tareas) y `/speckit-analyze`, sin conflictos con la
+  constitución; los 6 hallazgos MEDIUM resueltos (commit `933ae48`). Quedan abiertos los LOW I2-I5.
+- [hecho, 2026-10-13] `/speckit-implement`, salvo las tareas de abajo: `jevlab triage` con
+  `--ejemplo`, menú y `--en-vivo`; definiciones en `src/jevlab/specs/soporte/`; grabaciones
+  propias sobre el transporte de `httpx2`; regla TID251; `docs/standards/cli-ux.md`.
+  `uv run poe check` en verde (330 tests unitarios y de contrato, 19 de integración).
+  - Seis ejemplos grabados con `jev-1.13.0` en `src/jevlab/recordings/soporte/triaje/`.
+    `urgencia-ambigua` se reescribió porque daba «no»; ahora da «incierto» (0,66), cerca del
+    límite de la banda.
+  - Hallazgo: la API redondea probabilidades y confianzas a 2 decimales; SC-003 pasa de 0,001 a
+    0,01, decidido por la persona (research R3).
+  - Decisión del agente, a revisar: si faltan grabaciones, los tests que las leen se saltan con
+    motivo visible (`tests/conftest.py`) en vez de fallar.
+- **[siguiente]** Tareas pendientes de `specs/001-triaje-ticket/tasks.md`:
+  - T058: `uv run poe live` con la clave (valida la US4).
+  - T065: anotar el tiempo de la suite en el job `ubuntu-latest` de la CI (en local, unos 15 s;
+    triaje grabado, unos 0,03 s por ejecución).
+  - T066: quickstart en Windows, en PowerShell y con `| cat` en Git Bash.
+  - T067: lección `docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md` con las cifras
+    reales; buen ejemplo: `cobro-duplicado`, con `alta` como nivel más probable y el umbral no
+    alcanzado (1,81 < 2).
+  - T068 y T069: demostración por historia, retro y actualización de este apartado.
+  - T037 de la 000: `uv run jevlab doctor --remote`, que necesita también las claves de Azure.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
