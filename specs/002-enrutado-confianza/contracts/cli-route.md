@@ -53,7 +53,10 @@ Reglas:
   y el identificador de petición.
 - `Mover a cola` siempre aparece. Sin cola válida: `Mover a cola: sin cola · a revisión`, con el
   motivo (`escape`, `fuera de la definición` o `sin respuesta válida`).
-- `Reembolsar` solo aparece si la solicitud es `reembolso`.
+- `Reembolsar` siempre aparece. Si la solicitud no es `reembolso`, la abstención es explícita:
+  `Reembolsar: sin reembolso · solicitud consulta · confianza 0,92`. Con el escape,
+  `solicitud other (escape)`; sin respuesta válida, `solicitud sin respuesta válida · confianza no
+  disponible`. No lleva umbral ni va a revisión.
 - Cada acción muestra la confianza, el signo `≥` o `<`, el umbral, el riesgo y `provisional` si la
   justificación lo es; si falta la confianza, `confianza no disponible`.
 - Si algo va a revisión, la última línea da el número del elemento.
@@ -80,3 +83,5 @@ En nivel `info`, una línea por ejecución en el logger `jevlab`, solo con metad
 ```
 route peticion=7c1e0f4a-… modo=grabado ejemplo=cobro-duplicado modelo=jev-1.13.0 politica=0.1.0/3fa9c2d1 mover-a-cola=automatizada reembolsar=automatizada
 ```
+
+`reembolsar` toma los valores `automatizada`, `pendiente-de-confirmacion` o `sin-reembolso`.

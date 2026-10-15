@@ -116,6 +116,7 @@ acciones:
 | `automatizada` | Cumple la regla de research R4 |
 | `a revisión` | `mover-a-cola` sin automatizar |
 | `pendiente de confirmación` | `reembolsar` con solicitud `reembolso` sin automatizar |
+| `sin reembolso` | `reembolsar` con solicitud distinta de `reembolso`, escape o sin respuesta: abstención explícita (Constitución §II); no va a revisión |
 
 ### `PendingReason` (enum, texto de la salida)
 
@@ -126,6 +127,7 @@ acciones:
 | `sin respuesta válida` | `mover-a-cola` |
 | `confianza por debajo del umbral` | Las dos |
 | `la cola no se automatizó a facturacion` | `reembolsar` |
+| `la solicitud no es reembolso` | `reembolsar` (`sin reembolso`) |
 
 Si hay varios motivos, se guardan todos, en este orden.
 
@@ -134,7 +136,7 @@ Si hay varios motivos, se guardan todos, en este orden.
 | Campo | Tipo | Regla |
 | --- | --- | --- |
 | `action` | `ActionName` | |
-| `value` | `str \| None` | Cola propuesta, `reembolso` o `None` («sin cola») |
+| `value` | `str \| None` | Cola propuesta o valor de la solicitud; `None` sin respuesta válida («sin cola» en `mover-a-cola`) |
 | `confidence` | `float \| None` | La del servicio; `None` sin respuesta |
 | `threshold` | `float` | De la política |
 | `risk` | `Risk` | De la política |
@@ -151,9 +153,10 @@ Si hay varios motivos, se guardan todos, en este orden.
 | `origin` | `Origin` | El de la 001 |
 | `policy` | `PolicyRef` | |
 | `spec_versions` | `dict[str, str]` | De `ResolvedRequest` |
-| `actions` | `tuple[ActionOutcome, ...]` | `mover-a-cola` siempre; `reembolsar` solo si la solicitud es `reembolso` |
+| `actions` | `tuple[ActionOutcome, ...]` | Siempre `mover-a-cola` y `reembolsar`; si la solicitud no es `reembolso`, `reembolsar` queda `sin reembolso` |
 
-- `needs_review`: alguna acción no está `automatizada`.
+- `needs_review`: alguna acción está `a revisión` o `pendiente de confirmación`; `sin reembolso`
+  no cuenta.
 
 ## Cola de revisión
 
@@ -167,7 +170,7 @@ Si hay varios motivos, se guardan todos, en este orden.
 | `ticket` | `str` | Texto normalizado (FR-012); nunca sale en logs ni errores |
 | `origin` | `Origin` | |
 | `policy` | `PolicyRef` | |
-| `actions` | `tuple[ReviewAction, ...]` | Las no automatizadas |
+| `actions` | `tuple[ReviewAction, ...]` | Las que están `a revisión` o `pendiente de confirmación` |
 | `queue` | `str \| None` | Cola actual: la automatizada o la asignada por el Operador |
 
 - `pending`: le queda alguna `ReviewAction` sin resolución.
@@ -194,7 +197,10 @@ reembolsar pendiente --rechazar---> rechazada
 - Una acción ya resuelta o un elemento sin pendientes -> `AlreadyResolved` (código 2).
 - Una cola que no está en `cola-destino` o es el escape -> `UnknownQueue`, con las colas válidas
   (código 2).
-- Cada transición produce un `AuditEntry` de tipo `resolucion`.
+- `resolve` devuelve el elemento actualizado y un `AuditEntry` de tipo `resolucion` por cada
+  acción que resuelve: `asignar` a una cola distinta de `facturacion` con un reembolso pendiente
+  produce dos (`asignada` y `rechazada`), y `descartar`, uno por acción pendiente. El almacén
+  guarda el elemento y todas esas entradas en una sola transacción.
 
 ## Auditoría
 

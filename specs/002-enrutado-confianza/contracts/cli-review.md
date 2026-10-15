@@ -42,6 +42,13 @@ Elemento 4: reembolso confirmado (simulado) · cola facturacion
 Elemento 4 resuelto: sin acciones pendientes
 ```
 
+Si una resolución cierra también el reembolso (asignar otra cola o descartar), lo dice:
+
+```
+Elemento 5: cola tecnico asignada · reembolso rechazado (la cola no es facturacion)
+Elemento 5 resuelto: sin acciones pendientes
+```
+
 ## Códigos de salida y errores
 
 | Código | Caso | Mensaje (forma) |
@@ -57,8 +64,10 @@ Los errores no incluyen el texto del ticket.
 
 ## Logs
 
-En nivel `info`, una línea por resolución, sin el texto del ticket:
+En nivel `info`, una línea por acción resuelta, sin el texto del ticket:
 
 ```
 review elemento=4 peticion=2b90… accion=reembolsar resolucion=confirmada
+review elemento=5 peticion=81c3… accion=mover-a-cola resolucion=asignada cola=tecnico
+review elemento=5 peticion=81c3… accion=reembolsar resolucion=rechazada
 ```

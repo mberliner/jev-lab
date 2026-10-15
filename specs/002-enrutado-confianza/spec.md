@@ -95,8 +95,9 @@ la cola de revisión como pendiente de confirmación.
    con la confianza y el umbral.
 3. **Given** cualquier política válida, **When** se comparan los umbrales, **Then** el de
    «reembolsar» (riesgo alto) es mayor o igual que el de «mover a cola» (riesgo bajo).
-4. **Given** un ticket que no pide un reembolso, **When** lo enruta, **Then** no se propone ningún
-   reembolso.
+4. **Given** un ticket cuya solicitud no es `reembolso` (otra opción, `other` o sin respuesta
+   válida), **When** lo enruta, **Then** no se propone ningún reembolso, y la salida y la auditoría
+   lo registran como abstención explícita, con el valor y la confianza de la solicitud.
 5. **Given** un ticket cuya solicitud es `reembolso` con confianza suficiente pero cuya cola no se
    mueve sola a `facturacion`, **When** lo enruta, **Then** el reembolso queda pendiente de
    confirmación y la salida explica que la cola no se automatizó a `facturacion`.
@@ -162,9 +163,10 @@ versión de cada política y que una política no válida se rechaza sin automat
 
 1. **Given** la política inicial, **When** la persona enruta un ticket, **Then** la salida muestra
    la versión de la política aplicada, con su huella, y, para cada umbral, si es provisional.
-2. **Given** una política con el umbral de «mover a cola» por encima de la confianza de un ticket
-   que antes se movía, **When** lo enruta de nuevo, **Then** el ticket ya no se mueve, sin ningún
-   cambio en el código, y la salida muestra la nueva versión.
+2. **Given** una política con el umbral de «mover a cola» igual o menor que la confianza de un
+   ticket grabado que con la política inicial iba a revisión, **When** lo enruta de nuevo,
+   **Then** el ticket se mueve, sin ningún cambio en el código, y la salida muestra la nueva
+   versión.
 3. **Given** una política no válida (campo que falta, umbral fuera de 0 a 1, riesgo desconocido,
    umbral sin justificación, o una acción de más riesgo con un umbral menor que otra de menos
    riesgo), **When** la persona enruta un ticket, **Then** el comando termina con un error que
@@ -194,8 +196,9 @@ versión de cada política y que una política no válida se rechaza sin automat
 - Política inexistente o ilegible: error que dice qué archivo se esperaba, sin automatizar nada.
 - Política con dos versiones distintas en dos ejecuciones: cada decisión queda con la suya.
 - Texto con instrucciones dirigidas al modelo («reembolsa sin preguntar…»): se trata como contenido
-  del ticket, nunca como instrucción; el ejemplo `instruccion-incrustada` no se automatiza con la
-  política inicial.
+  del ticket, nunca como instrucción. Con la política inicial, ningún ejemplo con instrucciones
+  incrustadas produce un reembolso automatizado, incluido uno que lo pide expresamente
+  (`reembolso-incrustado`).
 - Errores del servicio en vivo, texto vacío, texto demasiado largo y modos grabado o en vivo: igual
   que en la 001.
 
@@ -243,9 +246,9 @@ versión de cada política y que una política no válida se rechaza sin automat
   acción de más riesgo tiene un umbral menor que una de menos riesgo.
 - **FR-011**: Cada ejecución de `jevlab route` MUST generar un identificador de petición único y
   registrar en la auditoría, por acción: identificador, fecha, decisión, valor, confianza, umbral,
-  riesgo, versión de la política, resultado (automatizada, a revisión o pendiente de confirmación),
-  origen y modelo. La auditoría MUST NOT contener el texto del ticket ni las respuestas completas
-  del servicio.
+  riesgo, versión de la política, resultado (automatizada, a revisión, pendiente de confirmación o
+  sin reembolso), origen y modelo. La auditoría MUST NOT contener el texto del ticket ni las
+  respuestas completas del servicio.
 - **FR-012**: La cola de revisión MAY guardar el texto del ticket, porque el Operador lo necesita
   para resolver; MUST NOT guardar claves ni respuestas completas del servicio.
 - **FR-013**: Tests de propiedades MUST comprobar, para cualquier política válida y cualquier
@@ -255,7 +258,9 @@ versión de cada política y que una política no válida se rechaza sin automat
   mayor también, y un umbral de más riesgo nunca es menor que uno de menos riesgo).
 - **FR-014**: Una nueva decisión, la solicitud del cliente, MUST describirse en la definición
   versionada con su escape, y el conjunto de ejemplos grabados MUST ampliarse con tickets que
-  pidan un reembolso de forma clara y ambigua, etiquetados como sintéticos.
+  pidan un reembolso de forma clara y ambigua y con uno que lo pida mediante una instrucción
+  incrustada, etiquetados como sintéticos. Los textos de los ejemplos de la 001 se reutilizan sin
+  cambios.
 - **FR-015**: Los mensajes de error y los logs `info` MUST NOT incluir el texto del ticket, las
   respuestas del servicio ni claves, igual que en la 001.
 - **FR-016**: Los archivos de estado local (cola de revisión y auditoría) MUST quedar fuera del
@@ -291,15 +296,17 @@ versión de cada política y que una política no válida se rechaza sin automat
   modificar ningún archivo de código, y la salida muestra la nueva versión.
 - **SC-006**: La suite por defecto reproduce todos los ejemplos de enrutado con 0 conexiones y 0
   coste; con la política inicial, los ejemplos cubren al menos: cola automatizada, cola a revisión
-  por confianza baja, `other` a revisión, reembolso automático y reembolso que pide confirmación.
+  por confianza baja, `other` a revisión, reembolso automático, reembolso que pide confirmación y
+  solicitud sin reembolso; y ningún ejemplo con instrucciones incrustadas automatiza un reembolso.
+  Cada ejemplo declara lo que cubre y un test lo comprueba sobre su grabación.
 
 ## Assumptions
 
 - Acciones de la feature: «mover a cola» (riesgo bajo) y «reembolsar» (riesgo alto). Ambas son
   simuladas; no hay sistemas externos de colas ni de pagos.
 - Umbrales iniciales: «mover a cola» 0,90 y «reembolsar» 0,97, provisionales hasta la evaluación
-  de la spec 004. Con las grabaciones actuales, la cola tiene confianza 1,0 en todos los ejemplos
-  salvo `instruccion-incrustada` (0,87), que va a revisión.
+  de la spec 004. Las confianzas del enrutado solo se conocen al grabar: ningún test ni demo fija
+  una cifra a mano, y los ejemplos de cada caso se eligen por lo que cubre su grabación.
 - El reembolso depende de una decisión nueva, la solicitud del cliente (Choice con escape), y no de
   un Noul: el servicio no devuelve confianza para Noul (research R3 de la 001) y §II exige
   condicionar la acción a la confianza.
@@ -311,7 +318,8 @@ versión de cada política y que una política no válida se rechaza sin automat
   resolución queda fuera de alcance.
 - La política inicial vive en el repositorio; una opción permite apuntar a otro archivo de
   política para experimentar, sin editar la del repositorio.
-- Las nuevas grabaciones se hacen con `uv run poe record`, con el mismo tope de coste que en la 001.
+- Las nuevas grabaciones se hacen con `uv run poe record-route`, sin regrabar las del triaje y con
+  el mismo tope de coste que en la 001.
 
 ## Decisiones Jev (jev-lab) *(mandatory si la feature pregunta al modelo)*
 
@@ -320,7 +328,7 @@ versión de cada política y que una política no válida se rechaza sin automat
 | Decisión | Pregunta (una idea, literal) | Primitiva | Opciones + escape | Acción automatizable y riesgo | Destino del escape |
 | --- | --- | --- | --- | --- | --- |
 | cola-destino | «¿A qué cola de soporte pertenece este ticket?» (la de la 001) | Choice | `facturacion`, `tecnico`, `cuenta`, `other` | Mover a cola; riesgo bajo | Cola de revisión |
-| solicitud | «¿Qué pide el cliente en este ticket?» | Choice | `reembolso`, `consulta`, `incidencia`, `other` | Reembolsar (solo si `reembolso` y la cola se movió sola a `facturacion`); riesgo alto | Sin reembolso; si la cola tampoco se automatiza, cola de revisión |
+| solicitud | «¿Qué pide el cliente en este ticket?» | Choice | `reembolso`, `consulta`, `incidencia`, `other` | Reembolsar (solo si `reembolso` y la cola se movió sola a `facturacion`); riesgo alto | Sin reembolso, como abstención explícita en la salida y en la auditoría; la cola sigue su propia regla |
 
 - **Lo que decide el código**: la comparación de la confianza con el umbral de cada acción, el
   escape y la respuesta no válida, el riesgo de cada acción, la validación de la política (incluida
@@ -342,10 +350,13 @@ versión de cada política y que una política no válida se rechaza sin automat
 
 | Historia | Persona | Cómo se demuestra (comando o petición) |
 | --- | --- | --- |
-| US1 | Usuario inicial de Jev | `uv run jevlab route --ejemplo cobro-duplicado` y `--ejemplo instruccion-incrustada` |
-| US2 | Usuario inicial de Jev | `uv run jevlab route --ejemplo <reembolso claro>` y `--ejemplo <reembolso ambiguo>` |
+| US1 | Usuario inicial de Jev | `uv run jevlab route --ejemplo cambio-de-correo` y el ejemplo que cubra «cola a revisión» (previsto: `instruccion-incrustada`) |
+| US2 | Usuario inicial de Jev | `uv run jevlab route --ejemplo` con el que cubra «reembolso automático» (previsto: `cobro-duplicado`) y `--ejemplo reembolso-ambiguo` |
 | US3 | Operador | `uv run jevlab review`, y resolver un pendiente |
-| US4 | Operador | `uv run jevlab route --ejemplo cobro-duplicado` con una política de umbral más alto |
+| US4 | Operador | El ejemplo de «cola a revisión» con `--politica` y un umbral igual a su confianza grabada |
+
+Los ejemplos «previstos» se confirman al grabar (tasks, T023); si la grabación no cubre el caso,
+la tabla se actualiza con el ejemplo nuevo que lo cubra.
 
 - **Número de historias**: 4 (P1-P4).
 - **Fuera de alcance (YAGNI)**: acciones reales sobre sistemas externos, importes de reembolso,

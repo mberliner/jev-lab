@@ -80,7 +80,8 @@ instalado (`typesafe-sdk` 0.7.4).
   - `reembolsar` solo se considera si la solicitud es `reembolso`. Se automatiza si su confianza
     es mayor o igual que el umbral y `mover-a-cola` se automatizó a `facturacion`. Si no, queda
     pendiente de confirmación con su motivo. Si la solicitud no es `reembolso` (otra opción,
-    escape o sin respuesta), no se propone reembolso.
+    escape o sin respuesta), no se propone reembolso: la acción queda `sin reembolso`, una
+    abstención explícita que se muestra y se audita, pero no va a revisión (Constitución §II).
   - Se compara la confianza que devuelve el servicio, la misma que muestra la salida. La
     recalculada solo comprueba la fórmula (FR-006 de la 001).
 - **Motivo:** FR-003, FR-006 y las aclaraciones 4 y 5. Con una función pura, los tests de
@@ -146,19 +147,38 @@ instalado (`typesafe-sdk` 0.7.4).
 - **Decisión:**
   - Las grabaciones viven en `src/jevlab/recordings/soporte/enrutado/`, con el mismo formato que
     las de la 001 (`contracts/recording.md` de la 001) y la petición `enrutado`.
-  - Ejemplos: los seis textos de la 001 y uno nuevo, `reembolso-ambiguo`, que insinúa una
-    devolución sin pedirla claramente. `cobro-duplicado` ya pide la devolución de un cargo y sirve
-    como reembolso claro.
+  - Ejemplos: los seis textos de la 001, sin cambios, y dos nuevos: `reembolso-ambiguo`, que
+    insinúa una devolución sin pedirla claramente, y `reembolso-incrustado`, adversarial, que no
+    pide dinero pero incrusta una orden de aprobar el reembolso. Se prevé que `cobro-duplicado`,
+    que pide la devolución de un cargo, cubra el reembolso automático.
+  - Los textos compartidos se sacan de `tests/live/test_record_triage.py` a
+    `tests/live/examples.py`, sin cambiarlos; cada script de grabación declara sus propios
+    `covers`.
+  - Cada ejemplo declara en `covers` todo lo que se espera de él, también lo implícito (por
+    ejemplo, `reembolso-ambiguo` necesita además la cola automatizada a `facturacion` para que se
+    pueda confirmar sin asignar). Un test lo comprueba sobre las grabaciones con un mapa de
+    etiqueta a condición, como `_COVERS` en la 001. Los tests de integración y el quickstart
+    eligen los ejemplos por etiqueta y toman las confianzas de la grabación: ninguna cifra se
+    escribe a mano.
   - El caso «reembolso con confianza suficiente y cola distinta de `facturacion`» no tiene
     ejemplo grabado: la descripción de `facturacion` incluye los reembolsos, así que un texto real
     difícilmente lo produce. Lo cubren los tests unitarios y de propiedades con respuestas
     construidas en el test.
-  - `tests/live/test_record_route.py`, con `@pytest.mark.live(max_usd=0.01)`; `poe record`
-    ejecuta los dos archivos de grabación.
-  - Si la respuesta real de un ejemplo no cae en el lado que pretende cubrir, se reescribe el
-    texto, como se hizo con `urgencia-ambigua` en la 001. Un test comprueba que, con la política
-    inicial, los ejemplos cubren los cinco casos de SC-006.
-- **Motivo:** FR-014 y SC-006, sin tocar las grabaciones de `jevlab triage`.
+  - `tests/live/test_record_route.py`, con `@pytest.mark.live(max_usd=0.01)`, se ejecuta con
+    `poe record-route`; `poe record-triage` graba el triaje y `poe record`, los dos.
+  - Si la grabación de un ejemplo no cubre lo previsto:
+    - un texto compartido con la 001 no se reescribe: se le quita la etiqueta y el caso lo cubre
+      un ejemplo nuevo (por ejemplo, `reembolso-claro` si `cobro-duplicado` no llega a 0,97);
+    - un ejemplo nuevo no adversarial se puede reescribir y regrabar, como `urgencia-ambigua` en
+      la 001;
+    - un ejemplo adversarial no se reescribe para que pase: si automatiza un reembolso, es un
+      hallazgo que se documenta y se mitiga.
+  - La lección dice que los ejemplos de cada caso se eligieron para mostrarlo: si un reembolso
+    claro no llega al umbral, eso se cuenta como lo que es, un umbral provisional exigente.
+- **Motivo:** FR-014 y SC-006 sin tocar las grabaciones de `jevlab triage`. Cambiar un texto
+  compartido obligaría a regrabar el triaje, cambiaría su salida y dejaría obsoletas las cifras de
+  la lección 001, y el texto nuevo tendría que seguir cubriendo lo que el triaje espera de él.
+  Las cifras del modelo solo se conocen al grabar, así que las tareas no dependen de ellas.
 - **Alternativas:** grabaciones sintéticas para los casos que la respuesta real no cubra. Se
   descarta para la CLI: los ejemplos de la CLI son respuestas reales. Las sintéticas siguen
   limitadas a `tests/contract/fixtures/` (research R10 de la 001).
