@@ -1,4 +1,6 @@
-"""Juez de TypeSafe: una petición `system_one` con las tres preguntas (research.md R1, R2 y R6).
+"""Juez de TypeSafe: una petición `system_one` con las preguntas de una petición.
+
+Research R1, R2 y R6 de la 001; R1 de la 002 (petición genérica).
 
 Un solo cliente por ejecución, que se cierra al salir del `with`. Los errores se traducen al
 dominio con el tipo y el estado HTTP, nunca con el cuerpo ni el texto del ticket (FR-014).
@@ -26,14 +28,14 @@ from typesafe_sdk import NoulAnswer as SdkNoulAnswer
 from typesafe_sdk import ScoreAnswer as SdkScoreAnswer
 
 from jevlab.adapters.recording_transport import RecordingTransport, ReplayTransport
-from jevlab.domain.decision_spec import ChoiceSpec, DecisionSpec, NoulSpec, TriageSpec
+from jevlab.domain.decision_spec import ChoiceSpec, DecisionSpec, NoulSpec, ResolvedRequest
 from jevlab.domain.diagnostics import (
     InvalidProviderResponse,
     ProviderRejected,
     ProviderUnavailable,
 )
 from jevlab.domain.examples import Exchange, Recording
-from jevlab.domain.triage import ChoiceAnswer, NoulAnswer, ScoreAnswer, TriageAnswers
+from jevlab.domain.triage import Answers, AnyAnswer, ChoiceAnswer, NoulAnswer, ScoreAnswer
 
 TIMEOUT_S = 10.0
 # El SDK exige una clave no vacía; en reproducción nunca sale de la máquina.
@@ -91,10 +93,12 @@ class TypeSafeJudge:
     def last_exchange(self) -> Exchange | None:
         return None if self._recorder is None else self._recorder.last_exchange()
 
-    def ask(self, spec: TriageSpec, ticket: str) -> TriageAnswers:
-        questions = {name: _question(d) for name, d in spec.questions().items()}
+    def ask(self, request: ResolvedRequest, ticket: str) -> Answers:
+        questions = {name: _question(d) for name, d in request.questions().items()}
         try:
-            response = self._client.system_one(state=ticket, questions=questions, model=spec.model)
+            response = self._client.system_one(
+                state=ticket, questions=questions, model=request.model
+            )
         except TypeSafeAPITimeoutError as error:
             raise ProviderUnavailable(
                 f"TypeSafe no respondió a tiempo ({TIMEOUT_S:g} s)"
@@ -111,32 +115,29 @@ class TypeSafeJudge:
             raise ProviderRejected(error.status) from error
         except TypeSafeError as error:
             raise InvalidProviderResponse() from error
-        answers = response.answers
-        queue, urgency, priority = (answers.get(name) for name in ("cola", "urgencia", "prioridad"))
-        return TriageAnswers(
+        return Answers(
             model=response.model,
-            queue=(
-                ChoiceAnswer(
-                    choice=queue.choice,
-                    confidence=queue.confidence,
-                    probabilities=dict(queue.probabilities),
-                )
-                if isinstance(queue, SdkChoiceAnswer)
-                else None
-            ),
-            urgency=(
-                NoulAnswer(probability=urgency.noul) if isinstance(urgency, SdkNoulAnswer) else None
-            ),
-            priority=(
-                ScoreAnswer(
-                    score=priority.score,
-                    confidence=priority.confidence,
-                    probabilities=dict(priority.probabilities),
-                )
-                if isinstance(priority, SdkScoreAnswer)
-                else None
-            ),
+            by_question={name: _answer(response.answers.get(name)) for name in request.questions()},
         )
+
+
+def _answer(answer: object) -> AnyAnswer | None:
+    """Traduce por el tipo de respuesta del SDK, sin conocer el nombre de la pregunta."""
+    if isinstance(answer, SdkChoiceAnswer):
+        return ChoiceAnswer(
+            choice=answer.choice,
+            confidence=answer.confidence,
+            probabilities=dict(answer.probabilities),
+        )
+    if isinstance(answer, SdkNoulAnswer):
+        return NoulAnswer(probability=answer.noul)
+    if isinstance(answer, SdkScoreAnswer):
+        return ScoreAnswer(
+            score=answer.score,
+            confidence=answer.confidence,
+            probabilities=dict(answer.probabilities),
+        )
+    return None
 
 
 def _question(decision: DecisionSpec) -> Question:

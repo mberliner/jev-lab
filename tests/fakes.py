@@ -1,11 +1,11 @@
 """Fakes en memoria de los puertos (docs/standards/architecture.md §3)."""
 
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import UTC, date, datetime
 
-from jevlab.domain.decision_spec import TriageSpec
+from jevlab.domain.decision_spec import ResolvedRequest
 from jevlab.domain.examples import Exchange, Recording
-from jevlab.domain.triage import TriageAnswers
+from jevlab.domain.triage import Answers
 from jevlab.ports.environment import PythonInfo
 
 
@@ -63,15 +63,15 @@ class FakeGeneratorProbe:
 class FakeJudge:
     """Responde lo programado para cada texto (o `default`) y registra las llamadas."""
 
-    default: TriageAnswers | None = None
-    by_text: dict[str, TriageAnswers] = field(default_factory=dict)
+    default: Answers | None = None
+    by_text: dict[str, Answers] = field(default_factory=dict)
     exchanges: dict[str, Exchange] = field(default_factory=dict)
     error: Exception | None = None
-    calls: list[tuple[TriageSpec, str]] = field(default_factory=list)
+    calls: list[tuple[ResolvedRequest, str]] = field(default_factory=list)
     last: str | None = None
 
-    def ask(self, spec: TriageSpec, ticket: str) -> TriageAnswers:
-        self.calls.append((spec, ticket))
+    def ask(self, request: ResolvedRequest, ticket: str) -> Answers:
+        self.calls.append((request, ticket))
         if self.error is not None:
             raise self.error
         answers = self.by_text.get(ticket, self.default)
@@ -98,16 +98,26 @@ class InMemoryRecordingLibrary:
 @dataclass
 class FrozenClock:
     day: date = date(2026, 10, 20)
+    moment: datetime = datetime(2026, 10, 20, 10, 2, tzinfo=UTC)
 
     def today(self) -> date:
         return self.day
 
+    def now(self) -> datetime:
+        return self.moment
+
 
 @dataclass
 class StaticSpecLoader:
-    spec: TriageSpec
+    """Devuelve la petición dada; con `by_name`, la de cada nombre."""
+
+    spec: ResolvedRequest | None = None
+    by_name: dict[str, ResolvedRequest] = field(default_factory=dict)
     requested: list[str] = field(default_factory=list)
 
-    def load_request(self, name: str) -> TriageSpec:
+    def load_request(self, name: str) -> ResolvedRequest:
         self.requested.append(name)
-        return self.spec
+        found = self.by_name.get(name, self.spec)
+        if found is None:
+            raise AssertionError(f"StaticSpecLoader sin petición para {name}")
+        return found

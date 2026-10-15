@@ -87,3 +87,26 @@ class RecordingOutdated(Exception):
 class MissingApiKey(Exception):
     def __init__(self) -> None:
         super().__init__("falta TYPESAFE_API_KEY; ver .env.example y jevlab doctor")
+
+
+class InvalidPolicy(Exception):
+    """La política no se puede usar: no se lee o no es válida. No automatiza nada (FR-010).
+
+    El mensaje dice el archivo, el campo y el motivo, nunca el contenido del archivo.
+    """
+
+    @classmethod
+    def unreadable(cls, path: str) -> "InvalidPolicy":
+        return cls(f"no se puede leer la política {path}")
+
+    @classmethod
+    def invalid(cls, source: str, reason: str) -> "InvalidPolicy":
+        return cls(f"política no válida ({source}): {reason}")
+
+
+class StateUnreadable(Exception):
+    """El archivo de estado local no es de esta versión de jevlab o no es una base SQLite."""
+
+    def __init__(self, path: str) -> None:
+        super().__init__(f"el archivo de estado {path} no es de esta versión de jevlab")
+        self.path = path

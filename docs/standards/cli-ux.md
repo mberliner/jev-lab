@@ -4,7 +4,9 @@
 
 Convenciones para todo lo que `jevlab` escribe en la terminal. Lo que muestra cada decisión está
 en `decision-design.md` §7; aquí se fija cómo se escribe. El ejemplo de referencia es el contrato
-de `jevlab triage` (`specs/001-triaje-ticket/contracts/cli-triage.md`).
+de `jevlab triage` (`specs/001-triaje-ticket/contracts/cli-triage.md`); para acciones con umbral
+(`≥` o `<`, riesgo y motivo), el de `jevlab route`
+(`specs/002-enrutado-confianza/contracts/cli-route.md`).
 
 ## 1. Texto plano en UTF-8, en cualquier terminal
 

@@ -64,7 +64,7 @@ resolver, esos dos dejan de estar pendientes (`contracts/cli-review.md`).
 ```bash
 cp src/jevlab/policies/soporte/enrutado.yaml "$JEVLAB_STATE_DIR/politica.yaml"
 # editar en la copia: mover-a-cola.umbral 0.90 -> la confianza que mostró la salida de
-# instruccion-incrustada en US1 (por ejemplo, 0.87), y version 0.1.0 -> 0.2.0
+# instruccion-incrustada en US1 (con la grabación actual, 0.88), y version 0.1.0 -> 0.2.0
 uv run jevlab route --ejemplo instruccion-incrustada --politica "$JEVLAB_STATE_DIR/politica.yaml"
 ```
 

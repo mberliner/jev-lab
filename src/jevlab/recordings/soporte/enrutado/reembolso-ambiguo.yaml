@@ -1,0 +1,60 @@
+name: reembolso-ambiguo
+text: Me ha llegado un cargo de 30 euros que no me cuadra. Si es un error vuestro, me gustaría que me
+  lo devolvierais; si no, explicadme de qué es.
+origen: sintetico
+covers:
+- reembolso-pendiente
+- cola-facturacion-automatizada
+model: jev-1.13.0
+recorded_on: 2026-10-14
+spec_versions:
+  enrutado: 0.1.0
+  cola-destino: 0.1.0
+  solicitud: 0.1.0
+request:
+  state: Me ha llegado un cargo de 30 euros que no me cuadra. Si es un error vuestro, me gustaría que
+    me lo devolvierais; si no, explicadme de qué es.
+  model: jev-1.13.0
+  questions:
+    cola:
+      type: choice
+      instructions: ¿A qué cola de soporte pertenece este ticket?
+      criteria:
+        facturacion: Cobros, facturas, reembolsos o métodos de pago.
+        tecnico: Fallos, errores o mal funcionamiento del producto.
+        cuenta: Acceso, contraseña, datos del perfil o alta y baja de la cuenta.
+        other: Ninguna de las anteriores.
+    solicitud:
+      type: choice
+      instructions: ¿Qué pide el cliente en este ticket?
+      criteria:
+        reembolso: Que le devuelvan dinero cobrado.
+        consulta: Información o ayuda para hacer algo.
+        incidencia: Que se arregle un fallo o un problema.
+        other: Ninguna de las anteriores.
+response:
+  status: 200
+  body:
+    model: jev-1.13.0
+    answers:
+      cola:
+        type: choice
+        choice: facturacion
+        confidence: 1.0
+        probabilities:
+          facturacion: 1.0
+          tecnico: 0.0
+          cuenta: 0.0
+          other: 0.0
+      solicitud:
+        type: choice
+        choice: reembolso
+        confidence: 0.87
+        probabilities:
+          reembolso: 0.9
+          consulta: 0.06
+          incidencia: 0.03
+          other: 0.01
+    usage:
+      input_tokens: 541
+      output_tokens: 105

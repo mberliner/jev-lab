@@ -356,13 +356,13 @@ versión de cada política y que una política no válida se rechaza sin automat
 
 | Historia | Persona | Cómo se demuestra (comando o petición) |
 | --- | --- | --- |
-| US1 | Usuario inicial de Jev | `uv run jevlab route --ejemplo cambio-de-correo` y el ejemplo que cubra «cola a revisión» (previsto: `instruccion-incrustada`) |
-| US2 | Usuario inicial de Jev | `uv run jevlab route --ejemplo` con el que cubra «reembolso automático» (previsto: `cobro-duplicado`) y `--ejemplo reembolso-ambiguo` |
+| US1 | Usuario inicial de Jev | `uv run jevlab route --ejemplo cambio-de-correo` y `--ejemplo instruccion-incrustada` (cola a revisión) |
+| US2 | Usuario inicial de Jev | `uv run jevlab route --ejemplo cobro-duplicado` (reembolso automático) y `--ejemplo reembolso-ambiguo` |
 | US3 | Operador | `uv run jevlab review`, y resolver un pendiente |
-| US4 | Operador | El ejemplo de «cola a revisión» con `--politica` y un umbral igual a su confianza grabada |
+| US4 | Operador | `uv run jevlab route --ejemplo instruccion-incrustada --politica <copia>`, con un umbral igual a su confianza grabada |
 
-Los ejemplos «previstos» se confirman al grabar (tasks, T023); si la grabación no cubre el caso,
-la tabla se actualiza con el ejemplo nuevo que lo cubra.
+Ejemplos confirmados con las grabaciones de T023. Si una regrabación deja de cubrir un caso, el
+test de las grabaciones lo detecta y la tabla se actualiza con el ejemplo que lo cubra.
 
 - **Número de historias**: 4 (P1-P4).
 - **Fuera de alcance (YAGNI)**: acciones reales sobre sistemas externos, importes de reembolso,

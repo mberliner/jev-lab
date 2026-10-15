@@ -9,7 +9,8 @@ from typer.testing import CliRunner
 
 import jevlab.entrypoints.cli.main as cli
 from jevlab.domain.diagnostics import ProviderUnavailable
-from tests.builders import answers, recording, triage_spec
+from jevlab.domain.triage import Answers
+from tests.builders import MODEL, answers, recording, triage_request
 from tests.fakes import FakeJudge, InMemoryRecordingLibrary, StaticSpecLoader
 
 _SECRET = "ts-valor-secreto-0123456789"  # gitleaks:allow
@@ -22,7 +23,7 @@ def _setup(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, judge: FakeJudge) ->
 
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("TYPESAFE_API_KEY", _SECRET)
-    monkeypatch.setattr(cli, "build_spec_loader", lambda: StaticSpecLoader(triage_spec()))
+    monkeypatch.setattr(cli, "build_spec_loader", lambda: StaticSpecLoader(triage_request()))
     monkeypatch.setattr(
         cli, "build_recordings", lambda: InMemoryRecordingLibrary([recording(text=_TEXT)])
     )
@@ -78,7 +79,7 @@ def test_live_error_logs_metadata_only(
 def test_abstentions_are_logged_as_such(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
-    blank = answers().model_copy(update={"queue": None, "urgency": None, "priority": None})
+    blank = Answers(model=MODEL, by_question={"cola": None, "urgencia": None, "prioridad": None})
     _setup(monkeypatch, tmp_path, FakeJudge(default=blank))
     caplog.set_level(logging.INFO)
 

@@ -57,7 +57,8 @@ Reglas:
 - `Reembolsar` siempre aparece. Si la solicitud no es `reembolso`, la abstención es explícita:
   `Reembolsar: sin reembolso · solicitud consulta · confianza 0,92`. Con el escape,
   `solicitud other (escape)`; sin respuesta válida, `solicitud sin respuesta válida · confianza no
-  disponible`. No lleva umbral ni va a revisión.
+  disponible`. Debajo, `motivo:` (`la solicitud no es reembolso` o `la solicitud no encaja en
+  ninguna opción`). No lleva umbral ni va a revisión.
 - Cada acción muestra la confianza, el signo `≥` o `<`, el umbral, el riesgo y `provisional` si la
   justificación lo es; si falta la confianza, `confianza no disponible`.
 - Si algo va a revisión, la última línea da el número del elemento.

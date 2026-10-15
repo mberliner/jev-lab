@@ -1,0 +1,12 @@
+# Política de enrutado (spec 002, FR-009): umbrales por riesgo, fuera del código.
+# Los dos umbrales son provisionales hasta la evaluación de la spec 004.
+version: 0.1.0
+acciones:
+  mover-a-cola:
+    riesgo: bajo
+    umbral: 0.90
+    justificacion: provisional  # se fija con la evaluación de la spec 004
+  reembolsar:
+    riesgo: alto
+    umbral: 0.97
+    justificacion: provisional  # se fija con la evaluación de la spec 004

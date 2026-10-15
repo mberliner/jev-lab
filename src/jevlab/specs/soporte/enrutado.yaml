@@ -1,0 +1,6 @@
+# Petición de enrutado (spec 002): la cola de la 001 y la solicitud del cliente.
+version: 0.1.0
+max_chars: 4000
+questions:
+  cola: cola-destino
+  solicitud: solicitud

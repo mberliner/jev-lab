@@ -105,6 +105,9 @@ acciones:
 
 ## Resultado del enrutado
 
+Las dos Choice se interpretan con `interpret_queue` de la 001, que gana el campo `choice` (la
+opción que devolvió el servicio, tal cual) para poder mostrar `other` en el escape de la solicitud.
+
 ### `ActionName` (enum)
 
 `mover-a-cola`, `reembolsar`.
@@ -123,11 +126,12 @@ acciones:
 | Valor | Acción |
 | --- | --- |
 | `escape` («el ticket no encaja en ninguna cola») | `mover-a-cola` |
-| `respuesta fuera de la definición` | `mover-a-cola` |
-| `sin respuesta válida` | `mover-a-cola` |
+| `la solicitud no encaja en ninguna opción` | `reembolsar` (`sin reembolso`, escape de la solicitud) |
+| `respuesta fuera de la definición` | Las dos (en `reembolsar`, `sin reembolso`) |
+| `sin respuesta válida` | Las dos (en `reembolsar`, `sin reembolso`) |
 | `confianza por debajo del umbral` | Las dos |
 | `la cola no se automatizó a facturacion` | `reembolsar` |
-| `la solicitud no es reembolso` | `reembolsar` (`sin reembolso`) |
+| `la solicitud no es reembolso` | `reembolsar` (`sin reembolso`, otra opción válida) |
 
 Si hay varios motivos, se guardan todos, en este orden.
 

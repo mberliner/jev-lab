@@ -14,11 +14,13 @@ import yaml
 from jevlab.adapters.typesafe_judge import TypeSafeJudge
 from jevlab.adapters.yaml_files import YamlSpecLoader
 from jevlab.application.triage import TRIAGE_REQUEST
+from jevlab.domain.decision_spec import TriageSpec
 from jevlab.domain.examples import Recording
 from jevlab.domain.triage import (
     ESCAPE_REASON,
     Origin,
     OriginMode,
+    TriageAnswers,
     TriageResult,
     UrgencyVerdict,
     interpret,
@@ -56,12 +58,13 @@ _REQUIRED = (
 
 
 def _results(recordings: list[Recording]) -> dict[str, TriageResult]:
-    spec = YamlSpecLoader().load_request(TRIAGE_REQUEST)
+    resolved = YamlSpecLoader().load_request(TRIAGE_REQUEST)
+    spec = TriageSpec.from_request(resolved)
     results = {}
     for recording in recordings:
         # Reproducir con la definición actual falla con RecordingOutdated si cambió.
         with TypeSafeJudge.replay(recording) as judge:
-            answers = judge.ask(spec, recording.text)
+            answers = TriageAnswers.from_answers(judge.ask(resolved, recording.text))
         origin = Origin(mode=OriginMode.GRABADO, model=recording.model)
         results[recording.name] = interpret(spec, answers, origin)
     return results

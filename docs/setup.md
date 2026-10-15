@@ -122,12 +122,32 @@ Todas se ejecutan igual en Linux y en Windows con `uv run poe <tarea>`:
 | `test` | Toda la suite salvo los tests `live`, con la red bloqueada |
 | `check` | Todas las puertas de calidad (la ejecuta pre-commit en cada commit) |
 | `live` | Tests contra servicios reales; necesitan `.env` y tienen tope de coste |
-| `record` | Regraba los ejemplos de `jevlab triage` con la clave real; mismo tope que `live` |
+| `record` | Regraba los ejemplos de `jevlab triage` y `jevlab route` con la clave real; mismo tope que `live` |
+| `record-triage`, `record-route` | Regraban solo los ejemplos de una de las dos peticiones |
 | `lint`, `typecheck`, `lint-imports`, `cov` | Puertas sueltas, para depurar |
 
 El tope de coste de los tests `live` se fija con `JEVLAB_LIVE_BUDGET_USD` (por defecto 0,10 USD).
 
-## 8. Agentes: Claude Code y Antigravity
+## 8. Estado local: auditoría y cola de revisión
+
+`jevlab route` y `jevlab review` guardan la auditoría y la cola de revisión en un archivo SQLite,
+`estado.sqlite3`, fuera del repositorio y el mismo desde cualquier directorio:
+
+| Sistema | Carpeta |
+| --- | --- |
+| Windows | `%LOCALAPPDATA%\jevlab` |
+| Linux | `$XDG_STATE_HOME/jevlab` o, si no está definida, `~/.local/state/jevlab` |
+
+- **Otra carpeta:** la variable `JEVLAB_STATE_DIR` la sustituye. Sirve para probar sin mezclar
+  con el estado real, como hace `specs/002-enrutado-confianza/quickstart.md`.
+- **Empezar de cero:** borrar `estado.sqlite3`; se crea vacío en el siguiente uso.
+- **Qué contiene:** la auditoría guarda solo metadatos de cada decisión y resolución; la cola de
+  revisión guarda además el texto de los tickets pendientes, para que el Operador pueda
+  resolverlos. No contiene claves.
+- **Otra versión:** si el archivo es de otra versión de jevlab, los comandos terminan con un error
+  que dice la ruta; se puede mover o borrar.
+
+## 9. Agentes: Claude Code y Antigravity
 
 Los dos agentes trabajan sobre los mismos artefactos. La decisión está en
 [ADR-0002](adr/0002-paridad-de-agentes.md).
@@ -167,7 +187,7 @@ specify integration install agy --force
 Los procedimientos para cambiar un preset o actualizar Spec Kit, incluido el paso por cada agente,
 están en `docs/governance.md` §5.
 
-## 9. Repositorio público en GitHub
+## 10. Repositorio público en GitHub
 
 El mantenedor crea el repositorio una sola vez:
 
@@ -183,7 +203,7 @@ El mantenedor crea el repositorio una sola vez:
 La CI no usa *secrets*: las comprobaciones remotas y los tests `live` quedan fuera de ella
 (`docs/standards/security.md` §5).
 
-## 10. Problemas frecuentes
+## 11. Problemas frecuentes
 
 | Síntoma | Causa | Arreglo |
 | --- | --- | --- |

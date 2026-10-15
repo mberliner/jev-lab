@@ -1,4 +1,5 @@
-"""Definiciones y grabaciones en YAML dentro del paquete (research.md R10).
+"""Definiciones, política y grabaciones en YAML dentro del paquete (research R10 de la 001, R3 de
+la 002).
 
 Solo leen, escriben y traducen nombres; validar es cosa del dominio.
 """
@@ -11,8 +12,10 @@ from typing import Any
 import yaml
 from pydantic import TypeAdapter
 
-from jevlab.domain.decision_spec import DecisionSpec, RequestSpec, TriageSpec
+from jevlab.domain.decision_spec import DecisionSpec, RequestSpec, ResolvedRequest
+from jevlab.domain.diagnostics import InvalidPolicy
 from jevlab.domain.examples import Recording
+from jevlab.domain.policy import Policy, parse_policy
 
 _DECISION: TypeAdapter[DecisionSpec] = TypeAdapter(DecisionSpec)
 _SYNTHETIC = "sintetico"
@@ -26,7 +29,7 @@ class YamlSpecLoader:
     def __init__(self, root: Traversable | None = None) -> None:
         self._root = root if root is not None else files("jevlab") / "specs"
 
-    def load_request(self, name: str) -> TriageSpec:
+    def load_request(self, name: str) -> ResolvedRequest:
         """`name` es `<dominio>/<petición>`; las decisiones viven en la misma carpeta."""
         domain, request_name = name.split("/")
         folder = self._root / domain
@@ -39,12 +42,34 @@ class YamlSpecLoader:
             )
             for decision in request.questions.values()
         }
-        return TriageSpec.resolve(request, decisions)
+        return ResolvedRequest.resolve(request, decisions)
+
+
+class YamlPolicyLoader:
+    """Lee la política del paquete o la de otro archivo (`--politica`); el dominio la valida."""
+
+    def __init__(self, default: Traversable | None = None) -> None:
+        self._default = (
+            default if default is not None else files("jevlab") / "policies/soporte/enrutado.yaml"
+        )
+
+    def load(self, path: Path | None) -> Policy:
+        source: Traversable = self._default if path is None else path
+        try:
+            data = _read(source)
+        except (OSError, UnicodeDecodeError, yaml.YAMLError):
+            raise InvalidPolicy.unreadable(str(source)) from None
+        return parse_policy(data, source.name)
 
 
 class YamlRecordingLibrary:
     def __init__(self, root: Traversable | None = None) -> None:
         self._root = root if root is not None else files("jevlab") / "recordings/soporte/triaje"
+
+    @classmethod
+    def packaged(cls, request: str, domain: str = "soporte") -> "YamlRecordingLibrary":
+        """Las grabaciones de una petición del paquete: `recordings/<dominio>/<petición>`."""
+        return cls(files("jevlab") / "recordings" / domain / request)
 
     def all(self) -> list[Recording]:
         if not self._root.is_dir():
