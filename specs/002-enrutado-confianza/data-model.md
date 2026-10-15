@@ -164,12 +164,13 @@ Si hay varios motivos, se guardan todos, en este orden.
 
 | Campo | Tipo | Regla |
 | --- | --- | --- |
-| `id` | `int` | Asignado por el almacén; corto para escribirlo |
+| `id` | `int \| None` | Asignado por el almacén al guardarlo; `None` hasta entonces. Corto para escribirlo |
 | `request_id` | `str` | El de la petición |
 | `created_at` | `datetime` | UTC |
 | `ticket` | `str` | Texto normalizado (FR-012); nunca sale en logs ni errores |
 | `origin` | `Origin` | |
 | `policy` | `PolicyRef` | |
+| `spec_versions` | `dict[str, str]` | Las del `RoutingResult`; las resoluciones las copian a su auditoría |
 | `actions` | `tuple[ReviewAction, ...]` | Las que están `a revisión` o `pendiente de confirmación` |
 | `queue` | `str \| None` | Cola actual: la automatizada o la asignada por el Operador |
 
@@ -222,7 +223,7 @@ reembolsar pendiente --rechazar---> rechazada
 | `origin_mode` | `OriginMode` | |
 | `model` | `str` | |
 | `spec_versions` | `dict[str, str]` | |
-| `review_item` | `int \| None` | En las resoluciones y en las decisiones que crean elemento |
+| `review_item` | `int \| None` | En las resoluciones y en las decisiones que crean elemento. En las decisiones lo rellena el almacén al guardar (ver «Persistencia») |
 
 Nunca el texto del ticket ni la respuesta del servicio (FR-011, SC-003).
 
@@ -234,7 +235,8 @@ audit(id INTEGER PK, request_id TEXT, at TEXT, kind TEXT, action TEXT, value TEX
       policy_version TEXT, policy_fingerprint TEXT, origin_mode TEXT, model TEXT,
       spec_versions TEXT, review_item INTEGER)
 review_item(id INTEGER PK, request_id TEXT UNIQUE, created_at TEXT, ticket TEXT,
-            origin TEXT, policy_version TEXT, policy_fingerprint TEXT, queue TEXT)
+            origin TEXT, policy_version TEXT, policy_fingerprint TEXT, spec_versions TEXT,
+            queue TEXT)
 review_action(item_id INTEGER, action TEXT, value TEXT, confidence REAL, threshold REAL,
               risk TEXT, justification TEXT, status TEXT, reasons TEXT, resolution TEXT,
               PRIMARY KEY(item_id, action))
@@ -243,3 +245,7 @@ review_action(item_id INTEGER, action TEXT, value TEXT, confidence REAL, thresho
 - `reasons`, `origin` y `spec_versions` se guardan como JSON.
 - `PRAGMA user_version = 1`; un archivo con otra versión da un error que lo dice (código 1).
 - El adaptador solo traduce filas a entidades; las reglas de transición son del dominio.
+- `record(result, entries, item)`: en una transacción, inserta primero el elemento (si lo hay),
+  toma el `id` que asigna SQLite, guarda las entradas de auditoría con ese `review_item` y
+  devuelve el elemento con su `id` (o `None`). Así la salida de `route` puede dar el número del
+  elemento, y las entradas que construye la aplicación no necesitan conocerlo.

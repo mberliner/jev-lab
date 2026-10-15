@@ -124,7 +124,8 @@ src/jevlab/
 └── recordings/soporte/enrutado/  # nuevo: un YAML por ejemplo
 
 tests/
-├── fakes.py                   # FakeJudge con Answers; + InMemoryRoutingStore, SequentialIds; FrozenClock.now
+├── fakes.py                   # FakeJudge con Answers; FrozenClock.now
+├── routing_fakes.py           # nuevo: InMemoryRoutingStore, SequentialIds, StaticPolicyLoader
 ├── unit/domain/               # política, huella, decide_routing, transiciones; propiedades (hypothesis)
 ├── unit/application/          # RouteTicket, ListPending y ResolveReview con fakes
 ├── unit/entrypoints/          # vistas, códigos, errores sin texto, logs sin payloads
