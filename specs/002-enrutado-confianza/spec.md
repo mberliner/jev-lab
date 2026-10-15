@@ -216,7 +216,9 @@ versión de cada política y que una política no válida se rechaza sin automat
   otro caso, MUST NOT automatizarse.
 - **FR-004**: La salida de cada acción MUST mostrar el resultado, la confianza, el umbral, el
   riesgo, si el umbral es provisional, el motivo cuando no se automatiza y el origen (en vivo o
-  grabado, con modelo y fecha) (`docs/standards/decision-design.md` §7).
+  grabado, con modelo y fecha) (`docs/standards/decision-design.md` §7). Cuando el reembolso
+  queda `sin reembolso` no se aplica ningún umbral: la salida muestra el valor y la confianza de
+  la solicitud (o «no disponible») y el motivo, sin umbral.
 - **FR-005**: Las acciones automatizadas MUST ser simuladas: se registran y se muestran, sin
   efectos fuera de jev-lab.
 - **FR-006**: La acción «reembolsar» MUST tener riesgo `alto` y la acción «mover a cola», riesgo
@@ -252,8 +254,9 @@ versión de cada política y que una política no válida se rechaza sin automat
 - **FR-012**: La cola de revisión MAY guardar el texto del ticket, porque el Operador lo necesita
   para resolver; MUST NOT guardar claves ni respuestas completas del servicio.
 - **FR-013**: Tests de propiedades MUST comprobar, para cualquier política válida y cualquier
-  confianza: que nada por debajo del umbral se automatiza; que el escape siempre termina en
-  revisión; que ningún reembolso se automatiza sin que la cola se haya movido sola a
+  confianza: que nada por debajo del umbral se automatiza; que el escape de la cola siempre
+  termina en revisión y el de la solicitud en abstención explícita (`sin reembolso`); que ningún
+  reembolso se automatiza sin que la cola se haya movido sola a
   `facturacion`; y que las bandas son monótonas (si una confianza se automatiza, cualquier confianza
   mayor también, y un umbral de más riesgo nunca es menor que uno de menos riesgo).
 - **FR-014**: Una nueva decisión, la solicitud del cliente, MUST describirse en la definición
@@ -286,8 +289,9 @@ versión de cada política y que una política no válida se rechaza sin automat
 
 - **SC-001**: En el 100 % de los casos de los tests de propiedades, ninguna acción con confianza
   por debajo de su umbral, con escape o sin respuesta válida se automatiza.
-- **SC-002**: El 100 % de las salidas de `jevlab route` muestra, por acción, resultado, confianza,
-  umbral, riesgo, motivo (si no se automatiza), versión de la política y origen.
+- **SC-002**: El 100 % de las salidas de `jevlab route` muestra, por acción, lo que exige FR-004
+  (resultado, confianza, umbral, riesgo y motivo si no se automatiza; en `sin reembolso`, valor y
+  confianza de la solicitud y motivo), además de la versión de la política y el origen.
 - **SC-003**: El 100 % de las peticiones y resoluciones queda en la auditoría con su identificador
   y la versión de la política, y 0 registros de auditoría contienen el texto de un ticket.
 - **SC-004**: Un Operador sin experiencia previa resuelve un elemento de la cola de revisión en

@@ -96,8 +96,8 @@ grabaciones del enrutado listos.
 
 **Independent Test**: los ejemplos con `mover-automatizada`, `mover-a-revision` y `mover-escape`
 (previstos: `cambio-de-correo`, `instruccion-incrustada` y `pregunta-fuera-de-ambito`): el primero
-se automatiza y los otros dos no, con su motivo; la auditoría tiene una entrada por petición con
-su identificador.
+se automatiza y los otros dos no, con su motivo; la auditoría tiene una entrada por acción
+decidida, con el identificador de su petición.
 
 ### Tests for User Story 1 (write first, must FAIL before implementation)
 
@@ -107,7 +107,7 @@ su identificador.
 - [ ] T025 [P] [US1] Tests unitarios de `RouteTicket` en `tests/unit/application/test_routing.py` con `FakeJudge`, `StaticSpecLoader`, `StaticPolicyLoader`, `InMemoryRoutingStore`, `SequentialIds` y `FrozenClock`: pide al juez una sola vez con la petición `enrutado` y el texto normalizado; el `RoutingResult` lleva `request_id`, `decided_at`, `origin`, `PolicyRef` y `spec_versions`; graba en el almacén una `AuditEntry` de tipo `decision` por acción con los campos de data-model, «`AuditEntry`», sin el texto del ticket (FR-011); en vivo comprueba la longitud antes de llamar
 - [ ] T026 [P] [US1] Tests de la vista en `tests/unit/entrypoints/test_route_view.py` (`contracts/cli-route.md`): líneas `Origen:`, `Política: <versión> · huella <8 hex>` y `Petición:`; `Mover a cola: <cola> · automatizada` con `confianza 1,00 ≥ umbral 0,90 (riesgo bajo, provisional)`; `a revisión` con `<` y la línea `motivo:`; `sin cola · a revisión` con el motivo de escape; `confianza no disponible` sin respuesta; coma decimal y dos decimales
 - [ ] T027 [P] [US1] Tests del comando en `tests/unit/entrypoints/test_cli_route.py` con `CliRunner`, `JEVLAB_STATE_DIR` en `tmp_path` y grabaciones reales: modos y selección iguales a `triage` (texto, `--ejemplo`, sin terminal lista y código 2, opciones incompatibles código 2); código 0 aunque no se automatice; los errores van a `stderr` en una línea y no contienen el texto del ticket; el log `info` de `route` tiene `peticion`, `modo`, `ejemplo`, `modelo`, `politica` y el resultado por acción, sin el texto (FR-015)
-- [ ] T028 [P] [US1] Test de integración (marca `integration`) en `tests/integration/test_route_queue.py`: con la red bloqueada, sin `.env` y `JEVLAB_STATE_DIR` temporal, con los ejemplos elegidos por etiqueta (una utilidad de test que busca en la biblioteca de grabaciones el primero con una etiqueta de `covers`), el de `mover-automatizada` sale automatizado, el de `mover-a-revision` sale a revisión con su confianza grabada por debajo del umbral y el de `mover-escape` sale `sin cola`; el archivo de estado tiene una entrada de auditoría por petición con su `request_id`, la versión y la huella de la política y sin el texto de ningún ticket
+- [ ] T028 [P] [US1] Test de integración (marca `integration`) en `tests/integration/test_route_queue.py`: con la red bloqueada, sin `.env` y `JEVLAB_STATE_DIR` temporal, con los ejemplos elegidos por etiqueta (una utilidad de test que busca en la biblioteca de grabaciones el primero con una etiqueta de `covers`), el de `mover-automatizada` sale automatizado, el de `mover-a-revision` sale a revisión con su confianza grabada por debajo del umbral y el de `mover-escape` sale `sin cola`; el archivo de estado tiene una entrada de auditoría por acción decidida (en la US1, `mover-a-cola`; desde la US2, también `reembolsar`), todas con el `request_id` de su petición, la versión y la huella de la política y sin el texto de ningún ticket
 
 ### Implementation for User Story 1
 

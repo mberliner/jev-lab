@@ -3,7 +3,7 @@
 Informe de `/speckit-analyze` sobre `spec.md`, `plan.md` y `tasks.md` (con `data-model.md`,
 `research.md`, `contracts/` y `quickstart.md`), contrastado con la constitución v0.3.1.
 
-**Fecha**: 2026-10-14 · **Estado**: corregidos todos los HIGH y MEDIUM, y F5; quedan los LOW
+**Fecha**: 2026-10-14 · **Estado**: segunda pasada (tras los commits `1aa6502` y `3bc08f4`): 5 hallazgos nuevos (I3-I6, U5), introducidos o hechos visibles por las correcciones; I3-I5 corregidos; pendientes I6, U5 y los LOW de la primera pasada
 
 ## Hallazgos
 
@@ -25,6 +25,11 @@ Informe de `/speckit-analyze` sobre `spec.md`, `plan.md` y `tasks.md` (con `data
 | E1 | Cobertura | LOW | plan, «Performance Goals» | «`route` grabado y `review` en menos de 1 s» no tiene tarea que lo mida (T052 solo anota el tiempo de la suite). | Anotar los tiempos en T053/T055, o rebajar la meta a orientativa. | Pendiente |
 | E2 | Cobertura | LOW | spec, «Edge Cases»; FR-013 | Sin test explícito para «el mismo ticket dos veces da dos elementos». La monotonía «si una confianza se automatiza, cualquier mayor también» solo se prueba para `mover-a-cola` (T024), no para `reembolsar` (T033). | Añadir los dos casos a T039 y T033. | Pendiente |
 | E3 | Cobertura | LOW | SC-004 | «El Operador resuelve un elemento en menos de 1 minuto siguiendo la lección» no tiene ninguna comprobación. | Cronometrarlo en T055 y anotarlo. | Pendiente |
+| I3 | Inconsistencia | HIGH | spec FR-004 y SC-002; contracts/cli-route.md, «Reglas» | Introducido por C1: FR-004 y SC-002 exigen umbral y riesgo en la salida de **cada** acción, pero la línea `Reembolsar: sin reembolso · solicitud consulta · confianza 0,92` no lleva umbral ni riesgo. Tal como están, SC-002 fallaría en cada ticket que no pida un reembolso. | Precisar en FR-004 y SC-002 que, en `sin reembolso`, la salida muestra el valor y la confianza de la solicitud y el motivo, porque no se aplica umbral; o añadir `riesgo alto · umbral no aplicado` a la línea. | Corregido: FR-004 y SC-002 dicen qué muestra `sin reembolso` (valor y confianza de la solicitud, o «no disponible», y motivo, sin umbral), como en el contrato. |
+| I4 | Inconsistencia | MEDIUM | spec FR-013; T033 | Introducido por C1: FR-013 dice que «el escape siempre termina en revisión», pero el escape de `solicitud` termina en `sin reembolso` (abstención), y T033 prueba eso. La constitución (§II) admite las dos salidas; la spec es más estrecha que su propio diseño. | FR-013: «el escape de la cola siempre termina en revisión y el de la solicitud en abstención (`sin reembolso`)». | Corregido: FR-013 distingue el escape de la cola (revisión) del de la solicitud (`sin reembolso`). |
+| I5 | Inconsistencia | MEDIUM | T028; tasks, prueba independiente de la US1 | «Una entrada de auditoría por petición» vale en la US1, pero desde la US2 `reembolsar` siempre está en el resultado y cada petición deja dos entradas: T028 empezaría a fallar al terminar la US2. | «Una entrada por acción decidida, con el mismo `request_id`». | Corregido: T028 y la prueba independiente de la US1 cuentan una entrada por acción decidida, con el `request_id` de su petición. |
+| I6 | Deriva terminológica | LOW | T038 | `ReviewItem.from_result` crea el elemento «con las acciones no automatizadas»; tras C1 son las que están `a revisión` o `pendiente de confirmación`, no `sin reembolso`. | Usar la definición de data-model, `ReviewItem.actions`. | Pendiente |
+| U5 | Infraespecificación | LOW | data-model `RoutingResult.actions`; T019, T029 | `RoutingResult.actions` contiene «siempre» las dos acciones, pero en la US1 `decide_routing` solo produce `mover-a-cola` (T029). Si T019 valida esa invariante en el tipo, la US1 no puede construir resultados. | Que la invariante la imponga `decide_routing` en T036, no el tipo de T019, o anotarlo en T019. | Pendiente |
 
 ## Cobertura
 
@@ -65,6 +70,7 @@ SC-004 se excluye del cómputo: es un resultado con personas (ver E3).
 - Cobertura: 100 % (22/22 con al menos una tarea)
 - Ambigüedades: 2 (F5, E1)
 - Duplicaciones: 0
+- Hallazgos nuevos en la segunda pasada: 5 (1 HIGH, 2 MEDIUM, 2 LOW)
 - Problemas críticos: 0 (C1 roza §II; se clasifica HIGH porque el código decide la abstención y
   solo falta hacerla visible)
 
