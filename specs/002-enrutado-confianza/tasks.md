@@ -226,7 +226,7 @@ resultado cambia, y la versión y la huella también; una copia no monótona ter
   - US4: con una copia de umbral 0,88 y versión 0.2.0, `instruccion-incrustada` se automatiza y la salida muestra `Política: 0.2.0 · huella 88ebb457`; una copia no monótona termina con código 1.
   - Tiempos (Windows, ejecutable instalado): `route` grabado 1,0 s, `review` 0,9 s, en el límite de la meta del plan.
   - Pendiente: cronometrar a una persona que resuelva un elemento siguiendo solo la lección (SC-004); no lo puede medir un agente.
-- [ ] T056 Retro: ¿algún principio estorbó?, ¿faltó alguno?, ¿alguno no se pudo verificar? Respuestas en el commit de cierre; cada «sí» abre su cambio o se anota en `docs/ideas.md`
+- [X] T056 Retro: ¿algún principio estorbó?, ¿faltó alguno?, ¿alguno no se pudo verificar? Respuestas en el commit de cierre; cada «sí» abre su cambio o se anota en `docs/ideas.md`
 
 ---
 

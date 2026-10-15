@@ -29,3 +29,6 @@ su nivel según §7, «Cambios en features ya entregadas»: 1 (PR de mantenimien
 
 | Origen (spec, fecha) | Idea | Principio o capa | Nivel | Dónde se recoge |
 | --- | --- | --- | --- | --- |
+| 002, 2026-10-15 | Test que impida que cargar la CLI importe SDKs pesados (el de OpenAI costaba 1,4 s en cada comando desde la 000 y nadie lo vio hasta medir la meta de la 002) | §IV, `docs/standards/testing.md` | 1 | PR de mantenimiento |
+| 002, 2026-10-15 | Medir cuánto varía la confianza al repetir la misma pregunta: entre dos grabaciones, `instruccion-incrustada` pasó de 0,85 a 0,88. Un umbral necesita ese margen | §II, §IV | 3 | Spec 004 (evaluación) |
+| 002, 2026-10-15 | Protocolo para los criterios de éxito que miden a una persona (SC-004: resolver un elemento en menos de 1 minuto con la lección): un agente no puede verificarlos | §VII, preset `jevlab-spec` | No aplica (cambio de preset) | PR del preset, `docs/governance.md` §7 |
