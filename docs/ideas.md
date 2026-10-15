@@ -1,7 +1,8 @@
 # Ideas
 
-Ideas abiertas para specs futuras. Al planificar una spec se revisa esta lista. Cuando una spec
-recoge una idea, se borra de aquí en el mismo commit que la incorpora.
+Ideas abiertas: de dominio, para specs futuras, y de las retros, para el nivel que les
+corresponda. Al planificar una spec se revisa esta lista. Cuando una spec o un PR recoge una idea,
+se borra de aquí en el mismo commit que la incorpora.
 
 ## Ideas de dominio
 
@@ -22,7 +23,9 @@ redacta de cero.
 ## Ideas de las retros
 
 Lo que sale de la retro de cierre de cada spec (`docs/governance.md` §7): una regla nueva o
-cambiada que obliga a adaptar algo ya hecho, o una mejora detectada al trabajar.
+cambiada que obliga a adaptar algo ya hecho, o una mejora detectada al trabajar. Cada idea lleva
+su nivel según §7, «Cambios en features ya entregadas»: 1 (PR de mantenimiento), 2 (ajuste con
+«Enmiendas» en la spec afectada) o 3 (spec propia).
 
-| Origen (spec, fecha) | Idea | Principio o capa | Spec que la recoge |
-| --- | --- | --- | --- |
+| Origen (spec, fecha) | Idea | Principio o capa | Nivel | Dónde se recoge |
+| --- | --- | --- | --- | --- |
