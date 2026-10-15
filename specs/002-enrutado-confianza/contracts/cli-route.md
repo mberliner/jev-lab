@@ -52,7 +52,8 @@ Reglas:
 - La línea `Origen:` va primero (`cli-ux.md` §5); después, la versión y la huella de la política
   y el identificador de petición.
 - `Mover a cola` siempre aparece. Sin cola válida: `Mover a cola: sin cola · a revisión`, con el
-  motivo (`escape`, `fuera de la definición` o `sin respuesta válida`).
+  motivo (`el ticket no encaja en ninguna cola`, `respuesta fuera de la definición` o `sin
+  respuesta válida`, los textos de la 001).
 - `Reembolsar` siempre aparece. Si la solicitud no es `reembolso`, la abstención es explícita:
   `Reembolsar: sin reembolso · solicitud consulta · confianza 0,92`. Con el escape,
   `solicitud other (escape)`; sin respuesta válida, `solicitud sin respuesta válida · confianza no

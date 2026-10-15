@@ -62,7 +62,7 @@ los dos casos la cola propuesta, la confianza, el umbral, el riesgo de la acció
    ticket se mueve automáticamente a esa cola e indica la confianza, el umbral y el riesgo.
 2. **Given** un ticket cuya cola tiene una confianza por debajo del umbral, **When** lo enruta,
    **Then** el ticket no se mueve y la salida explica el motivo con la confianza y el umbral
-   (por ejemplo, `cuenta · confianza 0,87 · no se mueve: umbral 0,90`).
+   (por ejemplo, `cuenta · a revisión · confianza 0,87 < umbral 0,90`).
 3. **Given** un ticket cuyo resultado es `other` o no tiene una respuesta válida, **When** lo
    enruta, **Then** el ticket no se mueve, sea cual sea la confianza, y la salida lo explica.
 4. **Given** cualquier ticket enrutado, **When** termina el comando, **Then** la decisión queda
@@ -147,8 +147,9 @@ deja de estar pendiente y que la resolución queda en la auditoría.
 
 ### User Story 4 - Cambiar los umbrales en una política versionada (Priority: P4)
 
-Como Operador, quiero cambiar los umbrales en `policy.yaml`, un archivo versionado fuera del
-código, y ver en cada salida qué versión de la política se aplicó, para ajustar el
+Como Operador, quiero cambiar los umbrales en la política de enrutado
+(`src/jevlab/policies/soporte/enrutado.yaml`, el `policy.yaml` de la descripción), un archivo
+versionado fuera del código, y ver en cada salida qué versión de la política se aplicó, para ajustar el
 comportamiento sin tocar código y saber siempre con qué reglas se decidió.
 
 **Why this priority**: Los umbrales versionados fuera del código son un requisito de §II, pero la
@@ -236,7 +237,8 @@ versión de cada política y que una política no válida se rechaza sin automat
   `facturacion`; asignar otra cola o descartar el elemento MUST rechazarlo. Un elemento deja de
   estar pendiente cuando no le quedan acciones pendientes. Cada resolución MUST quedar en la
   auditoría.
-- **FR-009**: Los umbrales MUST vivir en `policy.yaml`, versionado en el repositorio, con una
+- **FR-009**: Los umbrales MUST vivir en un archivo de política versionado en el repositorio
+  (`src/jevlab/policies/soporte/enrutado.yaml`; research R3), con una
   versión semver y, por acción, el riesgo, el umbral y su justificación (una evaluación o
   `provisional`) (`docs/standards/decision-design.md` §6).
 - **FR-009a**: Al cargar la política, el código MUST calcular una huella corta de su contenido. En

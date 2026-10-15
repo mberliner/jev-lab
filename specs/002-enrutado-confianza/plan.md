@@ -38,8 +38,8 @@ y `live` (`docs/standards/testing.md`).
 
 **Project Type**: CLI.
 
-**Performance Goals**: `route` grabado y `review` responden en menos de 1 s; la suite por
-defecto sigue por debajo de 1 minuto.
+**Performance Goals**: `route` grabado y `review` responden en menos de 1 s (se anota en T055);
+la suite por defecto sigue por debajo de 1 minuto (T052).
 
 **Constraints**: modo grabado sin red, sin claves y sin coste; en vivo, el cliente, los reintentos
 y el *timeout* de la 001; sin *payloads* en logs, errores ni auditoría; estado local fuera del

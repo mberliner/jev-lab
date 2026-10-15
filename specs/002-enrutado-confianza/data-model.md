@@ -123,7 +123,7 @@ acciones:
 | Valor | Acción |
 | --- | --- |
 | `escape` («el ticket no encaja en ninguna cola») | `mover-a-cola` |
-| `fuera de la definición` | `mover-a-cola` |
+| `respuesta fuera de la definición` | `mover-a-cola` |
 | `sin respuesta válida` | `mover-a-cola` |
 | `confianza por debajo del umbral` | Las dos |
 | `la cola no se automatizó a facturacion` | `reembolsar` |
@@ -153,7 +153,7 @@ Si hay varios motivos, se guardan todos, en este orden.
 | `origin` | `Origin` | El de la 001 |
 | `policy` | `PolicyRef` | |
 | `spec_versions` | `dict[str, str]` | De `ResolvedRequest` |
-| `actions` | `tuple[ActionOutcome, ...]` | Siempre `mover-a-cola` y `reembolsar`; si la solicitud no es `reembolso`, `reembolsar` queda `sin reembolso` |
+| `actions` | `tuple[ActionOutcome, ...]` | Siempre `mover-a-cola` y `reembolsar`; si la solicitud no es `reembolso`, `reembolsar` queda `sin reembolso`. Lo garantiza `decide_routing`, no el tipo |
 
 - `needs_review`: alguna acción está `a revisión` o `pendiente de confirmación`; `sin reembolso`
   no cuenta.
