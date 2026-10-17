@@ -6,8 +6,9 @@
 > cualquier agente.
 
 **Dónde estamos:** spec 002 (Enrutado con confianza) implementada y cerrada (56 de 56 tareas) en
-la rama local `002-enrutado-confianza`, sin subir todavía. La primera prueba de SC-004 no se
-cumplió; tras ajustes de nivel 2 (en «Enmiendas» de la spec), falta repetirla. Lo siguiente está al
+la rama local `002-enrutado-confianza`, sin subir todavía. Las dos primeras pruebas de SC-004
+no lo cumplieron (más de 10 min sin terminar; luego 2,5 min); tras ajustes de nivel 2 (en
+«Enmiendas» de la spec), falta la tercera. Lo siguiente está al
 final de «Spec 002», más abajo. La spec 001 (Triaje) está cerrada e integrada en `main`. La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
@@ -197,8 +198,11 @@ aplazada, se completó el 2026-10-14. Hecho:
     cola muestra lo que respondió el modelo, `other (escape)` (`e391381`).
   - La guía dice cómo la cola decide el reembolso (`2e8ba83`).
   - Protocolo de SC-004 versionado en `quickstart.md`, «SC-004: prueba con una persona».
-- **[siguiente]** Repetir SC-004 con otra persona sin experiencia, con el protocolo del quickstart,
-  y anotar el resultado en T055.
+- [hecho, 2026-10-17] Segunda prueba de SC-004 (`9fb59b5`): no se cumple, 2,5 min en la ronda 1
+  (1,5 de guía). Ajuste (`3439a27`): texto completo del ticket, qué hacer en el escape y la guía
+  dice qué atiende cada cola y qué pasa al asignar.
+- **[siguiente]** Tercera prueba de SC-004, con otra persona sin experiencia y el protocolo del
+  quickstart; anotar el resultado en T055.
   Después, subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y merge
   commit.
 
