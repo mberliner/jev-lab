@@ -1,21 +1,22 @@
 """Salida de `jevlab review` en texto plano (contracts/cli-review.md, docs/standards/cli-ux.md).
 
-Es el único sitio donde la CLI muestra el texto de un ticket que no acaba de escribir la persona,
-recortado y entre comillas.
+Es el único sitio donde la CLI muestra el texto de un ticket que no acaba de escribir la persona:
+entero, entre comillas, porque el Operador lo necesita para decidir (prueba de SC-004).
 """
 
+import textwrap
 from collections.abc import Sequence
 
 from jevlab.application.review import Guide
 from jevlab.domain.decision_spec import BILLING_QUEUE
 from jevlab.domain.policy import ActionName
 from jevlab.domain.review import Resolution, ReviewItem
-from jevlab.domain.routing import AuditEntry
+from jevlab.domain.routing import AuditEntry, PendingReason
 from jevlab.entrypoints.cli.route_view import TITLES, render_sources
 from jevlab.entrypoints.cli.triage_view import number
 
 _SEP = " · "
-_TEXT_WIDTH = 72
+_TEXT_WIDTH = 88
 _ID_WIDTH = 8
 _ABOUT = (
     "Peticiones con alguna acción que el código no automatizó; el motivo está en cada «regla».",
@@ -25,7 +26,7 @@ _ABOUT = (
 _CONDITIONS = {ActionName.REEMBOLSAR: f"solo con la cola {BILLING_QUEUE}"}
 _COMMANDS = (
     ("jevlab review", "lista los pendientes y qué hacer en cada uno"),
-    ("jevlab review asignar N <cola>", "pone la cola"),
+    ("jevlab review asignar N <cola>", "el ticket pasa a esa cola de soporte (simulado)"),
     ("jevlab review descartar N", "cierra el elemento sin cola"),
     ("jevlab review confirmar N", "confirma el reembolso (simulado)"),
     ("jevlab review rechazar N", "rechaza solo el reembolso"),
@@ -60,7 +61,7 @@ def render_guide(guide: Guide) -> list[str]:
         "La IA propone un valor con su confianza; el código lo compara con el umbral de la política.",
         "Si no lo alcanza, la acción espera aquí a que una persona la resuelva. Todo es simulado.",
         "",
-        f"Colas (definición {queue.name} {queue.version}):",
+        f"Colas: qué tickets atiende cada una (definición {queue.name} {queue.version}):",
     ]
     lines += [f"  {name:<{width}}  {queue.options[name]}" for name in names]
     escape = f"{queue.options[queue.escape]} Es el escape: no se asigna."
@@ -114,10 +115,7 @@ def render_item(item: ReviewItem, queues: Sequence[str]) -> list[str]:
             f"petición {short_id(item.request_id)}",
         ]
     )
-    text = item.ticket
-    if len(text) > _TEXT_WIDTH:
-        text = text[:_TEXT_WIDTH] + "…"
-    lines = [head, f"  «{text}»"]
+    lines = [head, *_quote(item.ticket)]
     if item.queue is not None:
         assigned = item.action(ActionName.MOVER_A_COLA)
         how = "asignada por una persona" if assigned is not None else "automatizada"
@@ -129,6 +127,14 @@ def render_item(item: ReviewItem, queues: Sequence[str]) -> list[str]:
     lines.append("  qué hacer:")
     lines += ["    " + command for command in todo(item, queues)]
     return lines
+
+
+def _quote(text: str) -> list[str]:
+    """El texto entero entre comillas, partido en líneas con sangría."""
+    wrapped = textwrap.wrap(text, _TEXT_WIDTH) or [""]
+    wrapped[0] = "«" + wrapped[0]
+    wrapped[-1] += "»"  # puede ser la misma línea que la primera
+    return ["  " + wrapped[0], *("   " + line for line in wrapped[1:])]
 
 
 def todo(item: ReviewItem, queues: Sequence[str]) -> list[str]:
@@ -145,6 +151,13 @@ def todo(item: ReviewItem, queues: Sequence[str]) -> list[str]:
             f"jevlab review rechazar {n}  # solo el reembolso",
         ]
     if move:
+        pending = item.pending_action(ActionName.MOVER_A_COLA)
+        if pending is not None and PendingReason.ESCAPE in pending.reasons:
+            return [
+                f"jevlab review asignar {n} <cola>  # si el ticket sí es de una cola: "
+                + ", ".join(queues),
+                f"jevlab review descartar {n}  # si no es de soporte, como propone el modelo",
+            ]
         return [
             f"jevlab review asignar {n} <cola>  # colas: {', '.join(queues)}",
             f"jevlab review descartar {n}",

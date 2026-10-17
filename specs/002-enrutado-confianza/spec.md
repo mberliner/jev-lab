@@ -123,7 +123,7 @@ deja de estar pendiente y que la resolución queda en la auditoría.
 
 1. **Given** tickets enrutados con alguna acción no automatizada, **When** el Operador ejecuta
    `jevlab review`, **Then** ve qué contiene la cola y quién la resuelve, y un elemento pendiente
-   por petición, con su identificador, el inicio del texto del ticket, la versión de la política,
+   por petición, con su identificador, el texto completo del ticket, la versión de la política,
    por cada acción pendiente el motivo, el valor propuesto por el modelo (o «ninguna»), la
    confianza y el umbral, y los comandos exactos que la resuelven.
 2. **Given** un elemento pendiente, **When** el Operador lo resuelve asignando una cola válida,
@@ -248,11 +248,12 @@ versión de cada política y que una política no válida se rechaza sin automat
   `facturacion`; asignar otra cola o descartar el elemento MUST rechazarlo. Un elemento deja de
   estar pendiente cuando no le quedan acciones pendientes. Cada resolución MUST quedar en la
   auditoría. El listado MUST decir qué contiene la cola y quién la resuelve, y cada elemento, los
-  comandos exactos que lo resuelven según lo que tenga pendiente, con las colas válidas.
-  `jevlab review guia` MUST explicar qué es la cola, qué significa cada cola, el riesgo y el
-  umbral de cada acción, cómo la cola decide el reembolso y qué hace cada comando, tomando las
-  colas de la definición y los umbrales de la política, sin repetirlos a mano; la cabecera del
-  listado MUST señalarla.
+  comandos exactos que lo resuelven según lo que tenga pendiente, con las colas válidas y, si el
+  modelo eligió el escape, cuándo asignar y cuándo descartar. El texto del ticket MUST mostrarse
+  completo. `jevlab review guia` MUST explicar qué es la cola, qué tickets atiende cada cola, el
+  riesgo y el umbral de cada acción, cómo la cola decide el reembolso y qué hace cada comando
+  (también qué pasa al asignar), tomando las colas de la definición y los umbrales de la política,
+  sin repetirlos a mano; la cabecera del listado MUST señalarla.
 - **FR-009**: Los umbrales MUST vivir en un archivo de política versionado en el repositorio
   (`src/jevlab/policies/soporte/enrutado.yaml`; research R3), con una
   versión semver y, por acción, el riesgo, el umbral y su justificación (una evaluación o
@@ -360,7 +361,7 @@ versión de cada política y que una política no válida se rechaza sin automat
   umbral, el riesgo, «provisional» junto a cada umbral, el motivo de no automatizar, la versión de
   la política, el identificador de petición y el origen, con cada dato etiquetado según venga del
   modelo, de la política o del código. El Operador ve en `jevlab review` qué es la cola y los
-  pendientes con su motivo, confianza, umbral, versión de la política, inicio del texto y los
+  pendientes con su motivo, confianza, umbral, versión de la política, texto completo y los
   comandos que los resuelven; en `jevlab review guia`, qué significa cada cola, cada acción y cada
   comando.
 
@@ -409,3 +410,4 @@ comportamiento ya describen el vigente; aquí queda qué cambió y por qué.
 | 2026-10-17 | Subcomando `jevlab review guia`: qué es la cola, qué significa cada cola (de `cola-destino`), riesgo y umbral de cada acción (de la política) y qué hace cada comando; la cabecera del listado la señala. Es nivel 2 y no 3: no añade historia de usuario, explica lo que el Operador ya hace en US3 sin permitirle nada nuevo | Tras la primera prueba de SC-004, entender la cola fue el primer bloqueo; el listado explica cada elemento, pero no el conjunto, y meterlo en el listado sería ruido para quien ya la conoce | FR-008, US3 escenario 9, «Qué ve cada persona», `contracts/cli-review.md`, lección §4 (paso 0) | `b140395` |
 | 2026-10-17 | Con el escape de la cola, «mover a cola» guarda y muestra lo que respondió el modelo (`IA propone la cola: other (escape)`) en lugar de `ninguna`, y la regla dice `escape, no se compara con el umbral`. La auditoría guarda `other` como valor; el escape sigue sin asignarse nunca | Al repasar la lección, `ninguna · confianza 1,00` parecía contradictorio y no decía lo que respondió el modelo (`cli-ux.md` §6); la solicitud ya mostraba `other (escape)` | FR-004, `data-model.md` (`ActionOutcome.value`), `contracts/cli-route.md`, lección §3 y §4 | `e391381` |
 | 2026-10-17 | La guía añade «La cola decide el reembolso»: con `facturacion` se puede confirmar o rechazar (en `route`, se automatiza desde el umbral de la política); con cualquier otra cola no se puede confirmar y asignarla lo rechaza; descartar lo rechaza; cuándo sale un elemento de la lista y que toda resolución se audita. La descripción de cada comando se acorta para no repetirlo | Lo menos evidente del sistema es que la cola condiciona el reembolso, y la guía solo lo decía en el comentario de `asignar`. Se generan con las colas válidas y el umbral de la política, sin una fila por cola | FR-008, US3 escenario 9, `contracts/cli-review.md`, lección §4 | `2e8ba83` |
+| 2026-10-17 | En `review`: el texto del ticket se muestra completo, partido en líneas, en lugar de recortado a 72 caracteres; en el escape, `qué hacer:` dice cuándo asignar y cuándo descartar; la guía dice qué tickets atiende cada cola y que asignar pasa el ticket a esa cola (simulado) | Segunda prueba de SC-004 (T055): el texto recortado no dejaba ver qué pedía el cliente; la persona preguntó qué atiende cada cola y qué pasa al asignar, y dudó por qué se ofrecía `asignar` en el escape | FR-008, US3 escenario 1, «Qué ve cada persona», `contracts/cli-review.md`, lección §4 | *(pendiente)* |

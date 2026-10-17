@@ -107,7 +107,7 @@ def test_guide_takes_queues_from_the_definition_and_thresholds_from_the_policy()
     rules = policy(move=0.8, refund=0.95, version="0.2.0")
     lines = review_view.render_guide(Guide(queue=route_spec().queue, policy=rules))
 
-    i = lines.index("Colas (definición cola-destino 0.1.0):")
+    i = lines.index("Colas: qué tickets atiende cada una (definición cola-destino 0.1.0):")
     assert lines[i + 1 : i + 6] == [
         "  cuenta       Acceso.",
         "  facturacion  Cobros.",
@@ -146,4 +146,30 @@ def test_guide_says_how_the_queue_decides_the_refund() -> None:
         "  descartar        sin cola: un reembolso pendiente queda rechazado",
         "Un elemento sale de la lista cuando no le quedan acciones pendientes.",
         "Toda resolución queda en la auditoría.",
+    ]
+
+
+def test_ticket_text_is_shown_whole_wrapped_and_quoted() -> None:
+    long = _item(6, queue="cuenta", queue_confidence=0.5).model_copy(
+        update={"ticket": "palabra " * 30}
+    )
+    short = _item(7, queue="cuenta", queue_confidence=0.5).model_copy(update={"ticket": "Hola."})
+
+    lines = review_view.render_item(long, _QUEUES)
+    text = lines[1 : lines.index("  Acción: mover a cola · estado: a revisión")]
+    assert len(text) > 1
+    assert text[0].startswith("  «palabra") and text[-1].endswith("palabra»")
+    assert all(line.startswith("   palabra") for line in text[1:])
+    assert " ".join(line.strip(" «»") for line in text).split() == ["palabra"] * 30
+    assert review_view.render_item(short, _QUEUES)[1] == "  «Hola.»"
+
+
+def test_escape_explains_when_to_assign_and_when_to_discard() -> None:
+    lines = review_view.render_item(
+        _item(8, queue="other", queue_confidence=1.0, kind="consulta"), _QUEUES
+    )
+
+    assert _todo(lines) == [
+        "    jevlab review asignar 8 <cola>  # si el ticket sí es de una cola: cuenta, facturacion, tecnico",
+        "    jevlab review descartar 8  # si no es de soporte, como propone el modelo",
     ]

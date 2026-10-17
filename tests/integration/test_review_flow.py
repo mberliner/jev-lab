@@ -42,7 +42,10 @@ def test_route_list_resolve_and_persist(tmp_path: Path, monkeypatch: pytest.Monk
     again = CliRunner().invoke(app, ["review"]).stdout.splitlines()
     assert again[0] == "Pendientes: 1"
     assert again[5].startswith(f"[{items['mover-escape']}] ")
-    assert f"    jevlab review descartar {items['mover-escape']}" in again
+    assert (
+        f"    jevlab review descartar {items['mover-escape']}  # si no es de soporte, como propone el modelo"
+        in again
+    )
 
     with closing(sqlite3.connect(state / "estado.sqlite3")) as connection, connection:
         resolutions = connection.execute(
