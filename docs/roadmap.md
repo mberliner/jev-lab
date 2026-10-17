@@ -6,9 +6,9 @@
 > cualquier agente.
 
 **Dónde estamos:** spec 002 (Enrutado con confianza) implementada y cerrada (56 de 56 tareas) en
-la rama local `002-enrutado-confianza`, sin subir todavía. Las dos primeras pruebas de SC-004
-no lo cumplieron (más de 10 min sin terminar; luego 2,5 min); tras ajustes de nivel 2 (en
-«Enmiendas» de la spec), falta la tercera. Lo siguiente está al
+la rama local `002-enrutado-confianza`, sin subir todavía. SC-004 está cerrado: tras dos pruebas y
+varios ajustes de nivel 2 (en «Enmiendas» de la spec), el criterio se enmendó para medir la
+claridad y no un tiempo, y la segunda prueba lo cumple. Lo siguiente está al
 final de «Spec 002», más abajo. La spec 001 (Triaje) está cerrada e integrada en `main`. La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
@@ -201,10 +201,10 @@ aplazada, se completó el 2026-10-14. Hecho:
 - [hecho, 2026-10-17] Segunda prueba de SC-004 (`9fb59b5`): no se cumple, 2,5 min en la ronda 1
   (1,5 de guía). Ajuste (`3439a27`): texto completo del ticket, qué hacer en el escape y la guía
   dice qué atiende cada cola y qué pasa al asignar.
-- **[siguiente]** Tercera prueba de SC-004, con otra persona sin experiencia y el protocolo del
-  quickstart; anotar el resultado en T055.
-  Después, subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y merge
-  commit.
+- [hecho, 2026-10-17] SC-004 enmendado: sin umbral de tiempo; el Operador resuelve sin ayuda y
+  con la respuesta esperada tras una presentación breve. La segunda prueba lo cumple.
+- **[siguiente]** Subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y
+  merge commit.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).

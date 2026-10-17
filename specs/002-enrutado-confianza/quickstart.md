@@ -99,6 +99,10 @@ uv run jevlab review    # comprobar: Pendientes: 3, los de la lección §4
 Se deja esa terminal abierta y, al lado, la lección en «4. La cola de revisión». Sin spec, sin
 contrato y sin `--help`.
 
+**Presentación.** Antes de la consigna, quien observa explica en pocas frases qué es jevlab: un
+sistema que enruta tickets de soporte, en el que la IA propone y el código decide si se aplica
+solo. No se explica la cola ni sus comandos; eso lo da la lección.
+
 **Consigna**, leída tal cual: «En esta terminal hay tickets que el sistema no se atrevió a resolver
 solo. Usando solo esta lección, resuelve el primero que veas como te parezca correcto. Avísame
 cuando termines.»
@@ -113,12 +117,12 @@ No se ayuda; a una pregunta se responde «sigue con la lección» y se anota.
 **Respuesta esperada:** la que da la lección §4, en el paso 2 de «Cómo se resuelve un elemento».
 Los elementos son los mismos que la lección usa de ejemplo.
 
-**Qué se anota en T055:** el tiempo de cada ronda y si baja de 60 s; el comando usado y si
-coincide con la respuesta esperada; si ejecutó `jevlab review guia` y cuánto tardó en leerla; los
+**Qué se anota en T055:** si resolvió cada ronda sin ayuda y el tiempo, como dato; el comando
+usado y si coincide con la respuesta esperada; si ejecutó `jevlab review guia` y cuánto tardó en leerla; los
 errores (código 2, o «comando no encontrado» por escribir un comando sin `uv run`) y qué hizo
-después; dónde dudó o qué preguntó; si ya conocía jevlab o se le explicó algo antes. Con varias
-personas, la mediana. Si alguien supera el minuto, el cambio es un ajuste de nivel 2
-(`docs/governance.md` §7).
+después; dónde dudó o qué preguntó; si ya conocía jevlab o se le explicó algo más que la
+presentación. Con varias personas, la mediana del tiempo. Si alguien no resuelve sin ayuda o
+elige otra respuesta, el cambio es un ajuste de nivel 2 (`docs/governance.md` §7).
 
 Al terminar se borra la carpeta de `JEVLAB_STATE_DIR`.
 
