@@ -106,11 +106,16 @@ automatiza) y revisión de que cada umbral tiene `justificacion`.
 - la confianza;
 - el motivo del escalado, si lo hay;
 - «no disponible» cuando falta un dato;
-- si el resultado es grabado (cassette) o sintético.
+- si el resultado es grabado (cassette) o sintético;
+- de dónde sale cada dato: el modelo (valor y confianza), la política (umbral y riesgo), el código
+  (la comparación y el estado) o una persona (la resolución);
+- si algo queda pendiente de una persona, qué puede hacer para resolverlo.
 
-**Correcto:** `técnico · confianza 0,62 · a revisión: umbral 0,80 · grabado`
+**Correcto:** `técnico · confianza 0,62 · a revisión: umbral 0,80 · grabado`, con cada dato
+etiquetado según su origen en el formato de la interfaz.
 
-**Incorrecto:** `técnico` (sin confianza ni motivo, y parece una decisión automática).
+**Incorrecto:** `técnico` (sin confianza ni motivo, y parece una decisión automática); o un valor
+del modelo junto al nombre de la acción, sin decir que es una propuesta.
 
 **Cómo se verifica:** tests de la salida de la CLI y de la API. El formato concreto de cada
-interfaz está en `cli-ux.md` y `api-errors.md`, cuando existan.
+interfaz está en `cli-ux.md` (§6 para el origen de cada dato) y `api-errors.md`, cuando existan.

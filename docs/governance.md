@@ -100,7 +100,7 @@ preset, estándar o ambos, según lo necesite.
 | Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | creado |
 | Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | creado |
 | Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | creado |
-| Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | *(no necesita)* | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
+| Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | `jevlab-decision` las exige en el plan | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
 | Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática (`poe check-writing`) |
 | Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática (gancho `commit-msg`) |
 
@@ -121,8 +121,9 @@ rellena el plan de arriba abajo, persona o agente, no clasifica datos ni piezas 
 Entre presets `append` la prioridad no cambia el resultado, solo el orden.
 
 No hay tema UX propio: la transparencia de la decisión (resultado, confianza, motivo de escalado,
-«no disponible», grabado o sintético) deriva de II y IV y vive en `jevlab-decision`; las
-convenciones de formato de CLI y API son solo estándares.
+«no disponible», grabado o sintético, origen de cada dato y qué hacer con lo pendiente) deriva de
+II y IV y vive en `jevlab-decision`; las convenciones de formato de CLI y API son estándares, y
+`jevlab-decision` obliga a que el plan las cite.
 
 ## 5. Presets propios: convenciones
 
@@ -156,10 +157,12 @@ admitir la versión instalada (hoy `>=1.1.3`, la estable de PyPI).
    specify preset add --dev presets/jevlab-<tema> --priority <n>
    ```
    Copia el preset a `.specify/presets/` (se versiona, para que un clon nuevo funcione sin pasos
-   extra) y lo anota en `.specify/presets/.registry`. **Antes, apartar `.venv/`** (por ejemplo,
-   `mv .venv .venv.off` y restaurarlo al terminar el paso 3): si existe, Spec Kit escribe en las
-   skills `.venv/bin/python` en lugar de `python3`, que solo vale en esa máquina y ese sistema
-   (comprobado con 1.1.4.dev0; `poe check-presets` lo detecta). La copia instalada no se sincroniza sola con
+   extra) y lo anota en `.specify/presets/.registry`. **Si el preset trae comandos, antes apartar
+   `.venv/`** (por ejemplo, `mv .venv .venv.off` y restaurarlo al terminar el paso 3): si existe,
+   Spec Kit escribe en las skills `.venv/bin/python` en lugar de `python3`, que solo vale en esa
+   máquina y ese sistema (comprobado con 1.1.4.dev0; `poe check-presets` lo detecta). Un preset
+   solo de plantillas no escribe skills y no lo necesita (comprobado con `jevlab-decision`
+   0.1.3). La copia instalada no se sincroniza sola con
    la fuente: sin reinstalar, Spec Kit sigue usando la anterior.
 3. **Solo si el preset trae comandos:** Spec Kit registra los comandos únicamente en la integración
    activa (regla de agente único activo). Para mantener la paridad, se pasa por cada agente y se
