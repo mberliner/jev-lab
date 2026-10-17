@@ -189,7 +189,10 @@ aplazada, se completó el 2026-10-14. Hecho:
     interfaz.
   - Ajuste de la 002 (`0e9eb05`): salida de `route` y `review`, contratos, spec con «Enmiendas»
     y lección §4.
-- **[siguiente]** Repetir SC-004 con otra persona sin experiencia y anotar el tiempo en T055.
+  - Segundo ajuste de la 002 (`b140395`): `jevlab review guia` explica las colas, las acciones y
+    los comandos; la lección la usa como paso 0.
+- **[siguiente]** Repetir SC-004 con otra persona sin experiencia, empezando por el paso 0 de la
+  lección, y anotar en T055 la lectura y la resolución; se juzga el total.
   Después, subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y merge
   commit.
 
