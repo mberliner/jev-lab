@@ -24,9 +24,10 @@ los principios. Funciona igual en Linux y en Windows, y con Claude Code o con An
 
 ## Estado
 
-Spec 000, «Cimientos»: entorno reproducible, esqueleto hexagonal, puertas de calidad en pre-commit
-y CI, y la comprobación `jevlab doctor`. El plan completo y el punto de reanudación están en el
-[roadmap](docs/roadmap.md).
+Entorno reproducible con arquitectura hexagonal, puertas de calidad en pre-commit y CI, y la CLI
+`jevlab`: comprobación del entorno (`doctor`), triaje de tickets con Choice, Score y Noul
+(`triage`), y enrutado con umbrales por riesgo, cola de revisión humana y auditoría (`route` y
+`review`). El plan completo y el punto de reanudación están en el [roadmap](docs/roadmap.md).
 
 ## Inicio rápido
 
@@ -46,7 +47,7 @@ uv run jevlab doctor
 | Documento | Para qué |
 | --- | --- |
 | [docs/setup.md](docs/setup.md) | Puesta en marcha en Linux y Windows, claves y agentes |
-| [docs/lessons/](docs/lessons/000-metodo-sdd-y-entorno-reproducible.md) | Una lección por spec; la 000 explica el método y el entorno, y la 001, las tres primitivas y la confianza |
+| [docs/lessons/](docs/lessons/000-metodo-sdd-y-entorno-reproducible.md) | Lecciones del laboratorio: qué se aprende, cómo se ejecuta y qué puede fallar en cada entrega |
 | [docs/roadmap.md](docs/roadmap.md) | Plan de specs y estado actual |
 | [Constitución](.specify/memory/constitution.md) | Principios que cumple todo el proyecto |
 | [docs/governance.md](docs/governance.md) | Dónde vive cada regla: constitución, presets y estándares |

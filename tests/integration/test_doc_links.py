@@ -11,8 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DOCS = (
     "README.md",
     "docs/setup.md",
-    "docs/lessons/000-metodo-sdd-y-entorno-reproducible.md",
-    "docs/lessons/001-tres-primitivas-y-como-leer-la-confianza.md",
+    *(p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "docs/lessons").glob("*.md"))),
 )
 _LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 _EXTERNAL = ("http://", "https://", "mailto:", "#")
