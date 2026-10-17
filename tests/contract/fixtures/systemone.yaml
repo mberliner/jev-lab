@@ -2,6 +2,23 @@
 # Imitan la forma de la respuesta del SDK 0.7.4; no son grabaciones de TypeSafe.
 origen: sintetico
 
+enrutado-valida:
+  status: 200
+  body:
+    model: jev-1.13.0
+    usage: {input_tokens: 90, output_tokens: 0}
+    answers:
+      cola:
+        type: choice
+        choice: facturacion
+        confidence: 1.0
+        probabilities: {facturacion: 1.0, tecnico: 0.0, cuenta: 0.0, other: 0.0}
+      solicitud:
+        type: choice
+        choice: reembolso
+        confidence: 0.98
+        probabilities: {reembolso: 0.99, consulta: 0.01, incidencia: 0.0, other: 0.0}
+
 valida:
   status: 200
   body:

@@ -1,0 +1,11 @@
+# Decisión solicitud (spec 002, «Decisiones Jev»). De ella depende el reembolso, con su umbral.
+version: 0.1.0
+model: jev-1.13.0
+primitive: choice
+instructions: ¿Qué pide el cliente en este ticket?
+options:
+  reembolso: Que le devuelvan dinero cobrado.
+  consulta: Información o ayuda para hacer algo.
+  incidencia: Que se arregle un fallo o un problema.
+  other: Ninguna de las anteriores.
+escape: other

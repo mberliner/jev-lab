@@ -9,18 +9,20 @@ from jevlab.adapters.typesafe_judge import TypeSafeJudge
 from jevlab.adapters.yaml_files import YamlSpecLoader
 from jevlab.application.triage import TRIAGE_REQUEST
 from jevlab.domain.confidence import choice_confidence, score_confidence
+from jevlab.domain.decision_spec import TriageSpec
 from jevlab.domain.examples import Recording
+from jevlab.domain.triage import TriageAnswers
 
 # La API devuelve probabilidades y confianzas con 2 decimales (research.md R3, hallazgo al grabar).
 _TOLERANCE = 0.01
 
 
 def test_recomputed_confidence_matches_service(real_recordings: list[Recording]) -> None:
-    spec = YamlSpecLoader().load_request(TRIAGE_REQUEST)
-    levels = len(spec.priority.levels)
+    resolved = YamlSpecLoader().load_request(TRIAGE_REQUEST)
+    levels = len(TriageSpec.from_request(resolved).priority.levels)
     for recording in real_recordings:
         with TypeSafeJudge.replay(recording) as judge:
-            answers = judge.ask(spec, recording.text)
+            answers = TriageAnswers.from_answers(judge.ask(resolved, recording.text))
         if answers.queue is not None:
             recomputed = choice_confidence(answers.queue.probabilities)
             assert recomputed == pytest.approx(answers.queue.confidence, abs=_TOLERANCE), (

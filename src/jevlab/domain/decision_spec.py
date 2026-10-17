@@ -137,50 +137,34 @@ class RequestSpec(_Frozen):
         return value
 
 
-# Pregunta de la petición de triaje y primitiva que espera (spec, «Decisiones Jev»).
-_TRIAGE_QUESTIONS: dict[str, type[_Decision]] = {
-    "cola": ChoiceSpec,
-    "urgencia": NoulSpec,
-    "prioridad": ScoreSpec,
-}
+class ResolvedRequest(_Frozen):
+    """Una petición con sus decisiones validadas por nombre de pregunta y un único modelo.
 
-
-class TriageSpec(_Frozen):
-    """La petición de triaje ya resuelta: sus tres decisiones validadas y el modelo común."""
+    Es lo que viaja al juez; `TriageSpec` y `RouteSpec` comprueban su forma concreta.
+    """
 
     request: RequestSpec
-    queue: ChoiceSpec
-    urgency: NoulSpec
-    priority: ScoreSpec
+    decisions: dict[str, DecisionSpec]
 
     @classmethod
-    def resolve(cls, request: RequestSpec, decisions: Mapping[str, DecisionSpec]) -> Self:
-        if set(request.questions) != set(_TRIAGE_QUESTIONS):
-            raise ValueError(f"el triaje pregunta {sorted(_TRIAGE_QUESTIONS)}")
+    def resolve(cls, request: RequestSpec, available: Mapping[str, DecisionSpec]) -> Self:
         resolved: dict[str, DecisionSpec] = {}
         for question, decision_name in request.questions.items():
-            decision = decisions.get(decision_name)
+            decision = available.get(decision_name)
             if decision is None:
                 raise ValueError(f"no existe la decisión {decision_name}")
-            if not isinstance(decision, _TRIAGE_QUESTIONS[question]):
-                raise TypeError(
-                    f"la pregunta {question} no admite la primitiva {decision.primitive}"
-                )
             resolved[question] = decision
         if len({d.model for d in resolved.values()}) != 1:
             raise ValueError("todas las decisiones de una petición comparten modelo")
-        return cls.model_validate(
-            {
-                "request": request,
-                "queue": resolved["cola"],
-                "urgency": resolved["urgencia"],
-                "priority": resolved["prioridad"],
-            }
-        )
+        return cls(request=request, decisions=resolved)
+
+    @property
+    def name(self) -> str:
+        return self.request.name
 
     @property
     def model(self) -> str:
-        return self.queue.model
+        return next(iter(self.decisions.values())).model
 
     @property
     def max_chars(self) -> int:
@@ -188,14 +172,96 @@ class TriageSpec(_Frozen):
 
     def questions(self) -> dict[str, DecisionSpec]:
         """Nombre de pregunta -> decisión, en el orden de la petición."""
-        by_name: dict[str, DecisionSpec] = {
-            "cola": self.queue,
-            "urgencia": self.urgency,
-            "prioridad": self.priority,
-        }
-        return {question: by_name[question] for question in self.request.questions}
+        return {question: self.decisions[question] for question in self.request.questions}
 
     def spec_versions(self) -> dict[str, str]:
         versions = {self.request.name: self.request.version}
         versions |= {d.name: d.version for d in self.questions().values()}
         return versions
+
+
+def _check_shape(
+    resolved: ResolvedRequest, label: str, expected: Mapping[str, type[_Decision]]
+) -> None:
+    if set(resolved.decisions) != set(expected):
+        raise ValueError(f"el {label} pregunta {sorted(expected)}")
+    for question, decision in resolved.decisions.items():
+        if not isinstance(decision, expected[question]):
+            raise TypeError(f"la pregunta {question} no admite la primitiva {decision.primitive}")
+
+
+class _RequestView(_Frozen):
+    """Forma concreta de una petición: delega en la petición resuelta."""
+
+    request: ResolvedRequest
+
+    @property
+    def model(self) -> str:
+        return self.request.model
+
+    @property
+    def max_chars(self) -> int:
+        return self.request.max_chars
+
+    def questions(self) -> dict[str, DecisionSpec]:
+        return self.request.questions()
+
+    def spec_versions(self) -> dict[str, str]:
+        return self.request.spec_versions()
+
+
+# Pregunta de la petición de triaje y primitiva que espera (spec 001, «Decisiones Jev»).
+_TRIAGE_QUESTIONS: dict[str, type[_Decision]] = {
+    "cola": ChoiceSpec,
+    "urgencia": NoulSpec,
+    "prioridad": ScoreSpec,
+}
+
+
+class TriageSpec(_RequestView):
+    """La petición de triaje: sus tres decisiones validadas."""
+
+    queue: ChoiceSpec
+    urgency: NoulSpec
+    priority: ScoreSpec
+
+    @classmethod
+    def from_request(cls, resolved: ResolvedRequest) -> Self:
+        _check_shape(resolved, "triaje", _TRIAGE_QUESTIONS)
+        return cls.model_validate(
+            {
+                "request": resolved,
+                "queue": resolved.decisions["cola"],
+                "urgency": resolved.decisions["urgencia"],
+                "priority": resolved.decisions["prioridad"],
+            }
+        )
+
+
+# Opciones que nombra la regla del reembolso (spec 002, FR-006): las comprueba la definición.
+BILLING_QUEUE = "facturacion"
+REFUND = "reembolso"
+
+_ROUTE_QUESTIONS: dict[str, type[_Decision]] = {"cola": ChoiceSpec, "solicitud": ChoiceSpec}
+
+
+class RouteSpec(_RequestView):
+    """La petición de enrutado: la cola de la 001 y la solicitud del cliente (spec 002)."""
+
+    queue: ChoiceSpec
+    request_kind: ChoiceSpec
+
+    @classmethod
+    def from_request(cls, resolved: ResolvedRequest) -> Self:
+        _check_shape(resolved, "enrutado", _ROUTE_QUESTIONS)
+        queue, kind = resolved.decisions["cola"], resolved.decisions["solicitud"]
+        assert isinstance(queue, ChoiceSpec) and isinstance(kind, ChoiceSpec)
+        if BILLING_QUEUE not in queue.options:
+            raise ValueError(f"la cola necesita la opción {BILLING_QUEUE}")
+        if REFUND not in kind.options:
+            raise ValueError(f"la solicitud necesita la opción {REFUND}")
+        return cls(request=resolved, queue=queue, request_kind=kind)
+
+    def valid_queues(self) -> tuple[str, ...]:
+        """Colas a las que el Operador puede asignar: todas menos el escape, en orden."""
+        return tuple(sorted(name for name in self.queue.options if name != self.queue.escape))

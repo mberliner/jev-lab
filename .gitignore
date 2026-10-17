@@ -11,6 +11,7 @@ htmlcov/
 # Secretos y estado local
 .env
 *.local.*
+estado.sqlite3
 
 # Estado local de agentes (no compartible)
 .claude/settings.local.json

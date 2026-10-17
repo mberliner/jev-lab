@@ -8,7 +8,7 @@ from typer.testing import CliRunner, Result
 
 import jevlab.entrypoints.cli.main as cli
 from jevlab.domain.diagnostics import ProviderRejected, ProviderUnavailable
-from tests.builders import answers, triage_spec
+from tests.builders import answers, triage_request
 from tests.fakes import FakeJudge, StaticSpecLoader
 
 # Valor sintético con forma de clave: el test comprueba que nunca aparece en la salida.
@@ -35,7 +35,7 @@ def _invoke(
         monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
     else:
         monkeypatch.setenv("TYPESAFE_API_KEY", key)
-    monkeypatch.setattr(cli, "build_spec_loader", lambda: StaticSpecLoader(triage_spec()))
+    monkeypatch.setattr(cli, "build_spec_loader", lambda: StaticSpecLoader(triage_request()))
     monkeypatch.setattr(cli, "live_judge", live)
     result = CliRunner().invoke(cli.app, ["triage", "--en-vivo", *args])
     return result, judge, opened

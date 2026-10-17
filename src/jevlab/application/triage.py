@@ -2,9 +2,9 @@
 
 from collections.abc import Sequence
 
-from jevlab.domain.decision_spec import TriageSpec
+from jevlab.domain.decision_spec import ResolvedRequest, TriageSpec
 from jevlab.domain.examples import ExampleTicket, Recording, TicketText
-from jevlab.domain.triage import Origin, OriginMode, TriageResult, interpret
+from jevlab.domain.triage import Origin, OriginMode, TriageAnswers, TriageResult, interpret
 from jevlab.ports.clock import Clock
 from jevlab.ports.judge import JudgePort
 from jevlab.ports.recordings import RecordingLibrary
@@ -20,16 +20,18 @@ class TriageTicket:
 
     def run_live(self, raw: str) -> TriageResult:
         """Normaliza y comprueba la longitud antes de llamar (FR-013a)."""
-        spec = self._specs.load_request(TRIAGE_REQUEST)
+        resolved = self._specs.load_request(TRIAGE_REQUEST)
+        spec = TriageSpec.from_request(resolved)
         ticket = TicketText.parse(raw)
         ticket.check_length(spec.max_chars)
-        answers = self._judge.ask(spec, ticket.value)
+        answers = TriageAnswers.from_answers(self._judge.ask(resolved, ticket.value))
         return interpret(spec, answers, Origin(mode=OriginMode.EN_VIVO, model=answers.model))
 
     def run_recorded(self, recording: Recording) -> TriageResult:
         """Envía el texto de la grabación: el de la persona solo sirve para elegirla."""
-        spec = self._specs.load_request(TRIAGE_REQUEST)
-        answers = self._judge.ask(spec, recording.text)
+        resolved = self._specs.load_request(TRIAGE_REQUEST)
+        spec = TriageSpec.from_request(resolved)
+        answers = TriageAnswers.from_answers(self._judge.ask(resolved, recording.text))
         origin = Origin(
             mode=OriginMode.GRABADO,
             model=recording.model,
@@ -46,7 +48,8 @@ class RecordExamples:
         self._library = library
         self._clock = clock
 
-    def run(self, spec: TriageSpec, examples: Sequence[ExampleTicket]) -> list[Recording]:
+    def run(self, spec: ResolvedRequest, examples: Sequence[ExampleTicket]) -> list[Recording]:
+        """Sirve a cualquier petición: graba la respuesta real a cada ejemplo."""
         saved = []
         for example in examples:
             text = TicketText.parse(example.text).value

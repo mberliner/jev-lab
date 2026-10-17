@@ -1,10 +1,13 @@
 # Estándar: salida de la CLI
 
-> Concreta: Constitución §IV, §V, §VI · Exigido por: *(sin preset)* · ADRs: *(ninguno)*
+> Concreta: Constitución §II, §IV, §V, §VI · Exigido por: preset jevlab-decision · ADRs:
+> *(ninguno)*
 
 Convenciones para todo lo que `jevlab` escribe en la terminal. Lo que muestra cada decisión está
 en `decision-design.md` §7; aquí se fija cómo se escribe. El ejemplo de referencia es el contrato
-de `jevlab triage` (`specs/001-triaje-ticket/contracts/cli-triage.md`).
+de `jevlab triage` (`specs/001-triaje-ticket/contracts/cli-triage.md`); para acciones con umbral
+(`≥` o `<`, riesgo y motivo), el de `jevlab route`
+(`specs/002-enrutado-confianza/contracts/cli-route.md`).
 
 ## 1. Texto plano en UTF-8, en cualquier terminal
 
@@ -81,3 +84,46 @@ fecha de la grabación (`decision-design.md` §7).
 **Correcto:** `Origen: grabado · ejemplo cobro-duplicado (ticket sintético) · jev-1.13.0 · 2026-10-20`
 
 **Cómo se verifica:** tests de la vista y test de integración sin red.
+
+## 6. Cada valor dice de dónde sale, y lo pendiente dice qué hacer
+
+**Regla.** Cuando una salida presenta una acción que depende de una decisión del modelo, cada
+dato lleva una etiqueta con su origen (`decision-design.md` §7):
+
+| Etiqueta | Origen | Ejemplo |
+| --- | --- | --- |
+| `Acción:` y `estado:` | lo que se hizo o queda por hacer | `Acción: mover a cola · estado: a revisión` |
+| `IA propone …:` o `IA clasifica …:` | el valor que da el modelo, con la pregunta y la confianza | `IA propone la cola: cuenta · confianza 0,88` |
+| `política:` | el umbral, el riesgo y si es provisional | `política: umbral 0,90 (riesgo bajo, provisional)` |
+| `regla:` | lo que comprueba el código y el motivo del estado | `regla: 0,88 < 0,90 · motivo: confianza por debajo del umbral` |
+
+Un valor no se escribe solo detrás del nombre de la acción. Lo que queda pendiente de una persona
+termina con `qué hacer:` y los comandos exactos que lo resuelven, uno por línea, con el número del
+elemento y, si piden un valor, los valores válidos en un comentario (`# colas: …`). Si solo hay que
+ejecutar otro comando para verlo, va en la misma línea (`qué hacer: jevlab review`). Un listado de
+pendientes empieza diciendo qué contiene y quién lo resuelve.
+
+**Motivo.** En la prueba de SC-004 de la spec 002, una persona sin experiencia no supo si
+`Mover a cola: cuenta` era una cola asignada o lo que proponía el modelo, ni por qué estaba en la
+cola, ni con qué comando resolverlo, y no terminó en 10 minutos. El principio del proyecto, «el
+modelo juzga, el código decide», solo se ve si la salida separa las dos cosas.
+
+**Correcto:**
+
+```text
+Acción: reembolsar · estado: pendiente de confirmación
+  IA clasifica la solicitud: reembolso · confianza 0,87
+  política: umbral 0,97 (riesgo alto, provisional)
+  regla: 0,87 < 0,97 · motivo: confianza por debajo del umbral
+qué hacer:
+  jevlab review confirmar 2
+  jevlab review rechazar 2
+```
+
+**Incorrecto:** `Reembolsar: reembolso · pendiente de confirmación` (no dice que `reembolso` lo
+propone el modelo, ni qué regla lo dejó pendiente, ni cómo se resuelve), o `automatizada por IA`
+(automatiza el código, al aplicar la política).
+
+**Cómo se verifica:** tests de la vista de cada comando, que buscan las etiquetas y la línea
+`qué hacer:`; y la prueba con una persona del criterio de éxito correspondiente, si la spec lo
+tiene.

@@ -39,11 +39,37 @@ class ScoreAnswer(_Frozen):
     probabilities: dict[int, float]
 
 
+AnyAnswer = ChoiceAnswer | NoulAnswer | ScoreAnswer
+
+
+class Answers(_Frozen):
+    """Respuestas de una petición cualquiera: por pregunta, la del SDK traducida o `None`."""
+
+    model: str
+    by_question: dict[str, AnyAnswer | None]
+
+    def choice(self, question: str) -> ChoiceAnswer | None:
+        answer = self.by_question.get(question)
+        return answer if isinstance(answer, ChoiceAnswer) else None
+
+
 class TriageAnswers(_Frozen):
     model: str
     queue: ChoiceAnswer | None
     urgency: NoulAnswer | None
     priority: ScoreAnswer | None
+
+    @classmethod
+    def from_answers(cls, answers: Answers) -> "TriageAnswers":
+        """Una pregunta sin respuesta, o con la de otra primitiva, llega como `None`."""
+        urgency = answers.by_question.get("urgencia")
+        priority = answers.by_question.get("prioridad")
+        return cls(
+            model=answers.model,
+            queue=answers.choice("cola"),
+            urgency=urgency if isinstance(urgency, NoulAnswer) else None,
+            priority=priority if isinstance(priority, ScoreAnswer) else None,
+        )
 
 
 class OriginMode(StrEnum):
@@ -65,13 +91,17 @@ MISSING_REASON = "sin respuesta válida"
 
 
 class QueueOutcome(_Frozen):
-    """`assigned` es None si falta la respuesta, si es ajena a la definición o si es el escape."""
+    """`assigned` es None si falta la respuesta, si es ajena a la definición o si es el escape.
+
+    `choice` es la opción que devolvió el servicio, tal cual (None sin respuesta).
+    """
 
     assigned: str | None
     abstention_reason: str | None
     distribution: tuple[tuple[str, float], ...]
     confidence: float | None
     recomputed_confidence: float | None
+    choice: str | None = None
 
 
 def interpret_queue(spec: ChoiceSpec, answer: ChoiceAnswer | None) -> QueueOutcome:
@@ -96,6 +126,7 @@ def interpret_queue(spec: ChoiceSpec, answer: ChoiceAnswer | None) -> QueueOutco
     distribution = sorted(answer.probabilities.items(), key=lambda kv: (-kv[1], order[kv[0]]))
     return QueueOutcome(
         assigned=assigned,
+        choice=answer.choice,
         abstention_reason=reason,
         distribution=tuple(distribution),
         confidence=answer.confidence,

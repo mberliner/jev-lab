@@ -2,8 +2,8 @@
 
 from typing import Protocol
 
-from jevlab.domain.decision_spec import TriageSpec
+from jevlab.domain.decision_spec import ResolvedRequest
 
 
 class SpecLoader(Protocol):
-    def load_request(self, name: str) -> TriageSpec: ...
+    def load_request(self, name: str) -> ResolvedRequest: ...

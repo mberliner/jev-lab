@@ -8,7 +8,7 @@ from typer.testing import CliRunner, Result
 import jevlab.entrypoints.cli.main as cli
 from jevlab.domain.diagnostics import RecordingOutdated
 from jevlab.domain.examples import Recording
-from tests.builders import answers, recording, triage_spec
+from tests.builders import answers, recording, triage_request
 from tests.fakes import FakeJudge, InMemoryRecordingLibrary, StaticSpecLoader
 
 _TEXT = "Me habéis cobrado dos veces la cuota."
@@ -25,7 +25,7 @@ def _invoke(
         replayed.append(example)
         return nullcontext(judge)
 
-    monkeypatch.setattr(cli, "build_spec_loader", lambda: StaticSpecLoader(triage_spec()))
+    monkeypatch.setattr(cli, "build_spec_loader", lambda: StaticSpecLoader(triage_request()))
     monkeypatch.setattr(cli, "build_recordings", lambda: InMemoryRecordingLibrary(list(_EXAMPLES)))
     monkeypatch.setattr(cli, "replay_judge", replay)
     return CliRunner().invoke(cli.app, ["triage", *args]), judge, replayed

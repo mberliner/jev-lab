@@ -1,0 +1,56 @@
+name: urgencia-ambigua
+text: 'Esto corre algo de prisa: el exportador de informes falla a veces y el lunes tenemos auditoría.'
+origen: sintetico
+covers: []
+model: jev-1.13.0
+recorded_on: 2026-10-14
+spec_versions:
+  enrutado: 0.1.0
+  cola-destino: 0.1.0
+  solicitud: 0.1.0
+request:
+  state: 'Esto corre algo de prisa: el exportador de informes falla a veces y el lunes tenemos auditoría.'
+  model: jev-1.13.0
+  questions:
+    cola:
+      type: choice
+      instructions: ¿A qué cola de soporte pertenece este ticket?
+      criteria:
+        facturacion: Cobros, facturas, reembolsos o métodos de pago.
+        tecnico: Fallos, errores o mal funcionamiento del producto.
+        cuenta: Acceso, contraseña, datos del perfil o alta y baja de la cuenta.
+        other: Ninguna de las anteriores.
+    solicitud:
+      type: choice
+      instructions: ¿Qué pide el cliente en este ticket?
+      criteria:
+        reembolso: Que le devuelvan dinero cobrado.
+        consulta: Información o ayuda para hacer algo.
+        incidencia: Que se arregle un fallo o un problema.
+        other: Ninguna de las anteriores.
+response:
+  status: 200
+  body:
+    model: jev-1.13.0
+    answers:
+      cola:
+        type: choice
+        choice: tecnico
+        confidence: 1.0
+        probabilities:
+          facturacion: 0.0
+          tecnico: 1.0
+          cuenta: 0.0
+          other: 0.0
+      solicitud:
+        type: choice
+        choice: incidencia
+        confidence: 1.0
+        probabilities:
+          reembolso: 0.0
+          consulta: 0.0
+          incidencia: 1.0
+          other: 0.0
+    usage:
+      input_tokens: 521
+      output_tokens: 105

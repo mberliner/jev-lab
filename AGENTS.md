@@ -17,7 +17,7 @@ Spec-Driven Development (Spec Kit).
 | `docs/roadmap.md` | **Plan vigente y estado actual**: empezar por «Estado actual y cómo retomar» |
 | `.specify/memory/constitution.md` | Principios no negociables (v0.3.1, ratificada) |
 | `docs/personas.md` | Perfiles de usuario a los que sirve cada feature |
-| `docs/ideas.md` | Ideas abiertas para specs futuras (de dominio y de las retros); revisar al planificar una spec |
+| `docs/ideas.md` | Ideas abiertas (de dominio y de las retros, con su nivel según `docs/governance.md` §7); revisar al planificar una spec |
 | `docs/governance.md` | Dónde vive cada regla común: constitución -> presets propios -> estándares |
 | `specs/NNN-*/` | Artefactos SDD de cada feature |
 | `docs/setup.md` | Puesta en marcha en Linux y Windows, claves y agentes |
@@ -58,8 +58,10 @@ Puesta en marcha completa: `docs/setup.md`. Todos los comandos son iguales en Li
 | `uv run poe check` | Todas las puertas de calidad (lo que ejecutan pre-commit y CI) |
 | `uv run jevlab doctor` | Comprueba el entorno local; `--remote` añade TypeSafe y Azure OpenAI |
 | `uv run poe live` | Tests contra servicios reales: necesitan `.env` y tienen tope de coste |
-| `uv run poe record` | Regraba los ejemplos de `jevlab triage` (necesita `.env`; mismo tope que `live`) |
+| `uv run poe record` | Regraba los ejemplos de `jevlab triage` y `jevlab route` (necesita `.env`; mismo tope que `live`); `record-triage` y `record-route` regraban solo uno |
 | `uv run jevlab triage` | Triaje de un ticket de ejemplo grabado, sin red; `--en-vivo` llama a TypeSafe |
+| `uv run jevlab route` | Enrutado con umbrales por riesgo (simulado); lo que no se automatiza va a la cola de revisión |
+| `uv run jevlab review` | Lista la cola de revisión; `review guia` explica las colas, las acciones y los comandos |
 | `uv run pre-commit install` | Activa los ganchos `pre-commit` y `commit-msg` |
 
 - Las puertas propias viven en `scripts/checks/` (una por módulo) y se lanzan con

@@ -100,8 +100,11 @@ cov = [
 ]
 test-integration = "pytest -m integration"
 live = "pytest -m live --force-enable-socket"
-# Regraba los ejemplos de src/jevlab/recordings/ con claves reales (research.md R11).
-record = { cmd = "pytest -m live --force-enable-socket tests/live/test_record_triage.py", env = { JEVLAB_RECORD = "1" } }
+# Regraba los ejemplos de src/jevlab/recordings/ con claves reales (research.md R11 de la 001 y
+# R8 de la 002): por petición, o las dos con `record`.
+record-triage = { cmd = "pytest -m live --force-enable-socket tests/live/test_record_triage.py", env = { JEVLAB_RECORD = "1" } }
+record-route = { cmd = "pytest -m live --force-enable-socket tests/live/test_record_route.py", env = { JEVLAB_RECORD = "1" } }
+record = ["record-triage", "record-route"]
 check-writing = "python -m checks.writing"
 check-commit-msg = "python -m checks.commit_msg"
 check-presets = "python -m checks.presets"

@@ -2,11 +2,14 @@
 
 ## Estado actual y cómo retomar
 
-> **Actualizado: 2026-10-14.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> **Actualizado: 2026-10-17.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 001 (Triaje) cerrada (69 de 69 tareas) e integrada en `main`; lo
-siguiente es la spec 002 (ver «Spec 001», más abajo). La spec 000
+**Dónde estamos:** spec 002 (Enrutado con confianza) implementada y cerrada (56 de 56 tareas) en
+la rama local `002-enrutado-confianza`, sin subir todavía. SC-004 está cerrado: tras dos pruebas y
+varios ajustes de nivel 2 (en «Enmiendas» de la spec), el criterio se enmendó para medir la
+claridad y no un tiempo, y la segunda prueba lo cumple. Lo siguiente está al
+final de «Spec 002», más abajo. La spec 001 (Triaje) está cerrada e integrada en `main`. La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
 aplazada, se completó el 2026-10-14. Hecho:
@@ -66,8 +69,8 @@ aplazada, se completó el 2026-10-14. Hecho:
    PyPI, comprobada): basta `uv tool install specify-cli`. [hecho, 2026-10-12] `integration upgrade --force` devuelve
    a la base las skills de las integraciones no activas; el paso por cada agente las restaura
    (`docs/governance.md` §5). [hecho, 2026-10-13] Entorno de Windows comprobado (uv, Python 3.13,
-   `python3` con PyYAML, `specify`) y reinstalación de presets verificada; falta documentarlo en
-   `docs/setup.md` en la spec 000.
+   `python3` con PyYAML, `specify`) y reinstalación de presets verificada; documentado en
+   `docs/setup.md` (§3 y §4) en la spec 000.
 
 **Después:** el resto de la spec 000 con Spec Kit.
 - [hecho, 2026-10-12] `/speckit-specify`: `specs/000-cimientos/spec.md`, 4 historias. Aclarado:
@@ -131,7 +134,77 @@ aplazada, se completó el 2026-10-14. Hecho:
   guardar el informe de `/speckit-analyze` en cada spec.
 - [hecho, 2026-10-14] `001-triaje-ticket` integrada en `main` con PR y merge commit
   (`docs/standards/version-control.md` §3).
-- **[siguiente]** Spec 002 desde `main`; al planificarla, revisar `docs/ideas.md`.
+- [hecho, 2026-10-14] Idea de la retro 001 recogida en `main`: el informe de `/speckit-analyze`
+  se guarda en `specs/NNN-*/analysis.md` (regla en `AGENTS.md`, sin preset).
+
+**Spec 002** (rama `002-enrutado-confianza`, artefactos en `specs/002-enrutado-confianza/`):
+- [hecho, 2026-10-14] `/speckit-specify` con 3 aclaraciones: el reembolso sin confianza
+  suficiente queda en la cola de revisión pendiente de confirmación; umbrales provisionales 0,90
+  (mover a cola) y 0,97 (reembolsar); el reembolso depende de una Choice nueva, `solicitud`.
+- [hecho, 2026-10-14] `/speckit-clarify` con 3 aclaraciones: el reembolso automático exige
+  además la cola automatizada a `facturacion`; un elemento de revisión por petición; huella del
+  contenido de la política junto a su versión.
+- [hecho, 2026-10-14] `/speckit-plan`: plan, research, data-model, contratos de `route` y
+  `review` y quickstart. Decisiones: petición genérica (`ResolvedRequest`) para no tocar el
+  comportamiento de `triage` (R1); política en `src/jevlab/policies/soporte/enrutado.yaml` (R3);
+  SQLite de la biblioteca estándar en el directorio de estado del usuario o `JEVLAB_STATE_DIR`
+  (R5); sin dependencias nuevas.
+- [hecho, 2026-10-14] `/speckit-tasks`: 56 tareas en `specs/002-enrutado-confianza/tasks.md`.
+- [hecho, 2026-10-14] `/speckit-analyze` en dos pasadas, con el informe y el estado de cada
+  hallazgo en `specs/002-enrutado-confianza/analysis.md`. Sin conflictos críticos; corregidos los
+  21 hallazgos. Decisiones de la persona:
+  - el escape de la solicitud es una abstención explícita («sin reembolso»), visible y auditada
+    (Constitución §II);
+  - cada acción resuelta en revisión deja su propia entrada de auditoría;
+  - los ejemplos declaran lo que cubren y un test lo comprueba; tests y demos los eligen por
+    etiqueta, sin cifras del modelo escritas a mano; los textos de la 001 no se reescriben y hay
+    un ejemplo adversarial propio, `reembolso-incrustado`.
+- [hecho, 2026-10-14] Gobernanza: niveles para cambiar features ya entregadas
+  (`docs/governance.md` §7): mantenimiento por PR, ajuste con «Enmiendas» en la spec afectada o
+  spec propia. Surgió de U2 del análisis: la regla anterior llevaba las mejoras de una spec
+  cerrada a la siguiente, aunque no tuviera que ver.
+- [hecho, 2026-10-15] `/speckit-implement` (commit `d94a57d`): `jevlab route` y `jevlab review`,
+  política en `src/jevlab/policies/soporte/enrutado.yaml`, auditoría y cola en SQLite.
+  `uv run poe check` en verde (475 tests unitarios y de contrato, 25 de integración, cobertura
+  97,85 %) y `uv run poe live` contra TypeSafe real.
+  - Ocho ejemplos grabados en `src/jevlab/recordings/soporte/enrutado/`. `reembolso-ambiguo` se
+    reescribió porque el modelo lo leía como `consulta` (0,39); ahora da `reembolso` 0,87.
+  - Hallazgo: el mismo texto cambia de confianza entre grabaciones (`instruccion-incrustada`, de
+    0,85 a 0,88 en la cola).
+  - Hallazgo corregido: la CLI importaba el SDK de OpenAI al arrancar, aunque solo lo usa
+    `doctor`; cada comando tardaba 2,3 s. Ahora tarda 0,9-1,0 s (también `triage`).
+  - Desviación anotada en `tasks.md`: el dominio de las historias se adelantó a la fase 2 porque
+    el contrato del almacén lo necesitaba, con los tests siempre antes.
+- [hecho, 2026-10-15] Cierre (commit `d400df4`): lección
+  `docs/lessons/002-la-confianza-como-segundo-eje-y-umbrales-por-riesgo.md` y retro en el commit.
+  Lo que genera, en `docs/ideas.md`: un test que impida cargar SDKs pesados al arrancar la CLI
+  (nivel 1), medir la variación de la confianza entre ejecuciones (spec 004) y un protocolo para
+  los criterios de éxito que miden a una persona (preset `jevlab-spec`).
+- [hecho, 2026-10-17] Primera prueba de SC-004: no se cumple (más de 10 minutos sin terminar). La
+  persona no distinguió la propuesta del modelo de la decisión del código, no entendió la cola ni
+  supo cómo resolver. Cambios:
+  - `docs/governance.md` §7 (`49ec30f`): un ajuste de nivel 2 actualiza los documentos que definen
+    el comportamiento y lo registra en «Enmiendas»; así, regenerar desde la spec da el
+    comportamiento vigente.
+  - `docs/standards/cli-ux.md` §6 y preset `jevlab-decision` 0.1.3 (`47bbcb6`): cada dato dice de
+    dónde sale (IA, política, regla) y lo pendiente dice qué hacer; el plan cita el estándar de su
+    interfaz.
+  - Ajuste de la 002 (`0e9eb05`): salida de `route` y `review`, contratos, spec con «Enmiendas»
+    y lección §4.
+  - Segundo ajuste de la 002 (`b140395`): `jevlab review guia` explica las colas, las acciones y
+    los comandos; la lección la usa como paso 0.
+  - Lección, quickstart y `AGENTS.md` al día con la salida vigente, y `docs/governance.md` §7 los
+    nombra entre lo que actualiza un ajuste de nivel 2 (`ce09547`); el escape de la
+    cola muestra lo que respondió el modelo, `other (escape)` (`e391381`).
+  - La guía dice cómo la cola decide el reembolso (`2e8ba83`).
+  - Protocolo de SC-004 versionado en `quickstart.md`, «SC-004: prueba con una persona».
+- [hecho, 2026-10-17] Segunda prueba de SC-004 (`9fb59b5`): no se cumple, 2,5 min en la ronda 1
+  (1,5 de guía). Ajuste (`3439a27`): texto completo del ticket, qué hacer en el escape y la guía
+  dice qué atiende cada cola y qué pasa al asignar.
+- [hecho, 2026-10-17] SC-004 enmendado: sin umbral de tiempo; el Operador resuelve sin ayuda y
+  con la respuesta esperada tras una presentación breve. La segunda prueba lo cumple.
+- **[siguiente]** Subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y
+  merge commit.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
@@ -139,6 +212,8 @@ aplazada, se completó el 2026-10-14. Hecho:
 **Convenciones vigentes al retomar:**
 - Toda decisión la aprueba la persona (HITL); los agentes proponen.
 - Commits sin firma de agente, en formato Conventional Commits y en español.
+- Una mejora sobre una feature ya entregada entra por su nivel (`docs/governance.md` §7), no
+  esperando a la siguiente spec.
 - Filtro de simplicidad: cambiar solo lo que corrige una contradicción o un riesgo real, con el
   mínimo texto.
 
@@ -276,7 +351,9 @@ jev-lab/
 │   ├── ports/                # interfaces (Protocol)
 │   ├── adapters/             # typesafe, cassette, azure, sqlite/postgres, yaml, cache, otel
 │   ├── entrypoints/{cli,api}/
-│   └── specs/<dominio>/*.yaml  # DecisionSpecs versionados
+│   ├── specs/<dominio>/*.yaml  # DecisionSpecs versionados
+│   ├── policies/<dominio>/*.yaml  # políticas de umbrales por riesgo, versionadas (002)
+│   └── recordings/<dominio>/<petición>/  # respuestas reales grabadas que reproduce la CLI
 ├── docs/lessons/NNN-<nombre-descriptivo>.md  # una lección por spec; el nombre dice lo que aporta
 ├── data/<dominio>/*.jsonl    # datasets propios o externos con licencia y cita + cassettes/
 ├── tests/{unit,contract,integration,live}/
@@ -412,7 +489,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
     - **ADRs** (`docs/adr/`, MADR) para decisiones con alternativas; no son una capa de reglas.
     - Precedencia: constitución > preset > estándar > `plan.md`. Cada regla se rastrea hasta un principio.
   - *Temas (decidido 2026-10-12):* `jevlab-spec`, `jevlab-arch`, `jevlab-decision`, `jevlab-testing` (`replace`) y `jevlab-security`; sin tema UX. Detalle en `docs/governance.md` §4.
-  - *Hecho (HITL, 2026-10-12):* contenido de cada preset y estándar; ADR-0001 y ADR-0002; `specify preset add --dev` y el efecto de `integration upgrade`. Pendiente: PyYAML en Windows (`docs/setup.md`).
+  - *Hecho (HITL, 2026-10-12):* contenido de cada preset y estándar; ADR-0001 y ADR-0002; `specify preset add --dev` y el efecto de `integration upgrade`. PyYAML en Windows, documentado en `docs/setup.md` §4.
 - **Aceptación:**
   - constitución v0.3.0 ratificada por el humano tras los 6 pasos HITL;
   - mecanismos de definiciones globales acordados y aplicados en las plantillas;
@@ -432,10 +509,11 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 ### 002: Enrutado con confianza según riesgo (Usuario inicial de Jev -> Operador)
 *Aprende: la confianza como segundo eje de decisión; umbrales por riesgo.*
 - **US1 (P1):** un ticket con confianza alta se enruta solo y la CLI explica el motivo (umbral y valor).
-- **US2 (P2):** si la acción es destructiva (p. ej. reembolso automático), se exige un umbral más alto; si no se alcanza, se pide confirmación.
-- **US3 (P3):** lo que tiene confianza baja o `other` entra en una **cola de revisión** (SQLite). Como Operador la listo y la resuelvo con `jevlab review`.
-- **US4 (P4):** como Operador cambio los umbrales en `policy.yaml` versionado, sin tocar código, y la CLI muestra qué versión se aplicó.
-- *Producción introducida:* configuración validada con Pydantic, auditoría de decisiones con `request_id` y tests de propiedades (hypothesis) que comprueban que las bandas son monótonas.
+- **US2 (P2):** si la acción es destructiva (reembolso automático, simulado), se exige un umbral más alto; si no se alcanza, el reembolso queda en la cola de revisión pendiente de confirmación. Depende de una Choice nueva, `solicitud`, y además de que la cola se haya movido sola a `facturacion`; si la solicitud no es un reembolso, la abstención se muestra y se audita.
+- **US3 (P3):** lo que tiene confianza baja o `other` entra en una **cola de revisión** (SQLite), un elemento por petición. Como Operador la listo y la resuelvo con `jevlab review` (`asignar`, `descartar`, `confirmar`, `rechazar`).
+- **US4 (P4):** como Operador cambio los umbrales en la política versionada (`src/jevlab/policies/soporte/enrutado.yaml`, o otra con `--politica`), sin tocar código, y la CLI muestra la versión y la huella del contenido que se aplicaron.
+- *Producción introducida:* configuración validada con Pydantic (incluida la monotonía por riesgo), auditoría de decisiones con `request_id` y tests de propiedades (hypothesis) que comprueban que las bandas son monótonas.
+- *Estado:* implementada y cerrada el 2026-10-15; lección `docs/lessons/002-la-confianza-como-segundo-eje-y-umbrales-por-riesgo.md`.
 
 ### 003: Guardarraíl de un asistente con fan-out y composición (Integrador)
 *Aprende: los patrones oficiales de fan-out, composite scoring e intent routing.*
@@ -449,9 +527,9 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 *Aprende: evaluar con datos propios y elegir umbrales con evidencia.*
 - **US1 (P1):** con `jevlab eval triage` evalúo un dataset etiquetado, propio o externo con licencia válida y citado (~200 ítems: claros, ambiguos, fuera de dominio y adversariales) y obtengo un informe con macro-F1 y la matriz de confusión.
 - **US2 (P2):** el informe incluye la **calibración**: Brier, ECE y diagrama de fiabilidad.
-- **US3 (P3):** obtengo la **curva cobertura-precisión** y un umbral recomendado para una precisión objetivo. Se exporta como propuesta de `policy.yaml`, con lo que se cierra el ciclo con la 002.
+- **US3 (P3):** obtengo la **curva cobertura-precisión** y un umbral recomendado para una precisión objetivo. Se exporta como propuesta de política (el formato de `src/jevlab/policies/soporte/enrutado.yaml`, que sustituye a `provisional` por la referencia a la evaluación), con lo que se cierra el ciclo con la 002. El umbral recomendado deja margen para la variación de la confianza entre ejecuciones (`docs/ideas.md`).
 - **US4 (P4):** comparo con el baseline **Azure OpenAI** (Structured Outputs estricto, mismas preguntas): acierto, latencia p50/p95 y coste por cada 1.000 llamadas. Se advierte que sus "probabilidades" son autodeclaradas.
-- *Producción introducida:* datasets versionados, ejecución reproducible (semilla y modelo fijado, p. ej. `jev-1.13`) y test de regresión al cambiar de modelo.
+- *Producción introducida:* datasets versionados, ejecución reproducible (semilla y modelo fijado, p. ej. `jev-1.13.0`) y test de regresión al cambiar de modelo.
 
 ### 005: Laboratorio de modos de fallo (Usuario inicial de Jev)
 *Aprende: dónde falla Jev y cómo se mitiga, con datos propios.* Cada historia es una comparación entre un diseño ingenuo y su mitigación, con `jevlab jagged <grupo>`, y usa el evaluador de la 004.
@@ -483,7 +561,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 
 ## Verificación
 - Por spec: `/speckit-analyze` sin inconsistencias graves antes de implementar. Cada US cumple sus escenarios Given/When/Then de `spec.md` y se puede demostrar por separado.
-- `uv run ruff check && uv run mypy src && uv run pytest -m "not live" --cov` en verde (≥ 80 %); `uv run pytest -m live` con claves reales.
+- `uv run poe check` en verde (lint, tipos, regla de dependencias, cobertura ≥ 80 % y ≥ 95 % en el dominio, integración y comprobaciones propias); `uv run poe live` con claves reales.
 - Demostración de cada US con la CLI o con `curl` contra la API, tanto con cassettes como en vivo.
 - 007: `docker compose up`, un 429 simulado que se resuelve con reintento, y modo degradado si Jev cae.
 - **Multiplataforma:** el job de CI en `windows-latest` pasa en verde, y en una máquina Windows `uv sync && uv run poe test` funciona sin pasos extra.
@@ -495,7 +573,7 @@ En cada spec se recorre `/speckit-specify -> clarify -> plan -> tasks -> analyze
 2. Hecho: `mkdir jev-lab && cd jev-lab && git init`, crear primero `.gitattributes` y luego `specify init . --integration claude --script py && specify integration install agy --force && specify integration status`.
 3. Hecho: `AGENTS.md` mínimo de arranque y `CLAUDE.md` (`@AGENTS.md`), para que cualquier agente abierto en `jev-lab/` tenga el contexto sin memorias externas. Se completan en la spec 000.
 4. Hecho: `/speckit-constitution` con el borrador y depuración HITL (pasos 1–6); v0.3.0 ratificada el 2026-10-11.
-5. Siguiente: HITL de mecanismos de arquitectura y definiciones globales (ver «Estado actual y cómo retomar»). Después, el resto de la spec 000.
+5. Hecho: HITL de mecanismos de arquitectura y definiciones globales, y spec 000. El estado vigente está en «Estado actual y cómo retomar».
 
 ---
 

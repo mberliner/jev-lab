@@ -11,3 +11,5 @@ Una fila por decisión de la spec. Si la spec dice «no aplica», esta sección 
 - **Revisión de I**: ¿alguna pregunta pide al modelo una cifra, una fecha, un permiso o más de una
   idea? [no \| sí: cómo se corrige].
 - **Escape y respuesta inválida**: [cómo se implementan la revisión o la abstención de la spec].
+- **Salida**: [interfaz y estándar de su formato: `docs/standards/cli-ux.md` (§6, origen de cada
+  dato y `qué hacer:`), `api-errors.md` \| no aplica].

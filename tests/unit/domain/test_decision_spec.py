@@ -10,6 +10,8 @@ from jevlab.domain.decision_spec import (
     DecisionSpec,
     NoulSpec,
     RequestSpec,
+    ResolvedRequest,
+    RouteSpec,
     ScoreSpec,
     TriageSpec,
 )
@@ -171,15 +173,37 @@ def test_request_cannot_repeat_a_decision() -> None:
         request(questions={"cola": "cola-destino", "otra": "cola-destino"})
 
 
-def test_triage_spec_resolves_questions_and_versions() -> None:
-    spec = TriageSpec.resolve(request(), decisions())
+def resolved(
+    req: RequestSpec | None = None, available: dict[str, DecisionSpec] | None = None
+) -> ResolvedRequest:
+    return ResolvedRequest.resolve(req or request(), available or decisions())
 
-    assert spec.model == "jev-1.13.0"
-    assert spec.max_chars == 4000
-    assert spec.queue.escape == "other"
-    assert spec.urgency.uncertain_band.low == 0.3
-    assert spec.priority.threshold_position == 2
-    assert spec.spec_versions() == {
+
+def test_resolved_request_keeps_questions_in_order_with_common_model() -> None:
+    r = resolved()
+
+    assert r.model == "jev-1.13.0"
+    assert r.max_chars == 4000
+    assert list(r.questions()) == ["cola", "urgencia", "prioridad"]
+    assert r.questions()["cola"].name == "cola-destino"
+
+
+def test_resolved_request_fails_with_missing_decision() -> None:
+    available = decisions()
+    del available["prioridad"]
+    with pytest.raises(ValueError, match="prioridad"):
+        ResolvedRequest.resolve(request(), available)
+
+
+def test_resolved_request_fails_with_different_models() -> None:
+    available = decisions()
+    available["prioridad"] = _DECISION.validate_python(score(model="jev-1.12.0"))
+    with pytest.raises(ValueError, match="modelo"):
+        ResolvedRequest.resolve(request(), available)
+
+
+def test_spec_versions_include_request_and_each_decision() -> None:
+    assert resolved().spec_versions() == {
         "triaje": "0.1.0",
         "cola-destino": "0.1.0",
         "urgencia-explicita": "0.1.0",
@@ -187,18 +211,21 @@ def test_triage_spec_resolves_questions_and_versions() -> None:
     }
 
 
-def test_triage_spec_fails_with_missing_decision() -> None:
-    available = decisions()
-    del available["prioridad"]
-    with pytest.raises(ValueError, match="prioridad"):
-        TriageSpec.resolve(request(), available)
+def test_triage_spec_from_request_resolves_questions_and_versions() -> None:
+    spec = TriageSpec.from_request(resolved())
+
+    assert spec.model == "jev-1.13.0"
+    assert spec.max_chars == 4000
+    assert spec.queue.escape == "other"
+    assert spec.urgency.uncertain_band.low == 0.3
+    assert spec.priority.threshold_position == 2
+    assert spec.spec_versions() == resolved().spec_versions()
 
 
-def test_triage_spec_fails_with_different_models() -> None:
-    available = decisions()
-    available["prioridad"] = _DECISION.validate_python(score(model="jev-1.12.0"))
-    with pytest.raises(ValueError, match="modelo"):
-        TriageSpec.resolve(request(), available)
+def test_triage_spec_fails_with_other_questions() -> None:
+    other = request(questions={"cola": "cola-destino", "urgencia": "urgencia-explicita"})
+    with pytest.raises(ValueError, match="triaje"):
+        TriageSpec.from_request(resolved(other))
 
 
 def test_triage_spec_fails_with_wrong_primitive_for_question() -> None:
@@ -210,4 +237,71 @@ def test_triage_spec_fails_with_wrong_primitive_for_question() -> None:
         }
     )
     with pytest.raises(TypeError, match="cola"):
-        TriageSpec.resolve(swapped, decisions())
+        TriageSpec.from_request(resolved(swapped))
+
+
+def kind(**overrides: Any) -> dict[str, Any]:
+    data: dict[str, Any] = {
+        "name": "solicitud",
+        "version": "0.1.0",
+        "model": "jev-1.13.0",
+        "primitive": "choice",
+        "instructions": "¿Qué pide el cliente en este ticket?",
+        "options": {"reembolso": "Dinero.", "consulta": "Ayuda.", "other": "Ninguna."},
+        "escape": "other",
+    }
+    return data | overrides
+
+
+def route_request(**overrides: Any) -> RequestSpec:
+    data: dict[str, Any] = {
+        "name": "enrutado",
+        "version": "0.1.0",
+        "max_chars": 4000,
+        "questions": {"cola": "cola-destino", "solicitud": "solicitud"},
+    }
+    return RequestSpec.model_validate(data | overrides)
+
+
+def route_decisions(**kind_overrides: Any) -> dict[str, DecisionSpec]:
+    return decisions() | {"solicitud": _DECISION.validate_python(kind(**kind_overrides))}
+
+
+def test_route_spec_from_request() -> None:
+    spec = RouteSpec.from_request(resolved(route_request(), route_decisions()))
+
+    assert spec.queue.name == "cola-destino"
+    assert spec.request_kind.name == "solicitud"
+    assert spec.model == "jev-1.13.0"
+    assert spec.spec_versions() == {
+        "enrutado": "0.1.0",
+        "cola-destino": "0.1.0",
+        "solicitud": "0.1.0",
+    }
+
+
+def test_route_spec_needs_exactly_queue_and_request_kind() -> None:
+    triage = resolved(request(), route_decisions())
+    with pytest.raises(ValueError, match="enrutado"):
+        RouteSpec.from_request(triage)
+
+
+def test_route_spec_needs_two_choices() -> None:
+    wrong = route_request(questions={"cola": "cola-destino", "solicitud": "urgencia-explicita"})
+    with pytest.raises(TypeError, match="solicitud"):
+        RouteSpec.from_request(resolved(wrong, route_decisions()))
+
+
+def test_route_spec_needs_refund_option() -> None:
+    no_refund = {"consulta": "Ayuda.", "incidencia": "Fallo.", "other": "Ninguna."}
+    with pytest.raises(ValueError, match="reembolso"):
+        RouteSpec.from_request(resolved(route_request(), route_decisions(options=no_refund)))
+
+
+def test_route_spec_needs_billing_queue() -> None:
+    available = route_decisions()
+    available["cola-destino"] = _DECISION.validate_python(
+        choice(options={"tecnico": "Fallos.", "other": "Ninguna."})
+    )
+    with pytest.raises(ValueError, match="facturacion"):
+        RouteSpec.from_request(resolved(route_request(), available))

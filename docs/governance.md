@@ -100,7 +100,7 @@ preset, estándar o ambos, según lo necesite.
 | Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | creado |
 | Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | creado |
 | Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | creado |
-| Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | *(no necesita)* | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
+| Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | `jevlab-decision` las exige en el plan | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
 | Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática (`poe check-writing`) |
 | Control de versiones | VI | *(no necesita)* | `version-control.md` | creado; comprobación automática (gancho `commit-msg`) |
 
@@ -121,8 +121,9 @@ rellena el plan de arriba abajo, persona o agente, no clasifica datos ni piezas 
 Entre presets `append` la prioridad no cambia el resultado, solo el orden.
 
 No hay tema UX propio: la transparencia de la decisión (resultado, confianza, motivo de escalado,
-«no disponible», grabado o sintético) deriva de II y IV y vive en `jevlab-decision`; las
-convenciones de formato de CLI y API son solo estándares.
+«no disponible», grabado o sintético, origen de cada dato y qué hacer con lo pendiente) deriva de
+II y IV y vive en `jevlab-decision`; las convenciones de formato de CLI y API son estándares, y
+`jevlab-decision` obliga a que el plan las cite.
 
 ## 5. Presets propios: convenciones
 
@@ -156,10 +157,12 @@ admitir la versión instalada (hoy `>=1.1.3`, la estable de PyPI).
    specify preset add --dev presets/jevlab-<tema> --priority <n>
    ```
    Copia el preset a `.specify/presets/` (se versiona, para que un clon nuevo funcione sin pasos
-   extra) y lo anota en `.specify/presets/.registry`. **Antes, apartar `.venv/`** (por ejemplo,
-   `mv .venv .venv.off` y restaurarlo al terminar el paso 3): si existe, Spec Kit escribe en las
-   skills `.venv/bin/python` en lugar de `python3`, que solo vale en esa máquina y ese sistema
-   (comprobado con 1.1.4.dev0; `poe check-presets` lo detecta). La copia instalada no se sincroniza sola con
+   extra) y lo anota en `.specify/presets/.registry`. **Si el preset trae comandos, antes apartar
+   `.venv/`** (por ejemplo, `mv .venv .venv.off` y restaurarlo al terminar el paso 3): si existe,
+   Spec Kit escribe en las skills `.venv/bin/python` en lugar de `python3`, que solo vale en esa
+   máquina y ese sistema (comprobado con 1.1.4.dev0; `poe check-presets` lo detecta). Un preset
+   solo de plantillas no escribe skills y no lo necesita (comprobado con `jevlab-decision`
+   0.1.3). La copia instalada no se sincroniza sola con
    la fuente: sin reinstalar, Spec Kit sigue usando la anterior.
 3. **Solo si el preset trae comandos:** Spec Kit registra los comandos únicamente en la integración
    activa (regla de agente único activo). Para mantener la paridad, se pasa por cada agente y se
@@ -266,12 +269,46 @@ de instalar un preset o cambiar de integración, `python3` debe resolver a un Py
 | --- | --- | --- |
 | **Constitución** | `/speckit-constitution` -> *Sync Impact Report* -> aprobación humana -> commit `docs(constitution): …` con bump semver | Revisar los presets afectados (el *Sync Impact Report* los lista) |
 | **Preset** | PR con bump de `version` en `preset.yml` y reinstalación (`specify preset update` o `add --dev`) | Afecta a los artefactos que se generen a partir de ese momento |
-| **Estándar** | PR normal | Inmediata; el código existente se adapta en la siguiente spec que lo toque |
-| **Specs ya cerradas** | No se reescriben. En la retro de cierre de cada spec se anota si una regla nueva obliga a una tarea de adaptación | La tarea se anota en `docs/ideas.md` y entra en una spec futura |
+| **Estándar** | PR normal | Inmediata; el código existente se adapta en un PR de mantenimiento o en la siguiente spec que lo toque |
+| **Specs ya cerradas** | Lo que cambie en su feature entra por el nivel que le corresponda (abajo); qué documentos se actualizan y cuáles no, también abajo | Lo pendiente se anota en `docs/ideas.md` con su nivel |
 
 Una retro breve al cerrar cada spec responde tres preguntas: ¿algún principio estorbó?, ¿faltó
 alguno?, ¿alguna sección de preset se rellenó por rellenar? Cada respuesta "sí" abre un cambio en
 la capa que corresponda.
+
+### Cambios en features ya entregadas
+
+Lo que sale de una retro, o lo que se detecta al trabajar sobre una feature cerrada, se clasifica
+por lo que cambia. Una mejora no espera a la siguiente spec ni se mezcla con una spec de otra
+función.
+
+| Nivel | Qué cambia | Cómo entra | Documentos de la spec cerrada |
+| --- | --- | --- | --- |
+| **1. Mantenimiento** | Nada del comportamiento que describe una spec: refactor, error que devuelve lo especificado, herramientas, puertas de calidad, documentación | PR directo (`fix`, `refactor`, `docs`, `build`, `ci` o `chore`), sin spec, con `uv run poe check` | No se tocan |
+| **2. Ajuste** | Algo pequeño del comportamiento de una feature entregada, sin historia de usuario nueva: un texto, un mensaje, un umbral, una grabación, un ejemplo | PR propio, sin pasar por Spec Kit; tests que cubran el cambio | Los documentos que definen el comportamiento se actualizan para describir el vigente, y se añade al final de su `spec.md` una sección «Enmiendas» con fecha, cambio, motivo y commit (abajo) |
+| **3. Capacidad nueva** | Algo que un perfil de usuario puede hacer y antes no: necesita al menos una historia de usuario nueva | Su propia spec, con todo lo que exige la constitución (§VII), en el lugar del roadmap que le corresponda por función | — |
+
+- La frontera entre 2 y 3: si el cambio necesita una historia de usuario nueva, es nivel 3.
+- Una spec en curso puede cambiar código, datos o grabaciones de una feature anterior cuando su
+  plan lo declara y lo justifica (por ejemplo, generalizar un puerto). Si eso cambia un
+  comportamiento descrito en la spec anterior, esa spec recibe también su enmienda.
+- Si una feature se integra en `main` después de su cierre, sus ajustes de nivel 1 y 2 pueden ir
+  en su misma rama, antes del PR: son de la misma función.
+
+**Qué documentos se actualizan.** Los documentos de una spec son la fuente de su feature:
+regenerar el código desde ellos debe dar el comportamiento vigente. Por eso cada documento se
+trata según lo que es:
+
+| Documento | Con un ajuste (nivel 2) |
+| --- | --- |
+| Lo que define el comportamiento externo: requisitos, escenarios de aceptación, «Qué ve cada persona», contratos, `data-model.md` si cambia una entidad | Se actualiza para describir el vigente |
+| Lo que lo enseña o lo valida: `quickstart.md`, la lección de la spec y los comandos de `AGENTS.md` | Se actualiza para que sus comandos y salidas esperadas sean los vigentes |
+| `spec.md`, sección «Enmiendas» | Se añade una entrada: fecha, cambio, motivo, documentos actualizados y commit |
+| Lo que registra cómo se llegó: sesiones de *Clarifications*, `research.md`, `analysis.md`, las tareas ya hechas de `tasks.md` | No se reescribe; una tarea hecha puede recibir una nota que remita a la enmienda |
+
+- Si un documento de comportamiento contradice una entrada de «Enmiendas», manda la enmienda, y la
+  contradicción se corrige como mantenimiento.
+- El estado de los documentos al cerrar la spec queda en git, en su commit de cierre.
 
 ### Versionado de documentos
 
