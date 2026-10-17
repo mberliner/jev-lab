@@ -41,7 +41,7 @@ def test_route_list_resolve_and_persist(tmp_path: Path, monkeypatch: pytest.Monk
     # Otra invocación sobre el mismo archivo: solo queda lo que no se resolvió.
     again = CliRunner().invoke(app, ["review"]).stdout.splitlines()
     assert again[0] == "Pendientes: 1"
-    assert again[4].startswith(f"[{items['mover-escape']}] ")
+    assert again[5].startswith(f"[{items['mover-escape']}] ")
     assert f"    jevlab review descartar {items['mover-escape']}" in again
 
     with closing(sqlite3.connect(state / "estado.sqlite3")) as connection, connection:

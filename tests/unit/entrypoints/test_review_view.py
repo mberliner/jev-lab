@@ -1,9 +1,11 @@
 """Salida de `jevlab review` (contracts/cli-review.md; cli-ux.md §6, prueba de SC-004)."""
 
+from jevlab.application.review import Guide
 from jevlab.domain.policy import ActionName
 from jevlab.domain.review import Resolution, ReviewItem
 from jevlab.entrypoints.cli import review_view
-from tests.routing_builders import routing_result
+from tests.builders import route_spec
+from tests.routing_builders import policy, routing_result
 
 _QUEUES = ("cuenta", "facturacion", "tecnico")
 
@@ -23,10 +25,11 @@ def _todo(lines: list[str]) -> list[str]:
 def test_header_says_what_the_queue_is_and_who_resolves_it() -> None:
     lines = review_view.render_pending([_item(queue="cuenta", queue_confidence=0.5)], _QUEUES)
 
-    assert lines[:3] == [
+    assert lines[:4] == [
         "Pendientes: 1",
         "Peticiones con alguna acción que el código no automatizó; el motivo está en cada «regla».",
         "Las resuelve una persona con los comandos de «qué hacer».",
+        "Qué significa cada cola y cada comando: jevlab review guia",
     ]
 
 
@@ -98,3 +101,36 @@ def test_assigned_queue_says_a_person_did_it() -> None:
 
     assert "  Cola: facturacion · asignada por una persona" in lines
     assert _todo(lines) == ["    jevlab review confirmar 5", "    jevlab review rechazar 5"]
+
+
+def test_guide_takes_queues_from_the_definition_and_thresholds_from_the_policy() -> None:
+    rules = policy(move=0.8, refund=0.95, version="0.2.0")
+    lines = review_view.render_guide(Guide(queue=route_spec().queue, policy=rules))
+
+    i = lines.index("Colas (definición cola-destino 0.1.0):")
+    assert lines[i + 1 : i + 6] == [
+        "  cuenta       Acceso.",
+        "  facturacion  Cobros.",
+        "  tecnico      Fallos.",
+        "  other        Ninguna de las anteriores. Es el escape: no se asigna.",
+        "",
+    ]
+    i = lines.index(f"Acciones (política 0.2.0 · huella {rules.fingerprint}):")
+    assert lines[i + 1 : i + 3] == [
+        "  mover a cola  riesgo bajo · umbral 0,80 (provisional)",
+        "  reembolsar    riesgo alto · umbral 0,95 (provisional) · solo con la cola facturacion",
+    ]
+
+
+def test_guide_lists_every_review_command() -> None:
+    lines = review_view.render_guide(Guide(queue=route_spec().queue, policy=policy()))
+
+    i = lines.index("Comandos (N es el número del elemento):")
+    commands = [line.split("  ")[1] for line in lines[i + 1 :]]
+    assert commands == [
+        "jevlab review",
+        "jevlab review asignar N <cola>",
+        "jevlab review descartar N",
+        "jevlab review confirmar N",
+        "jevlab review rechazar N",
+    ]

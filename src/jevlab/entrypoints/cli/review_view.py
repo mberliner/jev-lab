@@ -6,11 +6,13 @@ recortado y entre comillas.
 
 from collections.abc import Sequence
 
+from jevlab.application.review import Guide
 from jevlab.domain.decision_spec import BILLING_QUEUE
 from jevlab.domain.policy import ActionName
 from jevlab.domain.review import Resolution, ReviewItem
 from jevlab.domain.routing import AuditEntry
 from jevlab.entrypoints.cli.route_view import TITLES, render_sources
+from jevlab.entrypoints.cli.triage_view import number
 
 _SEP = " · "
 _TEXT_WIDTH = 72
@@ -18,6 +20,21 @@ _ID_WIDTH = 8
 _ABOUT = (
     "Peticiones con alguna acción que el código no automatizó; el motivo está en cada «regla».",
     "Las resuelve una persona con los comandos de «qué hacer».",
+    "Qué significa cada cola y cada comando: jevlab review guia",
+)
+_CONDITIONS = {ActionName.REEMBOLSAR: f"solo con la cola {BILLING_QUEUE}"}
+_COMMANDS = (
+    ("jevlab review", "lista los pendientes y qué hacer en cada uno"),
+    (
+        "jevlab review asignar N <cola>",
+        f"pone la cola; si no es {BILLING_QUEUE}, rechaza el reembolso",
+    ),
+    ("jevlab review descartar N", "cierra sin cola; rechaza también el reembolso"),
+    (
+        "jevlab review confirmar N",
+        f"confirma el reembolso (simulado); exige la cola {BILLING_QUEUE}",
+    ),
+    ("jevlab review rechazar N", "rechaza solo el reembolso"),
 )
 
 
@@ -32,6 +49,42 @@ def render_pending(items: Sequence[ReviewItem], queues: Sequence[str]) -> list[s
         lines += _ABOUT
     for item in items:
         lines += ["", *render_item(item, queues)]
+    return lines
+
+
+def render_guide(guide: Guide) -> list[str]:
+    """Qué es la cola, qué significa cada cola y cada acción, y qué hace cada comando.
+
+    Las colas salen de la definición `cola-destino` y los umbrales de la política del paquete,
+    las mismas que usa `jevlab route`: la guía no repite nada a mano.
+    """
+    queue, policy = guide.queue, guide.policy
+    names = sorted(name for name in queue.options if name != queue.escape)
+    width = max(len(name) for name in queue.options)
+    lines = [
+        "Cola de revisión: peticiones con alguna acción que el código no automatizó.",
+        "La IA propone un valor con su confianza; el código lo compara con el umbral de la política.",
+        "Si no lo alcanza, la acción espera aquí a que una persona la resuelva. Todo es simulado.",
+        "",
+        f"Colas (definición {queue.name} {queue.version}):",
+    ]
+    lines += [f"  {name:<{width}}  {queue.options[name]}" for name in names]
+    escape = f"{queue.options[queue.escape]} Es el escape: no se asigna."
+    lines += [f"  {queue.escape:<{width}}  {escape}", ""]
+    lines.append(f"Acciones (política {policy.version}{_SEP}huella {policy.fingerprint}):")
+    width = max(len(title) for title in TITLES.values())
+    for name, title in TITLES.items():
+        rule = policy.action(name)
+        parts = [f"riesgo {rule.riesgo.value}", f"umbral {number(rule.umbral)}"]
+        if rule.provisional:
+            parts[-1] += " (provisional)"
+        if name in _CONDITIONS:
+            parts.append(_CONDITIONS[name])
+        lines.append(f"  {title:<{width}}  {_SEP.join(parts)}")
+    lines += ["Cada elemento muestra la política con la que se decidió.", ""]
+    lines.append("Comandos (N es el número del elemento):")
+    width = max(len(command) for command, _ in _COMMANDS)
+    lines += [f"  {command:<{width}}  {what}" for command, what in _COMMANDS]
     return lines
 
 

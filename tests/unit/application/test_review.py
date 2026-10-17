@@ -2,14 +2,14 @@
 
 import pytest
 
-from jevlab.application.review import ListPending, ResolveReview, RouteQueues
+from jevlab.application.review import ListPending, ResolveReview, ReviewGuide, RouteQueues
 from jevlab.application.routing import ROUTE_REQUEST
 from jevlab.domain.policy import ActionName
 from jevlab.domain.review import Resolution, ReviewCommand, ReviewItemNotFound, UnknownQueue
 from tests.builders import route_request
 from tests.fakes import FrozenClock, StaticSpecLoader
-from tests.routing_builders import routed
-from tests.routing_fakes import InMemoryRoutingStore
+from tests.routing_builders import policy, routed
+from tests.routing_fakes import InMemoryRoutingStore, StaticPolicyLoader
 
 
 def _store_with(*kwargs_list: dict[str, object]) -> InMemoryRoutingStore:
@@ -82,3 +82,14 @@ def test_missing_item_fails_without_changes() -> None:
 
     assert str(error.value) == "no existe el elemento 9"
     assert store.audit == before
+
+
+def test_guide_reads_the_route_definition_and_the_package_policy() -> None:
+    specs, policies = StaticSpecLoader(route_request()), StaticPolicyLoader(policy())
+
+    guide = ReviewGuide(specs, policies).run()
+
+    assert specs.requested == [ROUTE_REQUEST]
+    assert policies.requested == [None]
+    assert guide.queue.name == "cola-destino"
+    assert guide.policy == policy()

@@ -145,6 +145,10 @@ deja de estar pendiente y que la resolución queda en la auditoría.
    **Then** la salida dice que no hay pendientes.
 8. **Given** la cola de revisión con elementos, **When** se cierra la terminal y se vuelve a
    ejecutar `jevlab review`, **Then** los elementos siguen ahí (persistencia local).
+9. **Given** un Operador que nunca ha usado la cola, **When** ejecuta `jevlab review guia`,
+   **Then** ve qué es la cola, qué significa cada cola (de la definición `cola-destino`), el riesgo
+   y el umbral de cada acción (de la política vigente) y qué hace cada comando de resolución, sin
+   que haga falta el archivo de estado.
 
 ---
 
@@ -243,6 +247,9 @@ versión de cada política y que una política no válida se rechaza sin automat
   estar pendiente cuando no le quedan acciones pendientes. Cada resolución MUST quedar en la
   auditoría. El listado MUST decir qué contiene la cola y quién la resuelve, y cada elemento, los
   comandos exactos que lo resuelven según lo que tenga pendiente, con las colas válidas.
+  `jevlab review guia` MUST explicar qué es la cola, qué significa cada cola, el riesgo y el
+  umbral de cada acción y qué hace cada comando, tomando las colas de la definición y los umbrales
+  de la política, sin repetirlos a mano; la cabecera del listado MUST señalarla.
 - **FR-009**: Los umbrales MUST vivir en un archivo de política versionado en el repositorio
   (`src/jevlab/policies/soporte/enrutado.yaml`; research R3), con una
   versión semver y, por acción, el riesgo, el umbral y su justificación (una evaluación o
@@ -351,7 +358,8 @@ versión de cada política y que una política no válida se rechaza sin automat
   la política, el identificador de petición y el origen, con cada dato etiquetado según venga del
   modelo, de la política o del código. El Operador ve en `jevlab review` qué es la cola y los
   pendientes con su motivo, confianza, umbral, versión de la política, inicio del texto y los
-  comandos que los resuelven.
+  comandos que los resuelven; en `jevlab review guia`, qué significa cada cola, cada acción y cada
+  comando.
 
 ## Corte vertical y lección (jev-lab) *(mandatory)*
 
@@ -395,3 +403,4 @@ comportamiento ya describen el vigente; aquí queda qué cambió y por qué.
 | Fecha | Cambio | Motivo | Documentos actualizados | Commit |
 | --- | --- | --- | --- | --- |
 | 2026-10-17 | Salida de `route` y `review` con cada dato etiquetado según su origen (`Acción`/`estado`, `IA`, `política`, `regla`), `qué hacer:` con los comandos exactos y, en `review`, una explicación de qué es la cola | Prueba de SC-004: una persona sin experiencia no distinguió la propuesta del modelo de la decisión del código, no entendió la cola ni supo cómo resolver un elemento, y no terminó en más de 10 minutos | FR-004, FR-008, US1 escenario 2, US3 escenario 1, «Qué ve cada persona», `contracts/cli-route.md`, `contracts/cli-review.md`, lección §4 | `0e9eb05` |
+| 2026-10-17 | Subcomando `jevlab review guia`: qué es la cola, qué significa cada cola (de `cola-destino`), riesgo y umbral de cada acción (de la política) y qué hace cada comando; la cabecera del listado la señala. Es nivel 2 y no 3: no añade historia de usuario, explica lo que el Operador ya hace en US3 sin permitirle nada nuevo | Tras la primera prueba de SC-004, entender la cola fue el primer bloqueo; el listado explica cada elemento, pero no el conjunto, y meterlo en el listado sería ruido para quien ya la conoce | FR-008, US3 escenario 9, «Qué ve cada persona», `contracts/cli-review.md`, lección §4 (paso 0) | *(pendiente)* |
