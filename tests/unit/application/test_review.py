@@ -2,7 +2,7 @@
 
 import pytest
 
-from jevlab.application.review import ListPending, ResolveReview
+from jevlab.application.review import ListPending, ResolveReview, RouteQueues
 from jevlab.application.routing import ROUTE_REQUEST
 from jevlab.domain.policy import ActionName
 from jevlab.domain.review import Resolution, ReviewCommand, ReviewItemNotFound, UnknownQueue
@@ -64,6 +64,12 @@ def test_escape_is_not_an_assignable_queue() -> None:
     with pytest.raises(UnknownQueue) as error:
         resolver.run(1, ReviewCommand.ASIGNAR, queue="other")
     assert error.value.queues == ("cuenta", "facturacion", "tecnico")
+
+
+def test_route_queues_are_the_valid_queues_of_the_definition() -> None:
+    specs = StaticSpecLoader(route_request())
+    assert RouteQueues(specs).run() == ("cuenta", "facturacion", "tecnico")
+    assert specs.requested == [ROUTE_REQUEST]
 
 
 def test_missing_item_fails_without_changes() -> None:

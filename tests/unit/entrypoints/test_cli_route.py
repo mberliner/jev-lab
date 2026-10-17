@@ -48,7 +48,8 @@ def test_by_name_routes_and_audits(state: Path) -> None:
     assert lines[0].startswith("Origen: grabado · ejemplo cambio-de-correo (ticket sintético)")
     assert lines[1].startswith("Política: 0.1.0 · huella ")
     request_id = lines[2].removeprefix("Petición: ")
-    assert "Mover a cola: cuenta · automatizada" in lines
+    assert "Acción: mover a cola · estado: automatizada" in lines
+    assert any(line.startswith("  IA propone la cola: cuenta · ") for line in lines)
     rows = _audit(state)
     assert {row[0] for row in rows} == {request_id}
     assert [row[1:3] for row in rows] == [
@@ -67,7 +68,10 @@ def test_by_text_selects_the_recording(state: Path) -> None:
 def test_pending_result_still_exits_zero_and_names_the_item(state: Path) -> None:
     result = _route("--ejemplo", "instruccion-incrustada")
     assert result.exit_code == 0, result.output
-    assert result.stdout.splitlines()[-1] == "En la cola de revisión: elemento 1 (jevlab review)"
+    assert result.stdout.splitlines()[-2:] == [
+        "En la cola de revisión: elemento 1",
+        "qué hacer: jevlab review",
+    ]
 
 
 def test_usage_errors_are_code_two(state: Path) -> None:
@@ -105,7 +109,8 @@ def test_other_policy_by_path(state: Path, tmp_path: Path) -> None:
 
     assert result.exit_code == 0, result.output
     assert result.stdout.splitlines()[1].startswith("Política: 0.2.0 · huella ")
-    assert "Mover a cola: cuenta · automatizada" in result.stdout
+    assert "Acción: mover a cola · estado: automatizada" in result.stdout
+    assert "  IA propone la cola: cuenta · " in result.stdout
 
 
 def test_invalid_policy_is_code_one_and_writes_nothing(state: Path, tmp_path: Path) -> None:

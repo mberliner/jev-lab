@@ -98,9 +98,10 @@ dato lleva una etiqueta con su origen (`decision-design.md` §7):
 | `regla:` | lo que comprueba el código y el motivo del estado | `regla: 0,88 < 0,90 · motivo: confianza por debajo del umbral` |
 
 Un valor no se escribe solo detrás del nombre de la acción. Lo que queda pendiente de una persona
-termina con una línea `qué hacer:` que da los comandos exactos que lo resuelven, con el número del
-elemento y, si piden un valor, los valores válidos. Un listado de pendientes empieza diciendo qué
-contiene y quién lo resuelve.
+termina con `qué hacer:` y los comandos exactos que lo resuelven, uno por línea, con el número del
+elemento y, si piden un valor, los valores válidos en un comentario (`# colas: …`). Si solo hay que
+ejecutar otro comando para verlo, va en la misma línea (`qué hacer: jevlab review`). Un listado de
+pendientes empieza diciendo qué contiene y quién lo resuelve.
 
 **Motivo.** En la prueba de SC-004 de la spec 002, una persona sin experiencia no supo si
 `Mover a cola: cuenta` era una cola asignada o lo que proponía el modelo, ni por qué estaba en la
@@ -114,7 +115,9 @@ Acción: reembolsar · estado: pendiente de confirmación
   IA clasifica la solicitud: reembolso · confianza 0,87
   política: umbral 0,97 (riesgo alto, provisional)
   regla: 0,87 < 0,97 · motivo: confianza por debajo del umbral
-  qué hacer: jevlab review confirmar 2 | jevlab review rechazar 2
+qué hacer:
+  jevlab review confirmar 2
+  jevlab review rechazar 2
 ```
 
 **Incorrecto:** `Reembolsar: reembolso · pendiente de confirmación` (no dice que `reembolso` lo

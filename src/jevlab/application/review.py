@@ -9,6 +9,16 @@ from jevlab.ports.routing_store import RoutingStore
 from jevlab.ports.specs import SpecLoader
 
 
+class RouteQueues:
+    """Las colas a las que el Operador puede asignar, de la definición `cola-destino`."""
+
+    def __init__(self, specs: SpecLoader) -> None:
+        self._specs = specs
+
+    def run(self) -> tuple[str, ...]:
+        return RouteSpec.from_request(self._specs.load_request(ROUTE_REQUEST)).valid_queues()
+
+
 class ListPending:
     def __init__(self, store: RoutingStore) -> None:
         self._store = store
@@ -30,7 +40,7 @@ class ResolveReview:
         item = self._store.get(item_id)
         if item is None:
             raise ReviewItemNotFound(item_id)
-        queues = RouteSpec.from_request(self._specs.load_request(ROUTE_REQUEST)).valid_queues()
+        queues = RouteQueues(self._specs).run()
         resolved, entries = resolve(item, command, queues, self._clock.now(), queue=queue)
         self._store.save_resolution(resolved, entries)
         return resolved, entries

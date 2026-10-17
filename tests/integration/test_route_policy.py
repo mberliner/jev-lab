@@ -39,8 +39,8 @@ def test_lowering_the_threshold_changes_the_result(
 
     assert initial.exit_code == 0 and changed.exit_code == 0, changed.output
     initial_lines, changed_lines = initial.stdout.splitlines(), changed.stdout.splitlines()
-    assert any(line.endswith(" · a revisión") for line in initial_lines if "Mover a cola" in line)
-    assert any(line.endswith(" · automatizada") for line in changed_lines if "Mover a cola" in line)
+    assert "Acción: mover a cola · estado: a revisión" in initial_lines
+    assert "Acción: mover a cola · estado: automatizada" in changed_lines
     assert initial_lines[1].startswith("Política: 0.1.0 · huella ")
     assert changed_lines[1].startswith("Política: 0.2.0 · huella ")
     assert initial_lines[1].split()[-1] != changed_lines[1].split()[-1]

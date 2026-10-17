@@ -26,17 +26,18 @@ def test_queue_is_moved_only_with_enough_confidence(
         outputs[tag] = result.stdout.splitlines()
 
     automated = outputs["mover-automatizada"]
-    assert any(
-        line.startswith("Mover a cola: ") and line.endswith(" · automatizada") for line in automated
-    )
+    assert "Acción: mover a cola · estado: automatizada" in automated
 
     review = outputs["mover-a-revision"]
-    i = next(n for n, line in enumerate(review) if line.startswith("Mover a cola: "))
-    assert review[i].endswith(" · a revisión")
-    assert " < umbral 0,90 " in review[i + 1]
-    assert review[i + 2] == "  motivo: confianza por debajo del umbral"
+    i = review.index("Acción: mover a cola · estado: a revisión")
+    assert review[i + 1].startswith("  IA propone la cola: ")
+    assert review[i + 2].startswith("  política: umbral 0,90 ")
+    assert review[i + 3].endswith(" < 0,90 · motivo: confianza por debajo del umbral")
+    assert review[-1] == "qué hacer: jevlab review"
 
-    assert "Mover a cola: sin cola · a revisión" in outputs["mover-escape"]
+    escape = outputs["mover-escape"]
+    i = escape.index("Acción: mover a cola · estado: a revisión")
+    assert escape[i + 1].startswith("  IA propone la cola: ninguna · ")
 
     with closing(sqlite3.connect(tmp_path / "estado" / "estado.sqlite3")) as connection, connection:
         rows = connection.execute(

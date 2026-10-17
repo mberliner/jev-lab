@@ -19,7 +19,7 @@ from jevlab.adapters.typesafe_judge import TypeSafeJudge
 from jevlab.adapters.uuid_ids import UuidIdGenerator
 from jevlab.adapters.yaml_files import YamlPolicyLoader, YamlRecordingLibrary, YamlSpecLoader
 from jevlab.application.check_environment import CheckEnvironment
-from jevlab.application.review import ListPending, ResolveReview
+from jevlab.application.review import ListPending, ResolveReview, RouteQueues
 from jevlab.application.routing import Routed, RouteTicket
 from jevlab.application.triage import TriageTicket
 from jevlab.domain.diagnostics import (
@@ -437,7 +437,8 @@ def review(ctx: typer.Context) -> None:
         items = ListPending(build_routing_store()).run()
     except StateUnreadable as error:
         raise _fail(str(error), 1) from None
-    for line in review_view.render_pending(items):
+    queues = RouteQueues(build_spec_loader()).run()
+    for line in review_view.render_pending(items, queues):
         typer.echo(line)
 
 
@@ -466,7 +467,8 @@ def _resolve(item_id: int, command: ReviewCommand, queue: str | None = None) -> 
             entry.outcome,
             extra,
         )
-    for line in review_view.render_resolution(item, entries):
+    queues = RouteQueues(build_spec_loader()).run()
+    for line in review_view.render_resolution(item, entries, queues):
         typer.echo(line)
 
 

@@ -22,9 +22,10 @@ def test_route_list_resolve_and_persist(tmp_path: Path, monkeypatch: pytest.Monk
         recording = with_tag(tag)
         result = runner.invoke(app, ["route", "--ejemplo", recording.name])
         assert result.exit_code == 0, result.output
-        last = result.stdout.splitlines()[-1]
-        assert last.startswith("En la cola de revisión: elemento "), tag
-        items[tag] = last.split()[6]
+        named, todo = result.stdout.splitlines()[-2:]
+        assert named.startswith("En la cola de revisión: elemento "), tag
+        assert todo == "qué hacer: jevlab review", tag
+        items[tag] = named.split()[-1]
 
     listed = runner.invoke(app, ["review"])
     assert listed.stdout.splitlines()[0] == "Pendientes: 3"
@@ -40,7 +41,8 @@ def test_route_list_resolve_and_persist(tmp_path: Path, monkeypatch: pytest.Monk
     # Otra invocación sobre el mismo archivo: solo queda lo que no se resolvió.
     again = CliRunner().invoke(app, ["review"]).stdout.splitlines()
     assert again[0] == "Pendientes: 1"
-    assert again[2].startswith(f"[{items['mover-escape']}] ")
+    assert again[4].startswith(f"[{items['mover-escape']}] ")
+    assert f"    jevlab review descartar {items['mover-escape']}" in again
 
     with closing(sqlite3.connect(state / "estado.sqlite3")) as connection, connection:
         resolutions = connection.execute(

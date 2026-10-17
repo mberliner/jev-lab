@@ -45,65 +45,83 @@ def test_live_origin() -> None:
 def test_automated_queue_and_refund() -> None:
     lines = _render()
 
-    assert "Mover a cola: facturacion · automatizada" in lines
-    assert "  confianza 1,00 ≥ umbral 0,90 (riesgo bajo, provisional)" in lines
-    assert "Reembolsar: reembolso · automatizada (simulado)" in lines
-    assert (
-        "  confianza 0,98 ≥ umbral 0,97 (riesgo alto, provisional) · cola facturacion automatizada"
-    ) in lines
+    i = lines.index("Acción: mover a cola · estado: automatizada")
+    assert lines[i + 1 : i + 4] == [
+        "  IA propone la cola: facturacion · confianza 1,00",
+        "  política: umbral 0,90 (riesgo bajo, provisional)",
+        "  regla: 1,00 ≥ 0,90",
+    ]
+    j = lines.index("Acción: reembolsar · estado: automatizada (simulado)")
+    assert lines[j + 1 : j + 4] == [
+        "  IA clasifica la solicitud: reembolso · confianza 0,98",
+        "  política: umbral 0,97 (riesgo alto, provisional)",
+        "  regla: 0,98 ≥ 0,97 · cola facturacion automatizada",
+    ]
     assert not any(line.startswith("En la cola de revisión") for line in lines)
-    assert not any("motivo" in line for line in lines)
+    assert not any("motivo" in line or "qué hacer" in line for line in lines)
+
+
+def test_values_are_never_written_after_the_action_name() -> None:
+    """La prueba de SC-004: `Mover a cola: cuenta` no decía que `cuenta` era la propuesta."""
+    lines = _render(1, queue="cuenta", queue_confidence=0.87, kind="reembolso", kind_confidence=0.8)
+    assert not any(line.startswith(("Mover a cola", "Reembolsar")) for line in lines)
 
 
 def test_queue_below_threshold_goes_to_review_with_reason() -> None:
     lines = _render(1, queue="cuenta", queue_confidence=0.87, kind="consulta", kind_confidence=0.9)
 
-    i = lines.index("Mover a cola: cuenta · a revisión")
-    assert lines[i + 1] == "  confianza 0,87 < umbral 0,90 (riesgo bajo, provisional)"
-    assert lines[i + 2] == "  motivo: confianza por debajo del umbral"
-    assert lines[-1] == "En la cola de revisión: elemento 1 (jevlab review)"
-    assert lines[-2] == ""
+    i = lines.index("Acción: mover a cola · estado: a revisión")
+    assert lines[i + 1 : i + 4] == [
+        "  IA propone la cola: cuenta · confianza 0,87",
+        "  política: umbral 0,90 (riesgo bajo, provisional)",
+        "  regla: 0,87 < 0,90 · motivo: confianza por debajo del umbral",
+    ]
+    assert lines[-3:] == ["", "En la cola de revisión: elemento 1", "qué hacer: jevlab review"]
 
 
 def test_escape_has_no_queue() -> None:
     lines = _render(2, queue="other", queue_confidence=1.0, kind="consulta")
 
-    i = lines.index("Mover a cola: sin cola · a revisión")
-    assert lines[i + 2] == "  motivo: el ticket no encaja en ninguna cola"
+    i = lines.index("Acción: mover a cola · estado: a revisión")
+    assert lines[i + 1] == "  IA propone la cola: ninguna · confianza 1,00"
+    assert lines[i + 3] == "  regla: sin valor válido · motivo: el ticket no encaja en ninguna cola"
 
 
 def test_missing_queue_answer_has_no_confidence() -> None:
     lines = _render(3, queue=None, kind="consulta")
 
-    i = lines.index("Mover a cola: sin cola · a revisión")
-    assert lines[i + 1] == "  confianza no disponible · umbral 0,90 (riesgo bajo, provisional)"
-    assert lines[i + 2] == "  motivo: sin respuesta válida"
+    i = lines.index("Acción: mover a cola · estado: a revisión")
+    assert lines[i + 1] == "  IA propone la cola: ninguna · confianza no disponible"
+    assert lines[i + 3] == "  regla: sin valor válido · motivo: sin respuesta válida"
 
 
 def test_pending_refund_shows_reasons() -> None:
     lines = _render(4, queue="cuenta", kind="reembolso", kind_confidence=0.81)
 
-    i = lines.index("Reembolsar: reembolso · pendiente de confirmación")
-    assert lines[i + 1] == "  confianza 0,81 < umbral 0,97 (riesgo alto, provisional)"
-    assert lines[i + 2] == (
-        "  motivo: confianza por debajo del umbral; la cola no se automatizó a facturacion"
+    i = lines.index("Acción: reembolsar · estado: pendiente de confirmación")
+    assert lines[i + 1] == "  IA clasifica la solicitud: reembolso · confianza 0,81"
+    assert lines[i + 3] == (
+        "  regla: 0,81 < 0,97 · motivo: confianza por debajo del umbral; "
+        "la cola no se automatizó a facturacion"
     )
 
 
 def test_no_refund_is_an_explicit_abstention_without_threshold() -> None:
     lines = _render(queue="cuenta", kind="consulta", kind_confidence=0.92)
-    i = lines.index("Reembolsar: sin reembolso · solicitud consulta · confianza 0,92")
-    assert lines[i + 1] == "  motivo: la solicitud no es reembolso"
+    i = lines.index("Acción: reembolsar · estado: sin reembolso")
+    assert lines[i + 1 : i + 3] == [
+        "  IA clasifica la solicitud: consulta · confianza 0,92",
+        "  regla: sin umbral · motivo: la solicitud no es reembolso",
+    ]
     assert "umbral 0,97" not in "\n".join(lines)
 
     escape = _render(queue="cuenta", kind="other", kind_confidence=0.65)
-    assert "Reembolsar: sin reembolso · solicitud other (escape) · confianza 0,65" in escape
+    assert "  IA clasifica la solicitud: other (escape) · confianza 0,65" in escape
+    assert "  regla: sin umbral · motivo: la solicitud no encaja en ninguna opción" in escape
 
     missing = _render(queue="cuenta", kind=None)
-    assert (
-        "Reembolsar: sin reembolso · solicitud sin respuesta válida · confianza no disponible"
-        in missing
-    )
+    assert "  IA clasifica la solicitud: ninguna · confianza no disponible" in missing
+    assert "  regla: sin umbral · motivo: sin respuesta válida" in missing
 
 
 def test_not_provisional_threshold_does_not_say_so() -> None:
@@ -113,7 +131,7 @@ def test_not_provisional_threshold_does_not_say_so() -> None:
 
     lines = _render(rules=evaluated)
 
-    assert "  confianza 1,00 ≥ umbral 0,90 (riesgo bajo)" in lines
+    assert "  política: umbral 0,90 (riesgo bajo)" in lines
 
 
 def test_recorded_date_is_shown() -> None:

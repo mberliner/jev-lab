@@ -61,8 +61,10 @@ los dos casos la cola propuesta, la confianza, el umbral, el riesgo de la acció
    cola», **When** la persona ejecuta `jevlab route "<texto>"`, **Then** la salida dice que el
    ticket se mueve automáticamente a esa cola e indica la confianza, el umbral y el riesgo.
 2. **Given** un ticket cuya cola tiene una confianza por debajo del umbral, **When** lo enruta,
-   **Then** el ticket no se mueve y la salida explica el motivo con la confianza y el umbral
-   (por ejemplo, `cuenta · a revisión · confianza 0,87 < umbral 0,90`).
+   **Then** el ticket no se mueve y la salida explica el motivo con la confianza y el umbral,
+   separando lo que propone el modelo de lo que aplica el código (por ejemplo,
+   `IA propone la cola: cuenta · confianza 0,87` y `regla: 0,87 < 0,90 · motivo: confianza por
+   debajo del umbral`).
 3. **Given** un ticket cuyo resultado es `other` o no tiene una respuesta válida, **When** lo
    enruta, **Then** el ticket no se mueve, sea cual sea la confianza, y la salida lo explica.
 4. **Given** cualquier ticket enrutado, **When** termina el comando, **Then** la decisión queda
@@ -120,9 +122,10 @@ deja de estar pendiente y que la resolución queda en la auditoría.
 **Acceptance Scenarios**:
 
 1. **Given** tickets enrutados con alguna acción no automatizada, **When** el Operador ejecuta
-   `jevlab review`, **Then** ve un elemento pendiente por petición, con su identificador, el
-   inicio del texto del ticket, la versión de la política y, por cada acción pendiente, el motivo,
-   el valor propuesto (o «sin cola»), la confianza y el umbral.
+   `jevlab review`, **Then** ve qué contiene la cola y quién la resuelve, y un elemento pendiente
+   por petición, con su identificador, el inicio del texto del ticket, la versión de la política,
+   por cada acción pendiente el motivo, el valor propuesto por el modelo (o «ninguna»), la
+   confianza y el umbral, y los comandos exactos que la resuelven.
 2. **Given** un elemento pendiente, **When** el Operador lo resuelve asignando una cola válida,
    **Then** el elemento deja de estar pendiente y la resolución queda en la auditoría con el
    identificador de la petición original.
@@ -217,9 +220,11 @@ versión de cada política y que una política no válida se rechaza sin automat
   otro caso, MUST NOT automatizarse.
 - **FR-004**: La salida de cada acción MUST mostrar el resultado, la confianza, el umbral, el
   riesgo, si el umbral es provisional, el motivo cuando no se automatiza y el origen (en vivo o
-  grabado, con modelo y fecha) (`docs/standards/decision-design.md` §7). Cuando el reembolso
-  queda `sin reembolso` no se aplica ningún umbral: la salida muestra el valor y la confianza de
-  la solicitud (o «no disponible») y el motivo, sin umbral.
+  grabado, con modelo y fecha) (`docs/standards/decision-design.md` §7). Cada dato MUST llevar la
+  etiqueta de su origen: el valor y la confianza, del modelo; el umbral y el riesgo, de la
+  política; la comparación, el estado y el motivo, del código (`docs/standards/cli-ux.md` §6).
+  Cuando el reembolso queda `sin reembolso` no se aplica ningún umbral: la salida muestra el
+  valor y la confianza de la solicitud (o «no disponible») y el motivo, sin umbral.
 - **FR-005**: Las acciones automatizadas MUST ser simuladas: se registran y se muestran, sin
   efectos fuera de jev-lab.
 - **FR-006**: La acción «reembolsar» MUST tener riesgo `alto` y la acción «mover a cola», riesgo
@@ -236,7 +241,8 @@ versión de cada política y que una política no válida se rechaza sin automat
   pendiente. Un reembolso MUST poder confirmarse solo cuando la cola del elemento es
   `facturacion`; asignar otra cola o descartar el elemento MUST rechazarlo. Un elemento deja de
   estar pendiente cuando no le quedan acciones pendientes. Cada resolución MUST quedar en la
-  auditoría.
+  auditoría. El listado MUST decir qué contiene la cola y quién la resuelve, y cada elemento, los
+  comandos exactos que lo resuelven según lo que tenga pendiente, con las colas válidas.
 - **FR-009**: Los umbrales MUST vivir en un archivo de política versionado en el repositorio
   (`src/jevlab/policies/soporte/enrutado.yaml`; research R3), con una
   versión semver y, por acción, el riesgo, el umbral y su justificación (una evaluación o
@@ -342,8 +348,10 @@ versión de cada política y que una política no válida se rechaza sin automat
   revisión.
 - **Qué ve cada persona**: el usuario inicial de Jev ve, por acción, el resultado, la confianza, el
   umbral, el riesgo, «provisional» junto a cada umbral, el motivo de no automatizar, la versión de
-  la política, el identificador de petición y el origen. El Operador ve en `jevlab review` los
-  pendientes con su motivo, confianza, umbral, versión de la política e inicio del texto.
+  la política, el identificador de petición y el origen, con cada dato etiquetado según venga del
+  modelo, de la política o del código. El Operador ve en `jevlab review` qué es la cola y los
+  pendientes con su motivo, confianza, umbral, versión de la política, inicio del texto y los
+  comandos que los resuelven.
 
 ## Corte vertical y lección (jev-lab) *(mandatory)*
 
@@ -378,3 +386,12 @@ test de las grabaciones lo detecta y la tabla se actualiza con el ejemplo que lo
     gana); instrucciones incrustadas que piden un reembolso (dato no confiable y umbral alto);
     filtrar el ticket en la auditoría (solo metadatos); decisiones sin trazabilidad
     (identificador y versión de política).
+
+## Enmiendas
+
+Ajustes de nivel 2 (`docs/governance.md` §7) hechos después del cierre. Los documentos de
+comportamiento ya describen el vigente; aquí queda qué cambió y por qué.
+
+| Fecha | Cambio | Motivo | Documentos actualizados | Commit |
+| --- | --- | --- | --- | --- |
+| 2026-10-17 | Salida de `route` y `review` con cada dato etiquetado según su origen (`Acción`/`estado`, `IA`, `política`, `regla`), `qué hacer:` con los comandos exactos y, en `review`, una explicación de qué es la cola | Prueba de SC-004: una persona sin experiencia no distinguió la propuesta del modelo de la decisión del código, no entendió la cola ni supo cómo resolver un elemento, y no terminó en más de 10 minutos | FR-004, FR-008, US1 escenario 2, US3 escenario 1, «Qué ve cada persona», `contracts/cli-route.md`, `contracts/cli-review.md`, lección §4 | *(el de este ajuste)* |

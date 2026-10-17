@@ -1,4 +1,8 @@
-"""Salida de `jevlab route` en texto plano (contracts/cli-route.md, docs/standards/cli-ux.md)."""
+"""Salida de `jevlab route` en texto plano (contracts/cli-route.md, docs/standards/cli-ux.md).
+
+Cada dato lleva la etiqueta de su origen (cli-ux.md §6): `IA` (valor y confianza), `política`
+(umbral y riesgo) y `regla` (la comparación del código y el motivo del estado).
+"""
 
 from jevlab.application.routing import Routed
 from jevlab.domain.policy import ActionName, PolicyRef
@@ -6,7 +10,11 @@ from jevlab.domain.routing import ActionOutcome, ActionStatus, PendingReason
 from jevlab.entrypoints.cli.triage_view import number, render_origin
 
 _SEP = " · "
-_TITLES = {ActionName.MOVER_A_COLA: "Mover a cola", ActionName.REEMBOLSAR: "Reembolsar"}
+TITLES = {ActionName.MOVER_A_COLA: "mover a cola", ActionName.REEMBOLSAR: "reembolsar"}
+_QUESTIONS = {
+    ActionName.MOVER_A_COLA: "IA propone la cola",
+    ActionName.REEMBOLSAR: "IA clasifica la solicitud",
+}
 
 
 def render(routed: Routed) -> list[str]:
@@ -19,7 +27,11 @@ def render(routed: Routed) -> list[str]:
     for action in result.actions:
         lines += ["", *render_action(action)]
     if routed.item is not None:
-        lines += ["", f"En la cola de revisión: elemento {routed.item.id} (jevlab review)"]
+        lines += [
+            "",
+            f"En la cola de revisión: elemento {routed.item.id}",
+            "qué hacer: jevlab review",
+        ]
     return lines
 
 
@@ -28,45 +40,47 @@ def render_policy(policy: PolicyRef) -> str:
 
 
 def render_action(action: ActionOutcome) -> list[str]:
-    title = _TITLES[action.action]
-    if action.status is ActionStatus.SIN_REEMBOLSO:
-        return render_abstention(title, action)
-    value = action.value or "sin cola"
     status = action.status.value
     if action.status is ActionStatus.AUTOMATIZADA and action.action is ActionName.REEMBOLSAR:
         status += " (simulado)"
-    lines = [f"{title}: {value}{_SEP}{status}", "  " + _comparison(action)]
-    if action.status is ActionStatus.AUTOMATIZADA and action.action is ActionName.REEMBOLSAR:
-        lines[-1] += f"{_SEP}cola facturacion automatizada"
-    if action.reasons:
-        lines.append(f"  motivo: {'; '.join(r.value for r in action.reasons)}")
-    return lines
+    head = f"Acción: {TITLES[action.action]}{_SEP}estado: {status}"
+    return [head, *("  " + line for line in render_sources(action))]
 
 
-def render_abstention(title: str, action: ActionOutcome) -> list[str]:
-    """Sin reembolso: el valor y la confianza de la solicitud y el motivo, sin umbral (FR-004)."""
-    if action.value is None:
-        reason = action.reasons[0] if action.reasons else PendingReason.SIN_RESPUESTA
-        kind = f"solicitud {reason.value}"
-    elif PendingReason.SOLICITUD_ESCAPE in action.reasons:
-        kind = f"solicitud {action.value} (escape)"
-    else:
-        kind = f"solicitud {action.value}"
-    confidence = (
-        "confianza no disponible"
-        if action.confidence is None
-        else f"confianza {number(action.confidence)}"
-    )
-    lines = [f"{title}: {action.status.value}{_SEP}{kind}{_SEP}{confidence}"]
-    if action.value is not None:
-        lines.append(f"  motivo: {'; '.join(r.value for r in action.reasons)}")
-    return lines
-
-
-def _comparison(action: ActionOutcome) -> str:
+def render_sources(action: ActionOutcome) -> list[str]:
+    """Las líneas `IA`, `política` y `regla` de una acción, sin sangría."""
+    lines = [f"{_QUESTIONS[action.action]}: {_proposal(action)}{_SEP}{_confidence(action)}"]
+    if action.status is ActionStatus.SIN_REEMBOLSO:
+        # La abstención no aplica umbral (FR-004): no hay línea de política.
+        return [*lines, f"regla: sin umbral{_SEP}motivo: {_reasons(action)}"]
     rule = f"umbral {number(action.threshold)} (riesgo {action.risk.value}"
     rule += ", provisional)" if action.provisional else ")"
+    lines.append(f"política: {rule}")
+    if action.value is None or action.confidence is None:
+        check = "sin valor válido"
+    else:
+        sign = "≥" if action.confidence >= action.threshold else "<"
+        check = f"{number(action.confidence)} {sign} {number(action.threshold)}"
+    if action.reasons:
+        check += f"{_SEP}motivo: {_reasons(action)}"
+    elif action.status is ActionStatus.AUTOMATIZADA and action.action is ActionName.REEMBOLSAR:
+        check += f"{_SEP}cola facturacion automatizada"
+    return [*lines, f"regla: {check}"]
+
+
+def _proposal(action: ActionOutcome) -> str:
+    if action.value is None:
+        return "ninguna"
+    if PendingReason.SOLICITUD_ESCAPE in action.reasons:
+        return f"{action.value} (escape)"
+    return action.value
+
+
+def _confidence(action: ActionOutcome) -> str:
     if action.confidence is None:
-        return f"confianza no disponible{_SEP}{rule}"
-    sign = "≥" if action.confidence >= action.threshold else "<"
-    return f"confianza {number(action.confidence)} {sign} {rule}"
+        return "confianza no disponible"
+    return f"confianza {number(action.confidence)}"
+
+
+def _reasons(action: ActionOutcome) -> str:
+    return "; ".join(r.value for r in action.reasons)

@@ -24,18 +24,19 @@ def test_refund_by_risk(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None
         return result.stdout.splitlines()
 
     automated = route(with_tag("reembolso-automatizado").name)
-    assert "Reembolsar: reembolso · automatizada (simulado)" in automated
+    assert "Acción: reembolsar · estado: automatizada (simulado)" in automated
     assert not any(line.startswith("En la cola de revisión") for line in automated)
 
     pending = route(with_tag("reembolso-pendiente").name)
-    assert "Reembolsar: reembolso · pendiente de confirmación" in pending
+    i = pending.index("Acción: reembolsar · estado: pendiente de confirmación")
+    assert pending[i + 1].startswith("  IA clasifica la solicitud: reembolso · ")
 
     abstention = route(with_tag("reembolso-abstencion").name)
-    assert any(line.startswith("Reembolsar: sin reembolso · solicitud ") for line in abstention)
+    assert "Acción: reembolsar · estado: sin reembolso" in abstention
     assert not any(line.startswith("En la cola de revisión") for line in abstention)
 
     for recording in all_with_tag("sin-reembolso-adversarial"):
-        assert "Reembolsar: reembolso · automatizada (simulado)" not in route(recording.name)
+        assert "Acción: reembolsar · estado: automatizada (simulado)" not in route(recording.name)
 
     with closing(sqlite3.connect(state / "estado.sqlite3")) as connection, connection:
         refunds = connection.execute(
