@@ -79,6 +79,43 @@ umbral laxo es peligroso: el ticket adversarial se automatiza. Si en la copia se
 `reembolsar.umbral` por debajo del de `mover-a-cola`, el comando termina con código 1 y el error
 de monotonía.
 
+## SC-004: prueba con una persona
+
+Criterio en `spec.md`, SC-004. Lo que lee la persona es la lección
+(`docs/lessons/002-la-confianza-como-segundo-eje-y-umbrales-por-riesgo.md`, §4); este apartado
+solo fija cómo se mide, igual en cada repetición. Los resultados se anotan en T055 de `tasks.md`.
+
+**Quién.** Alguien que no haya usado `jevlab review` ni leído la spec 002. Si no es así, se anota.
+
+**Preparación**, antes de que llegue la persona, con el estado aislado de «Requisitos»:
+
+```bash
+uv run jevlab route --ejemplo instruccion-incrustada
+uv run jevlab route --ejemplo reembolso-ambiguo
+uv run jevlab route --ejemplo pregunta-fuera-de-ambito
+uv run jevlab review    # comprobar: Pendientes: 3, los de la lección §4
+```
+
+Se deja esa terminal abierta y, al lado, la lección en «4. La cola de revisión». Sin spec, sin
+contrato y sin `--help`.
+
+**Consigna**, leída tal cual: «En esta terminal hay tickets que el sistema no se atrevió a resolver
+solo. Usando solo esta lección, resuelve el primero que veas como te parezca correcto. Avísame
+cuando termines.»
+
+**Cronómetro.** Empieza al terminar de leer la consigna y para cuando la salida dice
+`Elemento N resuelto: sin acciones pendientes`, o la lista ya no lo muestra. No se ayuda; a una
+pregunta se responde «sigue con la lección» y se anota.
+
+**Segunda ronda (opcional, el caso difícil):** «Ahora resuelve el del reembolso» (elemento 2).
+
+**Qué se anota en T055:** el tiempo de cada ronda y si baja de 60 s; el comando usado y si era
+razonable; los errores (código 2) y qué hizo después; dónde dudó o qué preguntó; si ya conocía
+jevlab. Con varias personas, la mediana. Si alguien supera el minuto, el cambio es un ajuste de
+nivel 2 (`docs/governance.md` §7).
+
+Al terminar se borra la carpeta de `JEVLAB_STATE_DIR`.
+
 ## Suite y en vivo
 
 ```bash

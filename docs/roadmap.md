@@ -6,8 +6,9 @@
 > cualquier agente.
 
 **Dónde estamos:** spec 002 (Enrutado con confianza) implementada y cerrada (56 de 56 tareas) en
-la rama local `002-enrutado-confianza`, sin subir todavía; lo siguiente está al final de «Spec
-002», más abajo. La spec 001 (Triaje) está cerrada e integrada en `main`. La spec 000
+la rama local `002-enrutado-confianza`, sin subir todavía. La primera prueba de SC-004 no se
+cumplió; tras ajustes de nivel 2 (en «Enmiendas» de la spec), falta repetirla. Lo siguiente está al
+final de «Spec 002», más abajo. La spec 001 (Triaje) está cerrada e integrada en `main`. La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
 aplazada, se completó el 2026-10-14. Hecho:
@@ -191,11 +192,13 @@ aplazada, se completó el 2026-10-14. Hecho:
     y lección §4.
   - Segundo ajuste de la 002 (`b140395`): `jevlab review guia` explica las colas, las acciones y
     los comandos; la lección la usa como paso 0.
-  - Lección, quickstart y `AGENTS.md` al día con la salida vigente (`ce09547`), y el escape de la
+  - Lección, quickstart y `AGENTS.md` al día con la salida vigente, y `docs/governance.md` §7 los
+    nombra entre lo que actualiza un ajuste de nivel 2 (`ce09547`); el escape de la
     cola muestra lo que respondió el modelo, `other (escape)` (`e391381`).
   - La guía dice cómo la cola decide el reembolso (`2e8ba83`).
-- **[siguiente]** Repetir SC-004 con otra persona sin experiencia, empezando por el paso 0 de la
-  lección, y anotar en T055 la lectura y la resolución; se juzga el total.
+  - Protocolo de SC-004 versionado en `quickstart.md`, «SC-004: prueba con una persona».
+- **[siguiente]** Repetir SC-004 con otra persona sin experiencia, con el protocolo del quickstart,
+  y anotar el resultado en T055.
   Después, subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y merge
   commit.
 
