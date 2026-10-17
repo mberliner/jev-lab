@@ -167,6 +167,10 @@ local, uno por petición. Una persona, el Operador, lo resuelve decidiendo lo qu
 atrevió a decidir. `jevlab route` avisa al final («En la cola de revisión: elemento 1») y dice qué
 hacer: `jevlab review`.
 
+**Cómo se escriben los comandos.** Los comandos que muestra `jevlab` (en la cabecera de la lista y
+en cada `qué hacer:`) se escriben con `uv run` delante, como todos los de esta lección:
+`jevlab review guia` se ejecuta como `uv run jevlab review guia`.
+
 **Paso 0, antes de resolver nada: la guía.** Explica en una pantalla qué significa cada cola, qué
 riesgo y qué umbral tiene cada acción y qué hace cada comando. No lo escribe nadie a mano: las colas
 salen de la definición `cola-destino`, la misma que lee el modelo, y los umbrales de la política.

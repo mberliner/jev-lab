@@ -110,8 +110,9 @@ pregunta se responde «sigue con la lección» y se anota.
 **Segunda ronda (opcional, el caso difícil):** «Ahora resuelve el del reembolso» (elemento 2).
 
 **Qué se anota en T055:** el tiempo de cada ronda y si baja de 60 s; el comando usado y si era
-razonable; los errores (código 2) y qué hizo después; dónde dudó o qué preguntó; si ya conocía
-jevlab. Con varias personas, la mediana. Si alguien supera el minuto, el cambio es un ajuste de
+razonable; si ejecutó `jevlab review guia` y cuánto tardó en leerla; los errores (código 2, o
+«comando no encontrado» por escribir un comando sin `uv run`) y qué hizo después; dónde dudó o qué
+preguntó; si ya conocía jevlab. Con varias personas, la mediana. Si alguien supera el minuto, el cambio es un ajuste de
 nivel 2 (`docs/governance.md` §7).
 
 Al terminar se borra la carpeta de `JEVLAB_STATE_DIR`.
