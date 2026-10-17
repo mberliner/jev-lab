@@ -302,6 +302,7 @@ trata según lo que es:
 | Documento | Con un ajuste (nivel 2) |
 | --- | --- |
 | Lo que define el comportamiento externo: requisitos, escenarios de aceptación, «Qué ve cada persona», contratos, `data-model.md` si cambia una entidad | Se actualiza para describir el vigente |
+| Lo que lo enseña o lo valida: `quickstart.md`, la lección de la spec y los comandos de `AGENTS.md` | Se actualiza para que sus comandos y salidas esperadas sean los vigentes |
 | `spec.md`, sección «Enmiendas» | Se añade una entrada: fecha, cambio, motivo, documentos actualizados y commit |
 | Lo que registra cómo se llegó: sesiones de *Clarifications*, `research.md`, `analysis.md`, las tareas ya hechas de `tasks.md` | No se reescribe; una tarea hecha puede recibir una nota que remita a la enmienda |
 

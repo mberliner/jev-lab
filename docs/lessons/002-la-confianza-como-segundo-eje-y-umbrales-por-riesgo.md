@@ -21,7 +21,12 @@ equivocarse. Todos los ejemplos salen de grabaciones reales y se reproducen sin 
 6. Qué puede fallar, empezando por un umbral demasiado laxo.
 
 Para probar sin mezclar con el estado real, apunta `JEVLAB_STATE_DIR` a una carpeta vacía (ver
-`docs/setup.md`, «Estado local»).
+`docs/setup.md`, «Estado local»), y ejecuta los comandos en el orden de la lección: los números de
+elemento de la cola de revisión salen de ese orden.
+
+De cada salida de `jevlab route` se muestran las acciones que se comentan. La salida completa
+empieza por `Origen:`, `Política:` y `Petición:`, lleva siempre las dos acciones y, si algo va a
+revisión, termina con el número del elemento y `qué hacer: jevlab review`.
 
 ## 1. El valor no basta: la confianza es el segundo eje
 
@@ -141,7 +146,7 @@ Acción: reembolsar · estado: sin reembolso
   IA clasifica la solicitud: consulta · confianza 0,99
   regla: sin umbral · motivo: la solicitud no es reembolso
 
-En la cola de revisión: elemento 1
+En la cola de revisión: elemento 3
 qué hacer: jevlab review
 ```
 
@@ -201,7 +206,7 @@ uv run jevlab review
 ```
 
 ```
-Pendientes: 2
+Pendientes: 3
 Peticiones con alguna acción que el código no automatizó; el motivo está en cada «regla».
 Las resuelve una persona con los comandos de «qué hacer».
 Qué significa cada cola y cada comando: jevlab review guia
@@ -226,6 +231,16 @@ Qué significa cada cola y cada comando: jevlab review guia
   qué hacer:
     jevlab review confirmar 2
     jevlab review rechazar 2
+
+[3] 2026-10-15 02:01 · grabado · política 0.1.0/3b3bc797 · petición f389e3cc…
+  «¿Tenéis previsto abrir una tienda física en Valencia el año que viene?»
+  Acción: mover a cola · estado: a revisión
+    IA propone la cola: ninguna · confianza 1,00
+    política: umbral 0,90 (riesgo bajo, provisional)
+    regla: sin valor válido · motivo: el ticket no encaja en ninguna cola
+  qué hacer:
+    jevlab review asignar 3 <cola>  # colas: cuenta, facturacion, tecnico
+    jevlab review descartar 3
 ```
 
 **Cómo se resuelve un elemento**, en tres pasos:
@@ -235,13 +250,15 @@ Qué significa cada cola y cada comando: jevlab review guia
    elemento 1, el modelo propone `cuenta`, pero con 0,88, por debajo del 0,90 que exige la
    política. El Operador lee el ticket («no consigo entrar en mi cuenta») y confirma que `cuenta`
    es la cola correcta. En el elemento 2, la cola `facturacion` ya se movió sola; solo queda
-   decidir si se devuelve el dinero.
+   decidir si se devuelve el dinero. En el elemento 3, el modelo eligió el escape: la pregunta
+   por una tienda física no es de ninguna cola de soporte, y el Operador lo descarta.
 3. Ejecutar uno de los comandos de `qué hacer:` tal como aparece, cambiando `<cola>` por la
    elegida:
 
 ```
 uv run jevlab review asignar 1 cuenta
 uv run jevlab review confirmar 2
+uv run jevlab review descartar 3
 ```
 
 ```
@@ -249,7 +266,11 @@ Elemento 1: cola cuenta asignada
 Elemento 1 resuelto: sin acciones pendientes
 Elemento 2: reembolso confirmado (simulado) · cola facturacion
 Elemento 2 resuelto: sin acciones pendientes
+Elemento 3: descartado
+Elemento 3 resuelto: sin acciones pendientes
 ```
+
+Ahora `uv run jevlab review` muestra `Pendientes: 0`.
 
 Las reglas también las impone el código: un reembolso solo se confirma cuando la cola del elemento
 es `facturacion`. Si la cola sigue pendiente, `confirmar` falla y pide asignarla antes; si el

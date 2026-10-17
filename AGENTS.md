@@ -60,6 +60,8 @@ Puesta en marcha completa: `docs/setup.md`. Todos los comandos son iguales en Li
 | `uv run poe live` | Tests contra servicios reales: necesitan `.env` y tienen tope de coste |
 | `uv run poe record` | Regraba los ejemplos de `jevlab triage` y `jevlab route` (necesita `.env`; mismo tope que `live`); `record-triage` y `record-route` regraban solo uno |
 | `uv run jevlab triage` | Triaje de un ticket de ejemplo grabado, sin red; `--en-vivo` llama a TypeSafe |
+| `uv run jevlab route` | Enrutado con umbrales por riesgo (simulado); lo que no se automatiza va a la cola de revisión |
+| `uv run jevlab review` | Lista la cola de revisión; `review guia` explica las colas, las acciones y los comandos |
 | `uv run pre-commit install` | Activa los ganchos `pre-commit` y `commit-msg` |
 
 - Las puertas propias viven en `scripts/checks/` (una por módulo) y se lanzan con

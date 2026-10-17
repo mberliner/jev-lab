@@ -30,9 +30,11 @@ uv run jevlab route --ejemplo instruccion-incrustada
 uv run jevlab route --ejemplo pregunta-fuera-de-ambito
 ```
 
-Esperado: el primero se mueve a `cuenta` (`automatizada`); el segundo queda `a revisión` con
-confianza por debajo de 0,90; el tercero, `sin cola · a revisión` por escape. Cada salida muestra
-política, huella y petición (`contracts/cli-route.md`).
+Esperado: en `Acción: mover a cola`, el primero queda `estado: automatizada` (`IA propone la
+cola: cuenta`); el segundo, `estado: a revisión` con `regla: 0,88 < 0,90`; el tercero, `estado: a
+revisión` con `motivo: el ticket no encaja en ninguna cola` (escape). Cada salida muestra origen,
+política, huella y petición, y las que van a revisión terminan con `qué hacer: jevlab review`
+(`contracts/cli-route.md`).
 
 ## US2: reembolso con umbral alto
 
@@ -49,15 +51,18 @@ reembolso automatizado.
 ## US3: atender la cola
 
 ```bash
+uv run jevlab review guia
 uv run jevlab review
 uv run jevlab review asignar <ID de instruccion-incrustada> cuenta
 uv run jevlab review confirmar <ID de reembolso-ambiguo>
 uv run jevlab review
 ```
 
-Esperado: la primera lista muestra un elemento por cada enrutado de arriba con algo pendiente
-(al menos `instruccion-incrustada`, `pregunta-fuera-de-ambito` y `reembolso-ambiguo`); tras
-resolver, esos dos dejan de estar pendientes (`contracts/cli-review.md`).
+Esperado: la guía muestra las colas de `cola-destino`, el riesgo y el umbral de cada acción y los
+comandos. La primera lista muestra un elemento por cada enrutado de arriba con algo pendiente
+(al menos `instruccion-incrustada`, `pregunta-fuera-de-ambito` y `reembolso-ambiguo`), cada uno
+con sus comandos en `qué hacer:`; tras resolver, esos dos dejan de estar pendientes
+(`contracts/cli-review.md`).
 
 ## US4: cambiar la política sin tocar código
 
