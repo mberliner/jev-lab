@@ -56,7 +56,9 @@ def render_sources(action: ActionOutcome) -> list[str]:
     rule = f"umbral {number(action.threshold)} (riesgo {action.risk.value}"
     rule += ", provisional)" if action.provisional else ")"
     lines.append(f"política: {rule}")
-    if action.value is None or action.confidence is None:
+    if PendingReason.ESCAPE in action.reasons:
+        check = "escape, no se compara con el umbral"
+    elif action.value is None or action.confidence is None:
         check = "sin valor válido"
     else:
         sign = "≥" if action.confidence >= action.threshold else "<"
@@ -71,7 +73,7 @@ def render_sources(action: ActionOutcome) -> list[str]:
 def _proposal(action: ActionOutcome) -> str:
     if action.value is None:
         return "ninguna"
-    if PendingReason.SOLICITUD_ESCAPE in action.reasons:
+    if {PendingReason.ESCAPE, PendingReason.SOLICITUD_ESCAPE} & set(action.reasons):
         return f"{action.value} (escape)"
     return action.value
 

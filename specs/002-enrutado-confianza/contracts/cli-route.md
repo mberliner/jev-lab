@@ -61,10 +61,12 @@ Reglas:
   y el identificador de petición.
 - Cada acción empieza por `Acción: <acción> · estado: <estado>`; debajo, con sangría:
   - `IA propone la cola:` o `IA clasifica la solicitud:`, con el valor que da el modelo y su
-    confianza. Sin valor válido, `ninguna`; sin confianza, `confianza no disponible`.
+    confianza. Con el escape, `other (escape)`; sin valor válido, `ninguna`; sin confianza,
+    `confianza no disponible`.
   - `política:`, con el umbral, el riesgo y `provisional` si la justificación lo es.
-  - `regla:`, con la comparación del código (`0,87 < 0,90`, o `sin valor válido` si no hay valor o
-    confianza que comparar) y, si no se automatiza, `motivo:` (`confianza por debajo del umbral`,
+  - `regla:`, con la comparación del código (`0,87 < 0,90`; `escape, no se compara con el umbral`
+    con el escape; o `sin valor válido` si no hay valor o confianza que comparar) y, si no se
+    automatiza, `motivo:` (`confianza por debajo del umbral`,
     `la cola no se automatizó a facturacion`, o los textos de la 001: `el ticket no encaja en
     ninguna cola`, `respuesta fuera de la definición`, `sin respuesta válida`).
 - `mover a cola` siempre aparece.

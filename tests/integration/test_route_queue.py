@@ -37,7 +37,7 @@ def test_queue_is_moved_only_with_enough_confidence(
 
     escape = outputs["mover-escape"]
     i = escape.index("Acción: mover a cola · estado: a revisión")
-    assert escape[i + 1].startswith("  IA propone la cola: ninguna · ")
+    assert escape[i + 1].startswith("  IA propone la cola: other (escape) · ")
 
     with closing(sqlite3.connect(tmp_path / "estado" / "estado.sqlite3")) as connection, connection:
         rows = connection.execute(

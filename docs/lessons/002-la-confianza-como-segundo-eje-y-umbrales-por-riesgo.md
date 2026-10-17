@@ -138,9 +138,9 @@ uv run jevlab route --ejemplo pregunta-fuera-de-ambito
 
 ```
 Acción: mover a cola · estado: a revisión
-  IA propone la cola: ninguna · confianza 1,00
+  IA propone la cola: other (escape) · confianza 1,00
   política: umbral 0,90 (riesgo bajo, provisional)
-  regla: sin valor válido · motivo: el ticket no encaja en ninguna cola
+  regla: escape, no se compara con el umbral · motivo: el ticket no encaja en ninguna cola
 
 Acción: reembolsar · estado: sin reembolso
   IA clasifica la solicitud: consulta · confianza 0,99
@@ -235,9 +235,9 @@ Qué significa cada cola y cada comando: jevlab review guia
 [3] 2026-10-15 02:01 · grabado · política 0.1.0/3b3bc797 · petición f389e3cc…
   «¿Tenéis previsto abrir una tienda física en Valencia el año que viene?»
   Acción: mover a cola · estado: a revisión
-    IA propone la cola: ninguna · confianza 1,00
+    IA propone la cola: other (escape) · confianza 1,00
     política: umbral 0,90 (riesgo bajo, provisional)
-    regla: sin valor válido · motivo: el ticket no encaja en ninguna cola
+    regla: escape, no se compara con el umbral · motivo: el ticket no encaja en ninguna cola
   qué hacer:
     jevlab review asignar 3 <cola>  # colas: cuenta, facturacion, tecnico
     jevlab review descartar 3

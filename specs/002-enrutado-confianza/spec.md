@@ -228,7 +228,9 @@ versión de cada política y que una política no válida se rechaza sin automat
   etiqueta de su origen: el valor y la confianza, del modelo; el umbral y el riesgo, de la
   política; la comparación, el estado y el motivo, del código (`docs/standards/cli-ux.md` §6).
   Cuando el reembolso queda `sin reembolso` no se aplica ningún umbral: la salida muestra el
-  valor y la confianza de la solicitud (o «no disponible») y el motivo, sin umbral.
+  valor y la confianza de la solicitud (o «no disponible») y el motivo, sin umbral. Si el modelo
+  elige el escape de la cola, la salida muestra ese valor marcado como escape, con su confianza, y
+  que no se compara con el umbral.
 - **FR-005**: Las acciones automatizadas MUST ser simuladas: se registran y se muestran, sin
   efectos fuera de jev-lab.
 - **FR-006**: La acción «reembolsar» MUST tener riesgo `alto` y la acción «mover a cola», riesgo
@@ -404,3 +406,4 @@ comportamiento ya describen el vigente; aquí queda qué cambió y por qué.
 | --- | --- | --- | --- | --- |
 | 2026-10-17 | Salida de `route` y `review` con cada dato etiquetado según su origen (`Acción`/`estado`, `IA`, `política`, `regla`), `qué hacer:` con los comandos exactos y, en `review`, una explicación de qué es la cola | Prueba de SC-004: una persona sin experiencia no distinguió la propuesta del modelo de la decisión del código, no entendió la cola ni supo cómo resolver un elemento, y no terminó en más de 10 minutos | FR-004, FR-008, US1 escenario 2, US3 escenario 1, «Qué ve cada persona», `contracts/cli-route.md`, `contracts/cli-review.md`, lección §4 | `0e9eb05` |
 | 2026-10-17 | Subcomando `jevlab review guia`: qué es la cola, qué significa cada cola (de `cola-destino`), riesgo y umbral de cada acción (de la política) y qué hace cada comando; la cabecera del listado la señala. Es nivel 2 y no 3: no añade historia de usuario, explica lo que el Operador ya hace en US3 sin permitirle nada nuevo | Tras la primera prueba de SC-004, entender la cola fue el primer bloqueo; el listado explica cada elemento, pero no el conjunto, y meterlo en el listado sería ruido para quien ya la conoce | FR-008, US3 escenario 9, «Qué ve cada persona», `contracts/cli-review.md`, lección §4 (paso 0) | `b140395` |
+| 2026-10-17 | Con el escape de la cola, «mover a cola» guarda y muestra lo que respondió el modelo (`IA propone la cola: other (escape)`) en lugar de `ninguna`, y la regla dice `escape, no se compara con el umbral`. La auditoría guarda `other` como valor; el escape sigue sin asignarse nunca | Al repasar la lección, `ninguna · confianza 1,00` parecía contradictorio y no decía lo que respondió el modelo (`cli-ux.md` §6); la solicitud ya mostraba `other (escape)` | FR-004, `data-model.md` (`ActionOutcome.value`), `contracts/cli-route.md`, lección §3 y §4 | *(pendiente)* |

@@ -79,12 +79,14 @@ def test_queue_below_threshold_goes_to_review_with_reason() -> None:
     assert lines[-3:] == ["", "En la cola de revisión: elemento 1", "qué hacer: jevlab review"]
 
 
-def test_escape_has_no_queue() -> None:
+def test_escape_shows_what_the_model_answered_and_is_not_compared() -> None:
     lines = _render(2, queue="other", queue_confidence=1.0, kind="consulta")
 
     i = lines.index("Acción: mover a cola · estado: a revisión")
-    assert lines[i + 1] == "  IA propone la cola: ninguna · confianza 1,00"
-    assert lines[i + 3] == "  regla: sin valor válido · motivo: el ticket no encaja en ninguna cola"
+    assert lines[i + 1] == "  IA propone la cola: other (escape) · confianza 1,00"
+    assert lines[i + 3] == (
+        "  regla: escape, no se compara con el umbral · motivo: el ticket no encaja en ninguna cola"
+    )
 
 
 def test_missing_queue_answer_has_no_confidence() -> None:

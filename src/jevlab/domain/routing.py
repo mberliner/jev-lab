@@ -97,7 +97,9 @@ def _decide_move(policy: Policy, queue: QueueOutcome) -> ActionOutcome:
     rule = policy.action(name)
     if queue.assigned is None:
         reason = _ABSTENTION[queue.abstention_reason or MISSING_REASON]
-        return _outcome(name, rule, None, queue.confidence, ActionStatus.A_REVISION, (reason,))
+        # El escape es una respuesta del modelo: se guarda, como en la solicitud; nunca se asigna.
+        value = queue.choice if queue.abstention_reason == ESCAPE_REASON else None
+        return _outcome(name, rule, value, queue.confidence, ActionStatus.A_REVISION, (reason,))
     if not _reaches(queue.confidence, rule.umbral):
         return _outcome(
             name,

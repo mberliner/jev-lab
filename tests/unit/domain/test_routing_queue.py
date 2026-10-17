@@ -48,7 +48,7 @@ def test_escape_is_never_automated_even_with_full_confidence() -> None:
     move = _move(_queue("other", 1.0), threshold=0.0)
 
     assert move.status is ActionStatus.A_REVISION
-    assert move.value is None
+    assert move.value == "other"  # lo que respondió el modelo; nunca se asigna como cola
     assert move.reasons == (PendingReason.ESCAPE,)
 
 

@@ -140,7 +140,7 @@ Si hay varios motivos, se guardan todos, en este orden.
 | Campo | Tipo | Regla |
 | --- | --- | --- |
 | `action` | `ActionName` | |
-| `value` | `str \| None` | Cola propuesta o valor de la solicitud; `None` sin respuesta válida («sin cola» en `mover-a-cola`) |
+| `value` | `str \| None` | Cola propuesta o valor de la solicitud, también el escape (`other`), que nunca se asigna; `None` sin respuesta válida o fuera de la definición |
 | `confidence` | `float \| None` | La del servicio; `None` sin respuesta |
 | `threshold` | `float` | De la política |
 | `risk` | `Risk` | De la política |
