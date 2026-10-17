@@ -224,6 +224,7 @@ resultado cambia, y la versión y la huella también; una copia no monótona ter
   - US2: `cobro-duplicado` reembolsa (1,00 >= 0,97, cola facturacion automatizada); `reembolso-ambiguo` queda pendiente de confirmación (0,87 < 0,97).
   - US3: `jevlab review` lista los pendientes; `asignar 1 cuenta` y `confirmar 2` los resuelven y la lista queda en `Pendientes: 0`.
   - US4: con una copia de umbral 0,88 y versión 0.2.0, `instruccion-incrustada` se automatiza y la salida muestra `Política: 0.2.0 · huella 88ebb457`; una copia no monótona termina con código 1.
+  - SC-004, primera prueba (2026-10-17): no se cumple. Más de 10 minutos sin terminar: la persona no distinguió la propuesta del modelo de la decisión del código, no entendió qué era la cola y no supo con qué comando resolver. Corregido con un ajuste de nivel 2 (spec, «Enmiendas»; commit `0e9eb05`). Pendiente repetir la prueba con otra persona sin experiencia y anotar aquí el tiempo.
   - Tiempos (Windows, ejecutable instalado): `route` grabado 1,0 s, `review` 0,9 s, en el límite de la meta del plan.
   - Pendiente: cronometrar a una persona que resuelva un elemento siguiendo solo la lección (SC-004); no lo puede medir un agente.
 - [X] T056 Retro: ¿algún principio estorbó?, ¿faltó alguno?, ¿alguno no se pudo verificar? Respuestas en el commit de cierre; cada «sí» abre su cambio o se anota en `docs/ideas.md`

@@ -2,7 +2,7 @@
 
 ## Estado actual y cómo retomar
 
-> **Actualizado: 2026-10-15.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> **Actualizado: 2026-10-17.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
 **Dónde estamos:** spec 002 (Enrutado con confianza) implementada y cerrada (56 de 56 tareas) en
@@ -178,9 +178,20 @@ aplazada, se completó el 2026-10-14. Hecho:
   Lo que genera, en `docs/ideas.md`: un test que impida cargar SDKs pesados al arrancar la CLI
   (nivel 1), medir la variación de la confianza entre ejecuciones (spec 004) y un protocolo para
   los criterios de éxito que miden a una persona (preset `jevlab-spec`).
-- **[siguiente]** Cronometrar SC-004 (una persona resuelve un elemento de la cola en menos de 1
-  minuto siguiendo solo la lección) y anotarlo en T055. Después, subir la rama, comprobar la CI en
-  Linux y Windows e integrar en `main` con PR y merge commit.
+- [hecho, 2026-10-17] Primera prueba de SC-004: no se cumple (más de 10 minutos sin terminar). La
+  persona no distinguió la propuesta del modelo de la decisión del código, no entendió la cola ni
+  supo cómo resolver. Cambios:
+  - `docs/governance.md` §7 (`49ec30f`): un ajuste de nivel 2 actualiza los documentos que definen
+    el comportamiento y lo registra en «Enmiendas»; así, regenerar desde la spec da el
+    comportamiento vigente.
+  - `docs/standards/cli-ux.md` §6 y preset `jevlab-decision` 0.1.3 (`47bbcb6`): cada dato dice de
+    dónde sale (IA, política, regla) y lo pendiente dice qué hacer; el plan cita el estándar de su
+    interfaz.
+  - Ajuste de la 002 (`0e9eb05`): salida de `route` y `review`, contratos, spec con «Enmiendas»
+    y lección §4.
+- **[siguiente]** Repetir SC-004 con otra persona sin experiencia y anotar el tiempo en T055.
+  Después, subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y merge
+  commit.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
