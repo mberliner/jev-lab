@@ -25,15 +25,9 @@ _ABOUT = (
 _CONDITIONS = {ActionName.REEMBOLSAR: f"solo con la cola {BILLING_QUEUE}"}
 _COMMANDS = (
     ("jevlab review", "lista los pendientes y qué hacer en cada uno"),
-    (
-        "jevlab review asignar N <cola>",
-        f"pone la cola; si no es {BILLING_QUEUE}, rechaza el reembolso",
-    ),
-    ("jevlab review descartar N", "cierra sin cola; rechaza también el reembolso"),
-    (
-        "jevlab review confirmar N",
-        f"confirma el reembolso (simulado); exige la cola {BILLING_QUEUE}",
-    ),
+    ("jevlab review asignar N <cola>", "pone la cola"),
+    ("jevlab review descartar N", "cierra el elemento sin cola"),
+    ("jevlab review confirmar N", "confirma el reembolso (simulado)"),
     ("jevlab review rechazar N", "rechaza solo el reembolso"),
 )
 
@@ -82,10 +76,33 @@ def render_guide(guide: Guide) -> list[str]:
             parts.append(_CONDITIONS[name])
         lines.append(f"  {title:<{width}}  {_SEP.join(parts)}")
     lines += ["Cada elemento muestra la política con la que se decidió.", ""]
+    lines += [*_refund_by_queue(names, number(policy.action(ActionName.REEMBOLSAR).umbral)), ""]
     lines.append("Comandos (N es el número del elemento):")
     width = max(len(command) for command, _ in _COMMANDS)
     lines += [f"  {command:<{width}}  {what}" for command, what in _COMMANDS]
     return lines
+
+
+def _refund_by_queue(queues: Sequence[str], threshold: str) -> list[str]:
+    """La regla del reembolso según la cola (FR-006), con las colas de la definición."""
+    rows = [
+        (
+            BILLING_QUEUE,
+            f"se puede confirmar o rechazar (en route, se automatiza desde {threshold})",
+        ),
+        (
+            ", ".join(q for q in queues if q != BILLING_QUEUE),
+            "no se puede confirmar: asignar una de ellas lo rechaza",
+        ),
+        ("descartar", "sin cola: un reembolso pendiente queda rechazado"),
+    ]
+    width = max(len(label) for label, _ in rows)
+    return [
+        "La cola decide el reembolso:",
+        *(f"  {label:<{width}}  {what}" for label, what in rows),
+        "Un elemento sale de la lista cuando no le quedan acciones pendientes.",
+        "Toda resolución queda en la auditoría.",
+    ]
 
 
 def render_item(item: ReviewItem, queues: Sequence[str]) -> list[str]:

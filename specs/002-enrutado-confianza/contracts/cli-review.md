@@ -80,11 +80,18 @@ Acciones (política 0.1.0 · huella 3b3bc797):
   reembolsar    riesgo alto · umbral 0,97 (provisional) · solo con la cola facturacion
 Cada elemento muestra la política con la que se decidió.
 
+La cola decide el reembolso:
+  facturacion      se puede confirmar o rechazar (en route, se automatiza desde 0,97)
+  cuenta, tecnico  no se puede confirmar: asignar una de ellas lo rechaza
+  descartar        sin cola: un reembolso pendiente queda rechazado
+Un elemento sale de la lista cuando no le quedan acciones pendientes.
+Toda resolución queda en la auditoría.
+
 Comandos (N es el número del elemento):
   jevlab review                   lista los pendientes y qué hacer en cada uno
-  jevlab review asignar N <cola>  pone la cola; si no es facturacion, rechaza el reembolso
-  jevlab review descartar N       cierra sin cola; rechaza también el reembolso
-  jevlab review confirmar N       confirma el reembolso (simulado); exige la cola facturacion
+  jevlab review asignar N <cola>  pone la cola
+  jevlab review descartar N       cierra el elemento sin cola
+  jevlab review confirmar N       confirma el reembolso (simulado)
   jevlab review rechazar N        rechaza solo el reembolso
 ```
 

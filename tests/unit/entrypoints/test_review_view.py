@@ -134,3 +134,16 @@ def test_guide_lists_every_review_command() -> None:
         "jevlab review confirmar N",
         "jevlab review rechazar N",
     ]
+
+
+def test_guide_says_how_the_queue_decides_the_refund() -> None:
+    lines = review_view.render_guide(Guide(queue=route_spec().queue, policy=policy(refund=0.95)))
+
+    i = lines.index("La cola decide el reembolso:")
+    assert lines[i + 1 : i + 6] == [
+        "  facturacion      se puede confirmar o rechazar (en route, se automatiza desde 0,95)",
+        "  cuenta, tecnico  no se puede confirmar: asignar una de ellas lo rechaza",
+        "  descartar        sin cola: un reembolso pendiente queda rechazado",
+        "Un elemento sale de la lista cuando no le quedan acciones pendientes.",
+        "Toda resolución queda en la auditoría.",
+    ]

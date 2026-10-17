@@ -147,8 +147,8 @@ deja de estar pendiente y que la resolución queda en la auditoría.
    ejecutar `jevlab review`, **Then** los elementos siguen ahí (persistencia local).
 9. **Given** un Operador que nunca ha usado la cola, **When** ejecuta `jevlab review guia`,
    **Then** ve qué es la cola, qué significa cada cola (de la definición `cola-destino`), el riesgo
-   y el umbral de cada acción (de la política vigente) y qué hace cada comando de resolución, sin
-   que haga falta el archivo de estado.
+   y el umbral de cada acción (de la política vigente), cómo la cola decide el reembolso y qué
+   hace cada comando de resolución, sin que haga falta el archivo de estado.
 
 ---
 
@@ -250,8 +250,9 @@ versión de cada política y que una política no válida se rechaza sin automat
   auditoría. El listado MUST decir qué contiene la cola y quién la resuelve, y cada elemento, los
   comandos exactos que lo resuelven según lo que tenga pendiente, con las colas válidas.
   `jevlab review guia` MUST explicar qué es la cola, qué significa cada cola, el riesgo y el
-  umbral de cada acción y qué hace cada comando, tomando las colas de la definición y los umbrales
-  de la política, sin repetirlos a mano; la cabecera del listado MUST señalarla.
+  umbral de cada acción, cómo la cola decide el reembolso y qué hace cada comando, tomando las
+  colas de la definición y los umbrales de la política, sin repetirlos a mano; la cabecera del
+  listado MUST señalarla.
 - **FR-009**: Los umbrales MUST vivir en un archivo de política versionado en el repositorio
   (`src/jevlab/policies/soporte/enrutado.yaml`; research R3), con una
   versión semver y, por acción, el riesgo, el umbral y su justificación (una evaluación o
@@ -407,3 +408,4 @@ comportamiento ya describen el vigente; aquí queda qué cambió y por qué.
 | 2026-10-17 | Salida de `route` y `review` con cada dato etiquetado según su origen (`Acción`/`estado`, `IA`, `política`, `regla`), `qué hacer:` con los comandos exactos y, en `review`, una explicación de qué es la cola | Prueba de SC-004: una persona sin experiencia no distinguió la propuesta del modelo de la decisión del código, no entendió la cola ni supo cómo resolver un elemento, y no terminó en más de 10 minutos | FR-004, FR-008, US1 escenario 2, US3 escenario 1, «Qué ve cada persona», `contracts/cli-route.md`, `contracts/cli-review.md`, lección §4 | `0e9eb05` |
 | 2026-10-17 | Subcomando `jevlab review guia`: qué es la cola, qué significa cada cola (de `cola-destino`), riesgo y umbral de cada acción (de la política) y qué hace cada comando; la cabecera del listado la señala. Es nivel 2 y no 3: no añade historia de usuario, explica lo que el Operador ya hace en US3 sin permitirle nada nuevo | Tras la primera prueba de SC-004, entender la cola fue el primer bloqueo; el listado explica cada elemento, pero no el conjunto, y meterlo en el listado sería ruido para quien ya la conoce | FR-008, US3 escenario 9, «Qué ve cada persona», `contracts/cli-review.md`, lección §4 (paso 0) | `b140395` |
 | 2026-10-17 | Con el escape de la cola, «mover a cola» guarda y muestra lo que respondió el modelo (`IA propone la cola: other (escape)`) en lugar de `ninguna`, y la regla dice `escape, no se compara con el umbral`. La auditoría guarda `other` como valor; el escape sigue sin asignarse nunca | Al repasar la lección, `ninguna · confianza 1,00` parecía contradictorio y no decía lo que respondió el modelo (`cli-ux.md` §6); la solicitud ya mostraba `other (escape)` | FR-004, `data-model.md` (`ActionOutcome.value`), `contracts/cli-route.md`, lección §3 y §4 | `e391381` |
+| 2026-10-17 | La guía añade «La cola decide el reembolso»: con `facturacion` se puede confirmar o rechazar (en `route`, se automatiza desde el umbral de la política); con cualquier otra cola no se puede confirmar y asignarla lo rechaza; descartar lo rechaza; cuándo sale un elemento de la lista y que toda resolución se audita. La descripción de cada comando se acorta para no repetirlo | Lo menos evidente del sistema es que la cola condiciona el reembolso, y la guía solo lo decía en el comentario de `asignar`. Se generan con las colas válidas y el umbral de la política, sin una fila por cola | FR-008, US3 escenario 9, `contracts/cli-review.md`, lección §4 | *(pendiente)* |
