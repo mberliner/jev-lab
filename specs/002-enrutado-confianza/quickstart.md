@@ -103,20 +103,22 @@ contrato y sin `--help`.
 solo. Usando solo esta lección, resuelve el primero que veas como te parezca correcto. Avísame
 cuando termines.»
 
-**Cronómetro.** Empieza al terminar de leer la consigna y para cuando la salida dice
-`Elemento N resuelto: sin acciones pendientes`, o la lista ya no lo muestra. No se ayuda; a una
-pregunta se responde «sigue con la lección» y se anota.
+**Cronómetro.** Cada ronda empieza al terminar de leer su consigna y para cuando la salida dice
+`Elemento N resuelto: sin acciones pendientes`, o la lista ya no lo muestra. La lectura de la guía
+va dentro de la ronda: empieza al ejecutar `jevlab review guia` y termina con el siguiente comando.
+No se ayuda; a una pregunta se responde «sigue con la lección» y se anota.
 
 **Segunda ronda (opcional, el caso difícil):** «Ahora resuelve el del reembolso» (elemento 2).
 
 **Respuesta esperada:** la que da la lección §4, en el paso 2 de «Cómo se resuelve un elemento».
 Los elementos son los mismos que la lección usa de ejemplo.
 
-**Qué se anota en T055:** el tiempo de cada ronda y si baja de 60 s; el comando usado y si coincide
-con la respuesta esperada; si ejecutó `jevlab review guia` y cuánto tardó en leerla; los errores (código 2, o
-«comando no encontrado» por escribir un comando sin `uv run`) y qué hizo después; dónde dudó o qué
-preguntó; si ya conocía jevlab. Con varias personas, la mediana. Si alguien supera el minuto, el cambio es un ajuste de
-nivel 2 (`docs/governance.md` §7).
+**Qué se anota en T055:** el tiempo de cada ronda y si baja de 60 s; el comando usado y si
+coincide con la respuesta esperada; si ejecutó `jevlab review guia` y cuánto tardó en leerla; los
+errores (código 2, o «comando no encontrado» por escribir un comando sin `uv run`) y qué hizo
+después; dónde dudó o qué preguntó; si ya conocía jevlab o se le explicó algo antes. Con varias
+personas, la mediana. Si alguien supera el minuto, el cambio es un ajuste de nivel 2
+(`docs/governance.md` §7).
 
 Al terminar se borra la carpeta de `JEVLAB_STATE_DIR`.
 
