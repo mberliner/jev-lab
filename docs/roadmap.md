@@ -191,6 +191,8 @@ aplazada, se completó el 2026-10-14. Hecho:
     y lección §4.
   - Segundo ajuste de la 002 (`b140395`): `jevlab review guia` explica las colas, las acciones y
     los comandos; la lección la usa como paso 0.
+  - Lección, quickstart y `AGENTS.md` al día con la salida vigente (`ce09547`), y el escape de la
+    cola muestra lo que respondió el modelo, `other (escape)` (`e391381`).
 - **[siguiente]** Repetir SC-004 con otra persona sin experiencia, empezando por el paso 0 de la
   lección, y anotar en T055 la lectura y la resolución; se juzga el total.
   Después, subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y merge
