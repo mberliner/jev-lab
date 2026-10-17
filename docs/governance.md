@@ -267,7 +267,7 @@ de instalar un preset o cambiar de integración, `python3` debe resolver a un Py
 | **Constitución** | `/speckit-constitution` -> *Sync Impact Report* -> aprobación humana -> commit `docs(constitution): …` con bump semver | Revisar los presets afectados (el *Sync Impact Report* los lista) |
 | **Preset** | PR con bump de `version` en `preset.yml` y reinstalación (`specify preset update` o `add --dev`) | Afecta a los artefactos que se generen a partir de ese momento |
 | **Estándar** | PR normal | Inmediata; el código existente se adapta en un PR de mantenimiento o en la siguiente spec que lo toque |
-| **Specs ya cerradas** | Sus documentos no se reescriben. Lo que cambie en su feature entra por el nivel que le corresponda (abajo) | Lo pendiente se anota en `docs/ideas.md` con su nivel |
+| **Specs ya cerradas** | Lo que cambie en su feature entra por el nivel que le corresponda (abajo); qué documentos se actualizan y cuáles no, también abajo | Lo pendiente se anota en `docs/ideas.md` con su nivel |
 
 Una retro breve al cerrar cada spec responde tres preguntas: ¿algún principio estorbó?, ¿faltó
 alguno?, ¿alguna sección de preset se rellenó por rellenar? Cada respuesta "sí" abre un cambio en
@@ -282,15 +282,29 @@ función.
 | Nivel | Qué cambia | Cómo entra | Documentos de la spec cerrada |
 | --- | --- | --- | --- |
 | **1. Mantenimiento** | Nada del comportamiento que describe una spec: refactor, error que devuelve lo especificado, herramientas, puertas de calidad, documentación | PR directo (`fix`, `refactor`, `docs`, `build`, `ci` o `chore`), sin spec, con `uv run poe check` | No se tocan |
-| **2. Ajuste** | Algo pequeño del comportamiento de una feature entregada, sin historia de usuario nueva: un texto, un mensaje, un umbral, una grabación, un ejemplo | PR propio, sin pasar por Spec Kit; tests que cubran el cambio | Se añade al final de su `spec.md` una sección «Enmiendas» con fecha, cambio, motivo y commit; lo anterior no se reescribe |
+| **2. Ajuste** | Algo pequeño del comportamiento de una feature entregada, sin historia de usuario nueva: un texto, un mensaje, un umbral, una grabación, un ejemplo | PR propio, sin pasar por Spec Kit; tests que cubran el cambio | Los documentos que definen el comportamiento se actualizan para describir el vigente, y se añade al final de su `spec.md` una sección «Enmiendas» con fecha, cambio, motivo y commit (abajo) |
 | **3. Capacidad nueva** | Algo que un perfil de usuario puede hacer y antes no: necesita al menos una historia de usuario nueva | Su propia spec, con todo lo que exige la constitución (§VII), en el lugar del roadmap que le corresponda por función | — |
 
 - La frontera entre 2 y 3: si el cambio necesita una historia de usuario nueva, es nivel 3.
 - Una spec en curso puede cambiar código, datos o grabaciones de una feature anterior cuando su
   plan lo declara y lo justifica (por ejemplo, generalizar un puerto). Si eso cambia un
-  comportamiento descrito en la spec anterior, esa spec recibe también su «Enmiendas».
-- Los documentos de una spec cerrada (spec, plan, research, data-model, contratos, tasks) son el
-  registro de lo que se decidió; la spec que los sustituye documenta lo nuevo.
+  comportamiento descrito en la spec anterior, esa spec recibe también su enmienda.
+- Si una feature se integra en `main` después de su cierre, sus ajustes de nivel 1 y 2 pueden ir
+  en su misma rama, antes del PR: son de la misma función.
+
+**Qué documentos se actualizan.** Los documentos de una spec son la fuente de su feature:
+regenerar el código desde ellos debe dar el comportamiento vigente. Por eso cada documento se
+trata según lo que es:
+
+| Documento | Con un ajuste (nivel 2) |
+| --- | --- |
+| Lo que define el comportamiento externo: requisitos, escenarios de aceptación, «Qué ve cada persona», contratos, `data-model.md` si cambia una entidad | Se actualiza para describir el vigente |
+| `spec.md`, sección «Enmiendas» | Se añade una entrada: fecha, cambio, motivo, documentos actualizados y commit |
+| Lo que registra cómo se llegó: sesiones de *Clarifications*, `research.md`, `analysis.md`, las tareas ya hechas de `tasks.md` | No se reescribe; una tarea hecha puede recibir una nota que remita a la enmienda |
+
+- Si un documento de comportamiento contradice una entrada de «Enmiendas», manda la enmienda, y la
+  contradicción se corrige como mantenimiento.
+- El estado de los documentos al cerrar la spec queda en git, en su commit de cierre.
 
 ### Versionado de documentos
 
