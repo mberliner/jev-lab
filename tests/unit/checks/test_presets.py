@@ -67,6 +67,12 @@ def test_installed_copy_differs_from_source(project: Path) -> None:
     assert "commands/speckit.tasks.md" in errors[0]
 
 
+def test_composed_command_in_installed_copy_is_not_extra(project: Path) -> None:
+    # Spec Kit escribe en la copia instalada el comando compuesto de un preset con `append`.
+    write(project, ".specify/presets/jevlab-testing/.composed/speckit.converge.md", "compuesto\n")
+    assert check_presets(project) == []
+
+
 def test_file_missing_in_installed_copy(project: Path) -> None:
     (project / ".specify/presets/jevlab-testing/commands/speckit.tasks.md").unlink()
     assert any("speckit.tasks.md" in e for e in check_presets(project))

@@ -66,7 +66,8 @@ El diseño SHOULD NOT incluir nada que las historias no necesiten.
 ## Excepciones
 
 Los archivos generados por Spec Kit y no editados por el proyecto (`.specify/templates/`,
-`.claude/skills/`, `.agents/skills/`) se excluyen de la comprobación. También se excluye este
+`.claude/skills/`, `.agents/skills/` y los comandos compuestos en `.specify/presets/*/.composed/`)
+se excluyen de la comprobación. También se excluye este
 estándar, porque muestra los símbolos que prohíbe. Su salida se ajusta mediante
 los presets propios, no editando esos archivos a mano.
 

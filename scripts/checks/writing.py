@@ -7,6 +7,8 @@ from checks._common import repo_files, report, root_parser
 
 EXCLUDED_PREFIXES = (".specify/templates/", ".claude/skills/", ".agents/skills/")
 EXCLUDED_FILES = frozenset({"docs/standards/writing.md"})
+# Comandos que Spec Kit compone sobre su base al instalar un preset (como las skills)
+COMPOSED = "/.composed/"
 
 _EMOJI = re.compile(
     "["
@@ -56,6 +58,7 @@ def _checked(name: str) -> bool:
         name.endswith(".md")
         and name not in EXCLUDED_FILES
         and not name.startswith(EXCLUDED_PREFIXES)
+        and COMPOSED not in name
     )
 
 

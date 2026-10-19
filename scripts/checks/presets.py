@@ -1,7 +1,8 @@
 """Puerta de presets: docs/governance.md §5, ADR-0002 y research.md R8.
 
 Lee los archivos versionados; no ejecuta la CLI de Spec Kit. Comprueba:
-- la copia instalada de cada preset (`.specify/presets/<id>/`) es igual a su fuente (`presets/<id>/`);
+- la copia instalada de cada preset (`.specify/presets/<id>/`) es igual a su fuente (`presets/<id>/`),
+  salvo los comandos compuestos que Spec Kit escribe en `.composed/`;
 - «Tests are OPTIONAL» no aparece en la plantilla de tareas resuelta ni en las skills de tareas;
 - cada skill sustituida por un preset está registrada en los dos agentes y tiene el mismo cuerpo;
 - no se versionan ni se registran en el manifiesto de Spec Kit los scripts de shell
@@ -24,10 +25,12 @@ TASKS_TEMPLATE = "tasks-template"
 VENV_PYTHONS = (".venv/bin/python", ".venv/Scripts/python")
 SHELL_SCRIPTS = (".specify/scripts/bash/", ".specify/scripts/powershell/")
 SPECKIT_MANIFEST = ".specify/integrations/speckit.manifest.json"
+COMPOSED = ".composed/"
 
 
 def _files(directory: Path) -> set[str]:
-    return {p.relative_to(directory).as_posix() for p in directory.rglob("*") if p.is_file()}
+    names = {p.relative_to(directory).as_posix() for p in directory.rglob("*") if p.is_file()}
+    return {name for name in names if not name.startswith(COMPOSED)}
 
 
 def _check_copies(root: Path) -> list[str]:

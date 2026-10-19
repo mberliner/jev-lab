@@ -57,6 +57,7 @@ def test_main_skips_generated_and_excluded_files(repo: Path) -> None:
     write(repo, ".specify/templates/t.md", "✅\n")
     write(repo, ".claude/skills/s/SKILL.md", "✅\n")
     write(repo, ".agents/skills/s/SKILL.md", "✅\n")
+    write(repo, ".specify/presets/p/.composed/speckit.converge.md", "✅\n")
     write(repo, "docs/standards/writing.md", "✅\n")
     assert main(["--root", str(repo)]) == 0
 
