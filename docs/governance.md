@@ -95,10 +95,10 @@ preset, estándar o ambos, según lo necesite.
 
 | Tema | Principio(s) | Preset (plantillas, estrategia) | Estándar(es) | Estado |
 | --- | --- | --- | --- | --- |
-| Forma de la spec (corte vertical, historias, lección) | VII | `jevlab-spec` (spec, checklist de cierre; `append`) | *(no necesita)* | creado |
+| Forma de la spec (corte vertical, historias, lección, cierre) | VII | `jevlab-spec` (spec, fase de cierre en tasks; `append`) | *(no necesita)* | creado |
 | Arquitectura | III | `jevlab-arch` (plan; `append`) | `architecture.md` | creado |
 | Decisión Jev (preguntas, escape, umbrales, transparencia ante cada persona) | I, II, IV | `jevlab-decision` (spec, plan; `append`) | `decision-design.md` | creado |
-| Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`; `replace`, ver *Actualizar Spec Kit*) | `testing.md` | creado |
+| Testing | IV | `jevlab-testing` (tasks y comando `speckit.tasks`, `replace`, ver *Actualizar Spec Kit*; comando `speckit.converge`, `append`) | `testing.md` | creado |
 | Seguridad | V | `jevlab-security` (plan; `append`) | `security.md` | creado |
 | Convenciones de interfaz (CLI, API) | *(las del tema decisión)* | `jevlab-decision` las exige en el plan | `cli-ux.md` (en 001), `api-errors.md` (en 003) | se escriben al nacer cada interfaz |
 | Redacción de la documentación | VI, VII | *(no necesita)* | `writing.md` | creado; comprobación automática (`poe check-writing`) |
@@ -180,7 +180,9 @@ admitir la versión instalada (hoy `>=1.1.3`, la estable de PyPI).
    - `specify preset resolve <plantilla>` muestra las capas esperadas;
    - `.specify/presets/.registry` lista el comando en `registered_skills` para los dos agentes;
    - `diff -r presets/jevlab-<tema> .specify/presets/jevlab-<tema>` no muestra diferencias de
-     contenido.
+     contenido. La copia instalada tiene además `.composed/` si el preset compone un comando
+     (`append`, `prepend` o `wrap`): es el comando que Spec Kit generó, se versiona y
+     `poe check-presets` no lo compara.
 5. Commit de la fuente, la copia instalada, el registro y las skills de los agentes.
 
 ### Reglas
@@ -276,6 +278,51 @@ Una retro breve al cerrar cada spec responde tres preguntas: ¿algún principio 
 alguno?, ¿alguna sección de preset se rellenó por rellenar? Cada respuesta "sí" abre un cambio en
 la capa que corresponda.
 
+### Verificación y cierre de una spec
+
+La fase final de `tasks.md` (preset `jevlab-spec`) tiene tres pasos, en este orden: demostrar
+cada historia, aceptar cada criterio de éxito y la retro. La retro, el commit de cierre y la
+marca «cerrada» del roadmap llegan solo cuando todos los criterios se cumplen.
+
+- **Criterios que miden a una persona** (comprensión, uso sin ayuda, tiempo): antes de la prueba
+  se escribe su protocolo en `quickstart.md`: consigna, preparación, qué se observa, respuesta
+  esperada (solo para quien observa) y cuándo se cumple. Un agente no puede verificarlos: anota el
+  resultado que da la persona.
+- **Si un criterio no se cumple**, la spec sigue abierta: sus cambios entran por el ciclo de
+  convergencia (abajo) y después se repite la prueba.
+- **Cambiar un criterio después de medirlo** lo decide la persona responsable y se registra en
+  «Enmiendas» aunque la spec siga abierta, para que el criterio original y la medición queden a
+  la vista.
+
+### Ciclo de convergencia
+
+Todo cambio de comportamiento de una spec, abierta en verificación o cerrada (nivel 2, abajo),
+entra por sus documentos y llega al código con Spec Kit. Nunca al revés: el código no cambia antes
+que la spec.
+
+1. **Documentos primero.** Se actualiza lo que define el comportamiento (requisitos, escenarios,
+   criterios, «Qué ve cada persona», contratos, `data-model.md`, `plan.md`), con
+   `/speckit-clarify` si hay que despejar una duda de diseño.
+2. **`/speckit-converge`.** Compara los documentos con el código y añade al final de `tasks.md` una
+   fase `## Phase N: Convergence` con el trabajo que falta, cada tarea trazada a su requisito,
+   criterio o historia. No toca `spec.md` ni las tareas existentes. El fragmento de
+   `jevlab-testing` le exige el test antes que el código y una tarea para `quickstart.md` y la
+   lección si cambia lo que se ve.
+3. **`/speckit-analyze`**, solo si cambió un requisito, un criterio, un contrato o el modelo de
+   datos. Su informe se añade a `analysis.md` con un apartado por fase.
+4. **`/speckit-implement`** ejecuta la fase, con `uv run poe check`. Si el cambio vino de una
+   prueba, la prueba se repite.
+
+- **Una fase por evento, no por ajuste.** Cada prueba, repaso o retro abre una sola fase con todos
+  sus cambios, y su cabecera dice qué la motivó, por ejemplo
+  `## Phase 9: Convergence (segunda prueba de SC-004, 2026-10-17)`.
+- **Los commits citan sus tareas** (`docs/standards/version-control.md` §1): con
+  `git log --grep T061` se llega del documento al commit sin anotar hashes en la spec.
+- **Un hallazgo `unrequested`** de converge indica que el código cambió antes que los documentos:
+  se documenta el comportamiento en la spec o se quita el código.
+- **Sobre una spec cerrada**, `.specify/feature.json` se apunta a su carpeta mientras dura el
+  ciclo y después se devuelve a la spec en curso.
+
 ### Cambios en features ya entregadas
 
 Lo que sale de una retro, o lo que se detecta al trabajar sobre una feature cerrada, se clasifica
@@ -285,7 +332,7 @@ función.
 | Nivel | Qué cambia | Cómo entra | Documentos de la spec cerrada |
 | --- | --- | --- | --- |
 | **1. Mantenimiento** | Nada del comportamiento que describe una spec: refactor, error que devuelve lo especificado, herramientas, puertas de calidad, documentación | PR directo (`fix`, `refactor`, `docs`, `build`, `ci` o `chore`), sin spec, con `uv run poe check` | No se tocan |
-| **2. Ajuste** | Algo pequeño del comportamiento de una feature entregada, sin historia de usuario nueva: un texto, un mensaje, un umbral, una grabación, un ejemplo | PR propio, sin pasar por Spec Kit; tests que cubran el cambio | Los documentos que definen el comportamiento se actualizan para describir el vigente, y se añade al final de su `spec.md` una sección «Enmiendas» con fecha, cambio, motivo y commit (abajo) |
+| **2. Ajuste** | Algo pequeño del comportamiento de una feature entregada, sin historia de usuario nueva: un texto, un mensaje, un umbral, una grabación, un ejemplo | PR propio por el ciclo de convergencia (arriba) sobre la spec cerrada | Los documentos que definen el comportamiento se actualizan para describir el vigente, `tasks.md` recibe su fase de convergencia y `spec.md` una entrada en «Enmiendas» (abajo) |
 | **3. Capacidad nueva** | Algo que un perfil de usuario puede hacer y antes no: necesita al menos una historia de usuario nueva | Su propia spec, con todo lo que exige la constitución (§VII), en el lugar del roadmap que le corresponda por función | — |
 
 - La frontera entre 2 y 3: si el cambio necesita una historia de usuario nueva, es nivel 3.
@@ -303,9 +350,12 @@ trata según lo que es:
 | --- | --- |
 | Lo que define el comportamiento externo: requisitos, escenarios de aceptación, «Qué ve cada persona», contratos, `data-model.md` si cambia una entidad | Se actualiza para describir el vigente |
 | Lo que lo enseña o lo valida: `quickstart.md`, la lección de la spec y los comandos de `AGENTS.md` | Se actualiza para que sus comandos y salidas esperadas sean los vigentes |
-| `spec.md`, sección «Enmiendas» | Se añade una entrada: fecha, cambio, motivo, documentos actualizados y commit |
-| Lo que registra cómo se llegó: sesiones de *Clarifications*, `research.md`, `analysis.md`, las tareas ya hechas de `tasks.md` | No se reescribe; una tarea hecha puede recibir una nota que remita a la enmienda |
+| `tasks.md` | Recibe al final la fase de convergencia; las tareas ya hechas no se reescriben |
+| `spec.md`, sección «Enmiendas» | Se añade una entrada: fecha, cambio, motivo, documentos actualizados y tareas de la fase de convergencia |
+| Lo que registra cómo se llegó: sesiones de *Clarifications*, `research.md`, `analysis.md` | No se reescribe; `analysis.md` recibe el informe de la fase si se pasó `/speckit-analyze` |
 
+- «Enmiendas» recoge solo los ajustes posteriores al cierre y los criterios cambiados después de
+  medirlos. Los cambios de una spec abierta quedan en su fase de convergencia y en git.
 - Si un documento de comportamiento contradice una entrada de «Enmiendas», manda la enmienda, y la
   contradicción se corrige como mantenimiento.
 - El estado de los documentos al cerrar la spec queda en git, en su commit de cierre.

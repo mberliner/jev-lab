@@ -23,3 +23,14 @@
   (p. ej. `001-tres-primitivas-y-como-leer-la-confianza.md`).
   - Qué se aprende: [...]
   - Qué puede fallar y su mitigación: [...]
+
+<!--
+  Sección opcional «Enmiendas» (`docs/governance.md` §7): se añade al final de esta spec solo con
+  el primer ajuste posterior al cierre o con el primer criterio cambiado después de medirlo.
+
+  ## Enmiendas
+
+  | Fecha | Cambio | Motivo | Documentos actualizados | Tareas |
+  | --- | --- | --- | --- | --- |
+  | AAAA-MM-DD | [qué cambia] | [por qué] | [FR, SC, contratos, lección] | [T0NN-T0NN, Phase N] |
+-->

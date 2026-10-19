@@ -1,12 +1,15 @@
 ---
-name: "speckit-converge"
-description: "Assess the current codebase against the feature's spec, plan, and tasks, then append any remaining unbuilt work as new tasks to tasks.md so implement can complete it."
-compatibility: "Requires spec-kit project structure with .specify/ directory"
+name: speckit-converge
+description: Assess the current codebase against the feature's spec, plan, and tasks,
+  then append any remaining unbuilt work as new tasks to tasks.md so implement can
+  complete it.
+compatibility: Requires spec-kit project structure with .specify/ directory
 metadata:
-  author: "github-spec-kit"
-  source: "templates/commands/converge.md"
+  author: github-spec-kit
+  source: preset:jevlab-testing
 ---
 
+# Speckit Converge Skill
 
 ## User Input
 
@@ -281,3 +284,22 @@ After producing the result, check if `.specify/extensions.yml` exists in the pro
     After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
 
 - If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
+
+
+## Reglas de jev-lab para la fase de convergencia
+
+> Deriva de: Constitución §IV y §VII · Proceso: `docs/governance.md` §7, «Ciclo de convergencia»
+
+Al escribir la fase `## Phase N: Convergence` en `tasks.md`, además de lo anterior:
+
+- **Test primero.** Cada cambio de comportamiento lleva su tarea de test antes de la de
+  implementación, y el test debe fallar antes del cambio (`docs/standards/testing.md`). Se siguen
+  las mismas reglas que en `/speckit-tasks`: los tests son obligatorios.
+- **Lo que enseña y valida.** Si cambia una salida, un comando o un flujo que ve una persona, se
+  añade una tarea para actualizar `quickstart.md`, la lección de la spec
+  (`docs/lessons/NNN-*.md`) y, si cambia un comando, `AGENTS.md`.
+- **Motivo en la cabecera.** La cabecera de la fase dice qué la motivó, entre paréntesis: la
+  prueba, el repaso o la retro, y la fecha. Por ejemplo,
+  `## Phase 9: Convergence (segunda prueba de SC-004, 2026-10-17)`.
+- **Prueba que se repite.** Si la fase la motivó una prueba de un criterio de éxito, su última
+  tarea es repetir esa prueba y anotar el resultado en la tarea de aceptación de la fase final.

@@ -30,6 +30,13 @@ Spec-Driven Development (Spec Kit).
 
 - Skills para Claude Code en `.claude/skills/` y para Antigravity en `.agents/skills/`. Las dos
   comparten `.specify/` y `specs/`.
+- Para cambiar el comportamiento de una spec tras implementarla (una verificación que falla, un
+  repaso, una retro o un ajuste de nivel 2), primero los documentos de la spec, después
+  `/speckit-converge` (añade a `tasks.md` una fase de convergencia) y `/speckit-implement`; nunca el
+  código antes que la spec. Una fase por evento, no por ajuste (`docs/governance.md` §7, «Ciclo de
+  convergencia»).
+- La retro de cierre va después de aceptar todos los criterios de éxito (`docs/governance.md` §7,
+  «Verificación y cierre de una spec»).
 - `/speckit-analyze` no escribe archivos: al terminar, su informe se guarda en
   `specs/NNN-*/analysis.md`, con el estado de cada hallazgo (corregido, aceptado o descartado y
   por qué), y se actualiza al resolverlos.

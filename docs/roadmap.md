@@ -2,7 +2,7 @@
 
 ## Estado actual y cómo retomar
 
-> **Actualizado: 2026-10-17.** Punto de entrada para retomar el trabajo en una sesión nueva, con
+> **Actualizado: 2026-10-19.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
 **Dónde estamos:** spec 002 (Enrutado con confianza) implementada y cerrada (56 de 56 tareas) en
@@ -203,6 +203,18 @@ aplazada, se completó el 2026-10-14. Hecho:
   dice qué atiende cada cola y qué pasa al asignar.
 - [hecho, 2026-10-17] SC-004 enmendado: sin umbral de tiempo; el Operador resuelve sin ayuda y
   con la respuesta esperada tras una presentación breve. La segunda prueba lo cumple.
+- [hecho, 2026-10-19] Gobernanza del cierre y de los ajustes, a partir de lo vivido con SC-004
+  (`docs/governance.md` §7):
+  - la retro va después de aceptar cada criterio de éxito; un criterio que mide a una persona
+    lleva antes su protocolo en `quickstart.md` (preset `jevlab-spec` 0.3.0). En la 002 la retro
+    se hizo antes de la prueba con una persona;
+  - todo cambio de comportamiento tras implementar entra por los documentos de la spec y llega al
+    código con `/speckit-converge` y `/speckit-implement`, en una fase de convergencia por evento
+    (`jevlab-testing` 0.2.3 añade al comando test primero y lección al día). En la 002 los ajustes
+    cambiaron primero el código y después la spec;
+  - «Enmiendas» cita tareas, no commits, y los commits citan sus tareas
+    (`docs/standards/version-control.md` §1): la 002 necesitó cinco commits solo para anotar hashes.
+    La 002 no se reescribe.
 - **[siguiente]** Subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y
   merge commit.
 

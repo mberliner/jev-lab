@@ -24,6 +24,9 @@ pies opcionales
   `domain`, `cli` o `api`.
 - **Cuerpo** (opcional): viñetas que explican qué cambia y por qué.
 - **Cambios incompatibles:** `!` tras el tipo o el ámbito, y un pie `BREAKING CHANGE: …`.
+- **Tareas de una fase de convergencia** (`docs/governance.md` §7): el resumen o el cuerpo cita
+  sus IDs (`T061`, `T061-T063`), para llegar al commit con `git log --grep`. Así la spec no anota
+  hashes y no hace falta un segundo commit para anotarlos.
 
 **Motivo.** El historial queda legible y filtrable por tipo y ámbito, y permite generar un
 changelog sin trabajo manual.
