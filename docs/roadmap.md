@@ -5,11 +5,11 @@
 > **Actualizado: 2026-10-19.** Punto de entrada para retomar el trabajo en una sesión nueva, con
 > cualquier agente.
 
-**Dónde estamos:** spec 002 (Enrutado con confianza) implementada y cerrada (56 de 56 tareas) en
-la rama local `002-enrutado-confianza`, sin subir todavía. SC-004 está cerrado: tras dos pruebas y
+**Dónde estamos:** spec 002 (Enrutado con confianza) implementada, cerrada (56 de 56 tareas) e
+integrada en `main` con merge commit (`b5b12e9`). SC-004 está cerrado: tras dos pruebas y
 varios ajustes de nivel 2 (en «Enmiendas» de la spec), el criterio se enmendó para medir la
-claridad y no un tiempo, y la segunda prueba lo cumple. Lo siguiente está al
-final de «Spec 002», más abajo. La spec 001 (Triaje) está cerrada e integrada en `main`. La spec 000
+claridad y no un tiempo, y la segunda prueba lo cumple. Lo siguiente, la
+spec 003, está al final de «Spec 002», más abajo. La spec 001 (Triaje) está cerrada e integrada en `main`. La spec 000
 (Cimientos) está cerrada en la rama `000-cimientos`, publicada en
 https://github.com/mberliner/jev-lab con la CI en verde en Linux y Windows; T037, la última tarea
 aplazada, se completó el 2026-10-14. Hecho:
@@ -215,8 +215,9 @@ aplazada, se completó el 2026-10-14. Hecho:
   - «Enmiendas» cita tareas, no commits, y los commits citan sus tareas
     (`docs/standards/version-control.md` §1): la 002 necesitó cinco commits solo para anotar hashes.
     La 002 no se reescribe.
-- **[siguiente]** Subir la rama, comprobar la CI en Linux y Windows e integrar en `main` con PR y
-  merge commit.
+- [hecho, 2026-10-17] Integración en `main` con merge commit (`b5b12e9`).
+- **[siguiente]** Spec 003 (Guardarraíl de un asistente con fan-out y composición), desde
+  `/speckit-specify`; su lugar en el plan, en «Specs», más abajo.
 
 **Antes de empezar en una máquina nueva:** `uv sync` y `uv run pre-commit install`
 (`docs/setup.md`).
